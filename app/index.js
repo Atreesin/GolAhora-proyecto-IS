@@ -30,7 +30,7 @@ app.use(cookieParser());
 app.use(cors());
 
 //rutas
-app.get("/", (req,res) => res.send("yluminus"));
+app.get("/", (req,res) => res.send("Sitio en construcción"));
 app.get("/register", async (req, res) => {res.json(await verPaises())});
 
 app.get("/agregarPais/:pais", async (req, res) => await lugarController.nuevoPais(req, res));
