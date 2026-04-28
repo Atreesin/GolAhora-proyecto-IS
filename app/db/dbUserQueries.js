@@ -3,7 +3,7 @@ import pool from "./databaseConnection.js"
 //registrar usuario
 const insertUser = 'INSERT INTO users SET ?';
 //registrar direccion de usuario
-const insertDireccion = 'INSERT INTO direccion SET ?';
+const insertDireccion = 'INSERT INTO direcciones SET ?';
 //modificar datos de usuario
 const updateUser = 'UPDATE users SET username = ?, nombre = ?, apellido = ?, nacionalidad = ?, dni = ?, genero = ?, fecha_nacimiento = ?, telefono = ?, email = ? WHERE id_usuario = ?';
 const updateUsername = 'UPDATE users SET username = ? WHERE id_usuario = ?';
@@ -27,6 +27,7 @@ const updateCidad = 'UPDATE direcciones SET ciudad = ? WHERE id__direccion = ?'
 const updateProvincia = 'UPDATE direcciones SET provincia = ? WHERE id_direccion = ?';
 const updatePais = 'UPDATE direcciones SET pais = ? WHERE id_direccion = ?';
 //consultar clientes
+const selectUserByEmailOrDni = 'SELECT u.username, u.nombre, u.apellido, n.nombre AS nacionalidad, u.dni, g.nombre AS genero, u.fecha_nacimiento, u.telefono, u.email, u.user_level FROM users u LEFT JOIN paises n ON u.nacionalidad = n.id_pais LEFT JOIN generos g ON u.genero = g.id_genero WHERE u.email = ? or u.dni = ?';
 const selectCantidadUsuarios = 'SELECT COUNT(*) AS total_usuarios FROM users';
 const selectUserIdByEmail = 'SELECT id_usuario FROM users WHERE email = ?';
 const selectUsersByGenero = 'SELECT u.username, u.nombre, u.apellido, n.nombre AS nacionalidad, u.dni, g.nombre AS genero, u.telefono, u.email FROM users u LEFT JOIN paises n ON u.nacionalidad = n.id_pais LEFT JOIN generos g ON u.genero = g.id_genero WHERE g.nombre = ? ORDER BY apellido ASC, nombre ASC, dni ASC';
@@ -186,6 +187,21 @@ async function getUserIdByEmail(email) {
     }
 };
 
+async function getUserByEmailOrDni(email, dni) {
+    try {
+        const rows = await pool.query(selectUserIdByEmail, [email, dni]);
+        if (rows.length > 0) {
+            return rows[0];
+        } else {
+            return null;
+        }
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+
+
 async function getUsersByGenero(genero) {
     try {
         const rows = await pool.query(selectUsersByGenero, genero);
@@ -292,7 +308,12 @@ async function getDireccionByUserId(id_usuario){
 async function getNextUserId() {
 
     const result = await pool.query(nextUserId);
-    return result[0].id_usuario + 1;
+    console.log(result);
+    if (result.length > 0){  
+
+        return result[0].id_usuario + 1;
+    }
+    return 1;
 };
 
 export const methods = {
@@ -300,6 +321,7 @@ export const methods = {
     agregarDireccion,
     getCantidadUsuarios,
     getUsuarios,
+    getUserByEmailOrDni,
     getSeccionDeUsuarios,
     getUsuariosByLevel,
     getSeccionDeUsuariosByLevel,

@@ -1,7 +1,7 @@
-import bcrypt from "bcryptjs";
-import jsnwebtoken from "jsonwebtoken";
+import bcryptjs from "bcryptjs";
+import jsonwebtoken from "jsonwebtoken";
 
-import { JWT_SECRET, JWT_EXPIRATION, JWT_COOKIE_EXPIRES, CLIENT_USER_LEVEL } from "../config";
+import { JWT_SECRET, JWT_EXPIRATION, JWT_COOKIE_EXPIRES, CLIENT_USER_LEVEL } from "../config.js";
 import { methods as dbUserQuery } from "../db/dbUserQueries.js";
 import { methods as dbLugarQuery } from "../db/dbLugaresQueries.js";
 import { methods as dbGeneroQuery } from "../db/dbGenerosQueries.js";
@@ -26,7 +26,7 @@ async function login(req, res) {
         return res.status(400).send({status: "Error", message: "Algunos campos estan vacios"})
     }
 
-    const usuarioARevisar = await dbUserQuery.getDatosUsuarioPorEmail(email);
+    const usuarioARevisar = await dbUserQuery.getUserLoginOptionByEmail(email);
 
     if(!usuarioARevisar){
         return res.status(400).send({ status: "Error", message: "Error al conectarse"})
@@ -50,7 +50,7 @@ async function login(req, res) {
 
     if (req.headers.plataform === "web") {
         res.cookie("jwt", token, cookieOpption);
-        res.send({ status: "ok", message: "Usuario loggeado", redirect: "/reservas_main" })
+        res.send({ status: "ok", message: "Usuario loggeado", redirect: "/profile" })
     }
 }
 
@@ -78,43 +78,45 @@ async function register(req, res) {
     const numero = req.body.numero;
     const codigo_postal = req.body.codigo_postal;
     const pais = req.body.pais;
-    const provinica = req.body.provinica;
+    const provincia = req.body.provincia;
     const ciudad = req.body.ciudad;
     const localidad = req.body.localidad;
 
-    if (!nombre || !apellido || !dni || !genero || !fecha_nacimiento || !email || !telefono || !password || !confirm_password || !calle || !numero || !localidad || !ciudad || !provinica || !pais) {
+    if (!nombre || !apellido || !dni || !genero || !fecha_nacimiento || !email || !telefono || !password || !confirm_password || !calle || !numero || !localidad || !ciudad || !provincia || !pais) {
+        console.log(provincia);
         return res.status(400).send({ status: "Error", message: "Algunos campos estan vacios"})
     }
     if (!(password === confirm_password)){
+        
         return res.status(400).send({status: "Error", message: "Las contraseñas no coinciden"})
     }
 
-    const usuarioExiste = await dbUserQuery.existeUsuarioByEmail(email);
+    const usuarioExiste = await dbUserQuery.getUserByEmailOrDni(email, dni);
     if(usuarioExiste) {
         return res.status(400).send({ status: "Error", message: "Este usuario ya existe"})
     }
     const salt = await bcryptjs.genSalt(8);
     const hashPassword = await bcryptjs.hash(password,salt);
-     const tokenVerificacion = jsonwebtoken.sing(
+    const tokenVerificacion = jsonwebtoken.sign(
         { email: email },
         JWT_SECRET,
         { expiresIn: JWT_EXPIRATION}
-     );
+    );
 
     const generateUsername = (id) => `user_${String(id).padStart(11, '0')}`;
 
    
-    const idNacionalidad = await dbLugarQuery.getPaisPorNombre(nacionalidad).id_pais;
+    let idNacionalidad = await dbLugarQuery.getPaisPorNombre(nacionalidad);
     if(!idNacionalidad){
         const nuevoPais = {
             nombre: nacionalidad
         };
 
         await dbLugarQuery.agregarPais(nuevoPais);
-        idNacionalidad = await dbLugarQuery.getPaisPorNombre(nacionalidad).id_pais;
+        idNacionalidad = await dbLugarQuery.getPaisPorNombre(nacionalidad);
     }
     
-    const idGenero = await dbGeneroQuery.getIdGeneroByGenero(genero);
+    let idGenero = await dbGeneroQuery.getIdGeneroByGenero(genero);
     if(!idGenero){
         const nuevoGenero = {
             genero
@@ -134,9 +136,9 @@ async function register(req, res) {
         username, 
         nombre, 
         apellido,
-        nacionalidad: idNacionalidad, 
+        nacionalidad: idNacionalidad.id_pais, 
         dni,
-        genero : idGenero, 
+        genero: idGenero, 
         fecha_nacimiento,
         telefono, 
         email, 
@@ -144,10 +146,10 @@ async function register(req, res) {
         user_level: CLIENT_USER_LEVEL
     }
     await dbUserQuery.agregarUsuario(nuevoUsuario);
-    const idNuevoUsuario = await dbUserQuery.getIdUsuarioByEmail(email); 
+    const idNuevoUsuario = await dbUserQuery.getUserIdByEmail(email); 
 
     //pais
-    const idPais = await dbLugarQuery.getPaisPorNombre(pais);
+    let idPais = await dbLugarQuery.getPaisPorNombre(pais);
     if(!idPais){
         const nuevoPais = {
             nombre: pais
@@ -157,37 +159,37 @@ async function register(req, res) {
         idPais = await dbLugarQuery.getPaisPorNombre(pais);
     };
     //provincia
-    const idProvincia = await dbLugarQuery.getProvinciaPorNombre(provincia);
+    let idProvincia = await dbLugarQuery.getProvinciaPorNombreYIdPais(provincia,idPais.id_pais);
     if(!idProvincia){
         const nuevaPronvincia = {
-            id_pais: idPais,
+            id_pais: idPais.id_pais,
             nombre: provincia
         };
 
         await dbLugarQuery.agregarProvincia(nuevaPronvincia);
-        idProvincia = await dbLugarQuery.getProvinciaPorNombre(provinica);
+        idProvincia = await dbLugarQuery.getProvinciaPorNombreYIdPais(provincia,idPais.id_pais);
     };
     //ciudad
-    const idCiudad = await dbLugarQuery.getCiudadPorNombre(ciudad);
+    let idCiudad = await dbLugarQuery.getCiudadPorNombreYIdProvincia(ciudad,idProvincia.id_provincia);
     if(!idCiudad){
         const nuevaCiudad = {
-            id_provincia: idProvincia,
+            id_provincia: idProvincia.id_provincia,
             nombre: ciudad
         };
 
         await dbLugarQuery.agregarCiudad(nuevaCiudad);
-        idCiudad = await dbLugarQuery.getCiudadPorNombre(ciudad);
+        idCiudad = await dbLugarQuery.getCiudadPorNombreYIdProvincia(ciudad,idProvincia.id_provincia);
     }
     //localidad
-    const idLocalidad = await dbLugarQuery.getLocalidadorNombre(localidad);
+    let idLocalidad = await dbLugarQuery.getLocalidadPorNombreYIdCiudad(localidad,idCiudad.id_ciudad);
     if(!idLocalidad){
         const nuevaLocalidad = {
-            id_ciudad: idCiudad,
+            id_ciudad: idCiudad.id_ciudad,
             nombre: localidad
         };
 
         await dbLugarQuery.agregarLocalidad(nuevaLocalidad);
-        idLocalidad = await dbLugarQuery.getLocalidadPorNombre(localidad);
+        idLocalidad = await dbLugarQuery.getLocalidadPorNombre(localidad,idCiudad.id_ciudad);
     }
 
 
@@ -196,13 +198,13 @@ async function register(req, res) {
         calle,
         numero,
         codigo_postal,
-        pais,
-        provincia,
-        ciudad,
-        localidad
+        id_pais: idPais.id_pais,
+        id_provincia: idProvincia.id_provincia,
+        id_ciudad: idCiudad.id_ciudad,
+        id_localidad: idLocalidad.id_localidad
     }
     //AGREGO LA DIRECCION A UN USUARIO
-    await dbUserQuery.agregarDireccionUsuario(direccion);
+    await dbUserQuery.agregarDireccion(direccion);
     return res.status(201).send({ status: "ok", message: `Usuario ${nuevoUsuario.username} agregado`, redirect: "/" })
 }
 

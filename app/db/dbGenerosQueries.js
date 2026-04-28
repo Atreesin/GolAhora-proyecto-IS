@@ -57,6 +57,7 @@ async function getIdGeneroByGenero(genero){
 
 
 export const methods = {
+    getGeneros,
     agregarGenero,
     getGeneroById,
     getIdGeneroByGenero

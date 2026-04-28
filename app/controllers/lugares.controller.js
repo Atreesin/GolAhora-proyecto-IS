@@ -25,6 +25,13 @@ async function nuevoPais(req, res) {
     return res.send(`el pais ${req.params.pais} ya existe`);
 }
 
+async function nombrePaises(req, res){
+    
+    const paises = await dbLugarQuery.getNombrePaises();
+    
+    return res.send(paises);
+};
+
 
 async function idPais(req, res){
     
@@ -41,6 +48,7 @@ async function idPais(req, res){
     return res.send(paisBuscado.id_pais);
 };
 
+// helpers
 async function idProvincia(provincia, idPais) {
     let idProvincia = await dbLugarQuery.getProvinciaPorNombre(provincia);
     if(!idProvincia){
@@ -88,7 +96,8 @@ export const methods = {
     idPais,
     idProvincia,
     idCiudad,
-    idLocalidad
+    idLocalidad,
+    nombrePaises
     /*
     paises,
     provincias,

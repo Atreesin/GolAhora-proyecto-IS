@@ -7,14 +7,19 @@ const insertCiudad = 'INSERT INTO ciudades SET ?';
 const insertLocalidad = 'INSERT INTO localidades SET ?';
 
 //consultar datos de usuario
+const selectNombrePaises = 'SELECT nombre FROM paises ORDER BY nombre ASC';
 const selectPaises = 'SELECT * FROM paises ORDER BY nombre ASC';
 const selectProvincias = 'SELECT * FROM provincias ORDER BY nombre ASC';
 const selectCiudades = 'SELECT * FROM ciudades ORDER BY nombre ASC';
 const selectLocalidades = 'SELECT * FROM localidades ORDER BY nombre ASC';
+
 const selectPaisByNombre = 'SELECT * FROM paises WHERE nombre = ?';
 const selectProvinciaByNombre = 'SELECT * FROM provincias WHERE nombre = ?';
+const selectProvinciaByNombreYIdPais = 'SELECT * FROM provincias WHERE nombre = ? and id_pais = ?';
 const selectCiudadByNombre = 'SELECT * FROM ciudades WHERE nombre = ?';
+const selectCiudadByNombreYIdProvincia = 'SELECT * FROM ciudades WHERE nombre = ? and id_provincia = ?'
 const selectLocalidadByNombre = 'SELECT * FROM localidades WHERE nombre = ?';
+const selectLocalidadByNombreYIdCiudad = 'SELECT * FROM localidades WHERE nombre = ? and id_ciudad = ?';
 
 const selectProvinciasByPais = 'SELECT pr.id_provincia, pr.nombre, pa.nombre AS pais FROM provincias pr LEFT JOIN paises pa ON pr.id_pais = pa.id_pais WHERE pa.nombre = ?';
 const selectCiudadesByProvincia = 'SELECT c.id_ciudad, c.nombre, p.nombre AS provincia FROM ciudades c LEFT JOIN provincias p ON c.id_provincia = p.id_provincia WHERE p.nombre = ?';
@@ -48,6 +53,21 @@ async function getPaises() {
         throw err;
     }
 };
+
+async function getNombrePaises() {
+    try {
+        const rows = await pool.query(selectNombrePaises);
+        if (rows.length > 0) {
+            return rows;
+        } else {
+            return null;
+        }
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+
 
 async function getProvincias() {
     try {
@@ -120,9 +140,37 @@ async function getProvinciaPorNombre(provincia) {
     }
 };
 
+async function getProvinciaPorNombreYIdPais(provincia, id_pais) {
+    try {
+        const rows = await pool.query(selectProvinciaByNombreYIdPais, [provincia, id_pais]);
+        if (rows.length > 0) {
+            return rows[0];
+        } else {
+            return null;
+        }
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+
 async function getCiudadPorNombre(ciudad) {
     try {
         const rows = await pool.query(selectCiudadByNombre, [ciudad]);
+        if (rows.length > 0) {
+            return rows[0]; 
+        } else {
+            return null; 
+        }
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+
+async function getCiudadPorNombreYIdProvincia(ciudad,id_provincia) {
+    try {
+        const rows = await pool.query(selectCiudadByNombreYIdProvincia, [ciudad, id_provincia]);
         if (rows.length > 0) {
             return rows[0]; 
         } else {
@@ -148,6 +196,19 @@ async function getLocalidadPorNombre(localidad) {
     }
 };
 
+async function getLocalidadPorNombreYIdCiudad(localidad, id_ciudad) {
+    try {
+        const rows = await pool.query(selectLocalidadByNombreYIdCiudad, [localidad, id_ciudad]);
+        if (rows.length > 0) {
+            return rows[0]; 
+        } else {
+            return null; 
+        }
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
 
 
 export const methods = {
@@ -155,12 +216,16 @@ export const methods = {
     agregarProvincia,
     agregarCiudad,
     agregarLocalidad,
+    getNombrePaises,
     getPaises,
     getProvincias,
     getCiudades,
     getLocalidades,
     getPaisPorNombre,
     getProvinciaPorNombre,
+    getProvinciaPorNombreYIdPais,
     getCiudadPorNombre,
-    getLocalidadPorNombre
+    getCiudadPorNombreYIdProvincia,
+    getLocalidadPorNombre,
+    getLocalidadPorNombreYIdCiudad
 }
