@@ -32,6 +32,26 @@ async function nombrePaises(req, res){
     return res.send(paises);
 };
 
+async function nombreProvincias(req, res){
+    
+    const provincias = await dbLugarQuery.getNombreProvincias();
+    
+    return res.send(provincias);
+};
+
+async function nombreCiudades(req, res){
+    
+    const ciudades = await dbLugarQuery.getNombreCiudades();
+    
+    return res.send(ciudades);
+};
+
+async function nombreLocalidades(req, res){
+    
+    const localidades = await dbLugarQuery.getNombreLocalidades();
+    
+    return res.send(localidades);
+};
 
 async function idPais(req, res){
     
@@ -97,7 +117,10 @@ export const methods = {
     idProvincia,
     idCiudad,
     idLocalidad,
-    nombrePaises
+    nombrePaises,
+    nombreProvincias,
+    nombreCiudades,
+    nombreLocalidades,
     /*
     paises,
     provincias,

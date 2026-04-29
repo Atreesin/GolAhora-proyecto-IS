@@ -8,6 +8,9 @@ const insertLocalidad = 'INSERT INTO localidades SET ?';
 
 //consultar datos de usuario
 const selectNombrePaises = 'SELECT nombre FROM paises ORDER BY nombre ASC';
+const selectNombreProvincias = 'SELECT nombre FROM provincias ORDER BY nombre ASC';
+const selectNombreCiudades = 'SELECT nombre FROM ciudades ORDER BY nombre ASC';
+const selectNombreLocalidades = 'SELECT nombre FROM localidades ORDER BY nombre ASC';
 const selectPaises = 'SELECT * FROM paises ORDER BY nombre ASC';
 const selectProvincias = 'SELECT * FROM provincias ORDER BY nombre ASC';
 const selectCiudades = 'SELECT * FROM ciudades ORDER BY nombre ASC';
@@ -68,6 +71,47 @@ async function getNombrePaises() {
     }
 };
 
+async function getNombreProvincias() {
+    try {
+        const rows = await pool.query(selectNombreProvincias);
+        if (rows.length > 0) {
+            return rows;
+        } else {
+            return null;
+        }
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+
+async function getNombreCiudades() {
+    try {
+        const rows = await pool.query(selectNombreCiudades);
+        if (rows.length > 0) {
+            return rows;
+        } else {
+            return null;
+        }
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+
+async function getNombreLocalidades() {
+    try {
+        const rows = await pool.query(selectNombreLocalidades);
+        if (rows.length > 0) {
+            return rows;
+        } else {
+            return null;
+        }
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
 
 async function getProvincias() {
     try {
@@ -217,6 +261,9 @@ export const methods = {
     agregarCiudad,
     agregarLocalidad,
     getNombrePaises,
+    getNombreProvincias,
+    getNombreCiudades,
+    getNombreLocalidades,
     getPaises,
     getProvincias,
     getCiudades,

@@ -86,6 +86,9 @@ async function register(req, res) {
         console.log(provincia);
         return res.status(400).send({ status: "Error", message: "Algunos campos estan vacios"})
     }
+
+    //comprobar complejidad de la pass (a implementar)
+
     if (!(password === confirm_password)){
         
         return res.status(400).send({status: "Error", message: "Las contraseñas no coinciden"})

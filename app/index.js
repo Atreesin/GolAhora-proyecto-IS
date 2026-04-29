@@ -7,6 +7,8 @@ import cors from "cors";
 import {PORT} from './config.js';
 
 import userRoutes from './routes/user.routes.js';
+import adminRoutes from './routes/admin.routes.js';
+import clienteRoutes from './routes/cliente.routes.js';
 
 import { methods as dbLugarQuery } from "./db/dbLugaresQueries.js";
 
@@ -32,6 +34,8 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(cookieParser());
 app.use(userRoutes);
+app.use(adminRoutes);
+app.use(clienteRoutes);
 app.use(cors());
 
 //rutas
@@ -42,10 +46,13 @@ app.get("/buscarOagregarPais/:pais", async (req, res) => await lugarController.i
 
 //api get
 app.get("/api/paises", lugarController.nombrePaises);
-app.get("/api/generos", generoController.generos)
+app.get("/api/provincias", lugarController.nombreProvincias);
+app.get("/api/ciudades", lugarController.nombreCiudades);
+app.get("/api/localidades", lugarController.nombreLocalidades);
+app.get("/api/generos", generoController.generos);
 //api post
-app.post("/api/login",authentication.login);
-app.post("/api/register",authentication.register);
+app.post("/api/login", authentication.login);
+app.post("/api/register", authentication.register);
 
 
 async function nuevoPais(pais){

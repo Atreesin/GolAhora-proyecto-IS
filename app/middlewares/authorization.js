@@ -27,10 +27,7 @@ async function revisarCookie(req){
     try{
         const cookieJWT = req.headers.cookie.split("; ").find(cookie => cookie.startsWith("jwt=")).slice(4);
         const decodificada = jsonwebtoken.verify(cookieJWT,JWT_SECRET);
-        console.log(JWT_SECRET)
-       
-        const usuarioARevisar = await dbUserQuery.getDatosUsuarioPorEmail(decodificada.email);
-        console.log(usuarioARevisar)
+        const usuarioARevisar = await dbUserQuery.getUserLoginOptionByEmail(decodificada.email);
         if(!usuarioARevisar){
           return false
         }
@@ -45,7 +42,7 @@ async function comprobarAdmin(req){
     try{
         const cookieJWT = req.headers.cookie.split("; ").find(cookie => cookie.startsWith("jwt=")).slice(4);
         const decodificada = jsonwebtoken.verify(cookieJWT,JWT_SECRET);
-        const usuarioARevisar = await dbUserQuery.getDatosUsuarioPorEmail(decodificada.email);
+        const usuarioARevisar = await dbUserQuery.getUserLoginOptionByEmail(decodificada.email);
         if(usuarioARevisar.user_level != ADMIN_USER_LEVEL){
           return false
         }
