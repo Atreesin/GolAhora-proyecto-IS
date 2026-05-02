@@ -12,6 +12,8 @@ router.get("/profile", authorization.soloUsers, (req,res)=>res.sendFile(__dirnam
 router.get("/user/:useriId", (req, res) => res.sendFile(__dirname + "/pages/user/profile.html"));
 //router.get("/verificar/:token", authentication.verificarCuenta)
 
+router.get("/api/userInfo", authorization.soloUsers, (req, res) => res.send("A IMPLEMENTAR"))
+
 
 
 export default router

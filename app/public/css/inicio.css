@@ -18,6 +18,18 @@ main {
     flex: 1;
 }
 
+.logo {
+    display: flex;
+    align-items: center; /* centra verticalmente */
+    gap: 5px; /* espacio entre imagen y texto */
+}
+
+.logo-img {
+    width: 50px;   /* ajustá el tamaño según tu diseño */
+    height: auto;
+    margin: 0;
+}
+
 /* Barra de navegación */
 .navbar {
   display: flex;

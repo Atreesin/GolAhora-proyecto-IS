@@ -161,24 +161,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 document.getElementById("register-form").addEventListener("submit",async(e)=>{
     e.preventDefault();
-    console.log(e.target.children.nombre.value)
-    console.log(e.target.children.apellido.value)
-    console.log(e.target.children.nacionalidad.value)
-    console.log(e.target.children.dni.value)
-    console.log(e.target.children.genero.value)
-    console.log(e.target.children.fecha_nacimiento.value)
-    console.log(e.target.children.telefono.value)
-    console.log(e.target.children.email.value)
-    console.log(e.target.children.password.value)
-    console.log(e.target.children.confirm_password.value)
-    console.log(e.target.children.calle.value)
-    console.log(e.target.children.numero.value)
-    console.log(e.target.children.codigo_postal.value)
-    console.log(e.target.children.pais.value)
-    console.log(e.target.children.provincia.value)
-    console.log(e.target.children.ciudad.value)
-    console.log(e.target.children.localidad.value)
-
+    
     const res = await fetch("/api/register",{
         method:"POST",
         headers:{
@@ -205,8 +188,14 @@ document.getElementById("register-form").addEventListener("submit",async(e)=>{
             localidad: e.target.children.localidad.value
         })
     });
-    if(!res.ok) return mensajeError.classList.toggle("escondido", false);
+    
+    if(!res.ok){
+      mensajeError.innerHTML = (await res.json()).message;
+      return mensajeError.classList.toggle("escondido", false);
+    } 
+    
     const resJson = await res.json();
+    
     if(resJson.redirect){
         window.location.href = resJson.redirect;
     }

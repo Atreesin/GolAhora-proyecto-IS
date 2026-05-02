@@ -15,6 +15,7 @@ import { methods as dbLugarQuery } from "./db/dbLugaresQueries.js";
 import { methods as authentication } from "./controllers/authentication.controller.js";
 import { methods as lugarController } from "./controllers/lugares.controller.js";
 import { methods as generoController } from "./controllers/generos.controller.js";
+import { methods as userController } from "./controllers/user.controller.js";
 
 import path from 'path';
 import { fileURLToPath } from "url";
@@ -50,6 +51,7 @@ app.get("/api/provincias", lugarController.nombreProvincias);
 app.get("/api/ciudades", lugarController.nombreCiudades);
 app.get("/api/localidades", lugarController.nombreLocalidades);
 app.get("/api/generos", generoController.generos);
+app.get("/api/user", userController.getDatosUsuario);
 //api post
 app.post("/api/login", authentication.login);
 app.post("/api/register", authentication.register);

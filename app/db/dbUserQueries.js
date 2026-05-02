@@ -37,6 +37,7 @@ const selectAllUsersLimit = 'SELECT u.username, u.nombre, u.apellido, n.nombre A
 const selectUsersByLevelLimit = 'SELECT u.username, u.nombre, u.apellido, n.nombre AS nacionalidad, u.dni, g.genero, u.telefono, u.email FROM users u LEFT JOIN paises n ON u.nacionalidad = n.id_pais LEFT JOIN generos g ON u.genero = g.id_genero WHERE u.user_level = ? ORDER BY apellido ASC, nombre ASC, dni ASC LIMIT ? OFFSET ?';
 const selectAllUserByLevel = 'SELECT u.username, u.nombre, u.apellido, n.nombre AS nacionalidad, u.dni, g.genero, u.telefono, u.email FROM users u LEFT JOIN paises n ON u.nacionalidad = n.id_pais LEFT JOIN generos g ON u.genero = g.id_genero WHERE user_level = ? ORDER BY apellido ASC, nombre ASC, dni ASC';
 const selectUserById = 'SELECT u.username, u.nombre, u.apellido, n.nombre AS nacionalidad, u.dni, g.genero, u.fecha_nacimiento, u.telefono, u.email, u.user_level FROM users u LEFT JOIN paises n ON u.nacionalidad = n.id_pais LEFT JOIN generos g ON u.genero = g.id_genero WHERE id_usuario = ?';
+const selectUserByEmail = 'SELECT u.username, u.nombre, u.apellido, n.nombre AS nacionalidad, u.dni, g.genero, u.fecha_nacimiento, u.telefono, u.email, u.user_level FROM users u LEFT JOIN paises n ON u.nacionalidad = n.id_pais LEFT JOIN generos g ON u.genero = g.id_genero WHERE email = ?';
 const selectUserLoginOptionByEmail = 'SELECT username, password, user_level FROM users WHERE email = ?';
 const selectUserLoginOptionByUsername = 'SELECT username, password, user_level FROM users WHERE username = ?';
 const selectFullUserById = 'SELECT u.username, u.nombre, u.apellido, n.nombre AS nacionalidad, u.dni, g.genero, u.fecha_nacimiento, u.telefono, u.email, d.calle, d.numero, d.codigo_postal, pa.nombre AS pais, pr.nombre AS provincia, c.nombre AS ciudad, l.nombre AS localidad, u.user_level, u.fecha_registro  FROM users u LEFT JOIN generos g ON u.genero = g.id_genero LEFT JOIN paises n ON u.nacionalidad = n.id_pais LEFT JOIN direcciones d ON u.id_usuario = d.id_usuario LEFT JOIN paises pa ON d.id_pais = pa.id_pais LEFT JOIN provincias pr ON d.id_provincia = pr.id_provincia LEFT JOIN ciudades c ON d.id_ciudad = c.id_ciudad LEFT JOIN localidades l ON d.id_localidad = l.id_localidad WHERE u.id_usuario = ?';
@@ -145,6 +146,20 @@ async function getUserById(id) {
     }
 };
 
+async function getUserByEmail(email) {
+    try {
+        const rows = await pool.query(selectUserByEmail, email);
+        if (rows.length > 0) {
+            return rows[0];
+        } else {
+            return null;
+        }
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+
 async function getUserLoginOptionByEmail(email) {
     try {
         const rows = await pool.query(selectUserLoginOptionByEmail, email);
@@ -189,7 +204,7 @@ async function getUserIdByEmail(email) {
 
 async function getUserByEmailOrDni(email, dni) {
     try {
-        const rows = await pool.query(selectUserIdByEmail, [email, dni]);
+        const rows = await pool.query(selectUserByEmailOrDni, [email, dni]);
         if (rows.length > 0) {
             return rows[0];
         } else {
@@ -326,6 +341,7 @@ export const methods = {
     getUsuariosByLevel,
     getSeccionDeUsuariosByLevel,
     getUserById,
+    getUserByEmail,
     getUserLoginOptionByEmail,
     getUserLoginOptionByUsername,
     getUserIdByEmail,
