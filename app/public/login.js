@@ -8,7 +8,7 @@ document.getElementById("login-form").addEventListener("submit",async (e)=>{
         method: "POST",
         headers:{
             "content-Type":"application/json",
-            "plataform" : "web"
+            "plataform":"web"
         },
         body: JSON.stringify({
             email, password

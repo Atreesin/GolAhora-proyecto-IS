@@ -5,7 +5,9 @@ import { methods as dbUserQuery } from '../db/dbUserQueries.js'
 
 async function revisarCookie(req,res) {
     try {
+        
         const cookieJWT = obtenerCookie(req);
+        
         const decodificada = decodificarCookie(cookieJWT);
         
         const email = decodificada.email;
@@ -39,14 +41,14 @@ async function comprobarAdmin(req) {
 
 function obtenerCookie(req){
     
-    if (req.headers.plataform === "web") {
+    if (req.headers.cookie) {
         return req.headers.cookie.split("; ").find(cookie => cookie.startsWith("jwt=")).slice(4);
     }
     if (req.headers.plataform === "windows") {
-        return req.headers.authorization
+        return req.headers.authorization;
     }
     if(req.headers.plataform != "web" && req.headers.plataform != "windows"){
-        return ""
+        return "error"
     }
 }
 

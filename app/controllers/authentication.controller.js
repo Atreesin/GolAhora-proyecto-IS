@@ -47,9 +47,7 @@ async function login(req, res) {
         expires: new Date(Date.now() + JWT_COOKIE_EXPIRES * 24 * 60 * 1000),
         path: "/"
     }
-
     
-
     if (req.headers.plataform === "web") {
         res.cookie("jwt", token, cookieOpption);
         res.send({ status: "ok", message: "Usuario loggeado", redirect: "/profile" })

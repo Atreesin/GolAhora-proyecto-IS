@@ -40,7 +40,7 @@ app.use(clienteRoutes);
 app.use(cors());
 
 //rutas
-//app.get("/", (req,res) => res.send("yluminus"));
+
 
 app.get("/agregarPais/:pais", async (req, res) => await lugarController.nuevoPais(req, res));
 app.get("/buscarOagregarPais/:pais", async (req, res) => await lugarController.idPais(req, res))

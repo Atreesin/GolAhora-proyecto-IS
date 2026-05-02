@@ -8,8 +8,9 @@ async function soloAdmin(req, res, next) {
 }
 
 async function soloUsers(req, res, next) {
+    
     const logeado = await cookieHelper.revisarCookie(req);
-    console.log(logeado)
+    
     if (logeado) return next();
     
     const now = new Date(Date.now());
