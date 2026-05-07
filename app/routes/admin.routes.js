@@ -12,6 +12,8 @@ router.get("/user/:useriId", (req, res) => res.sendFile(__dirname + "/pages/user
 //router.get("/verificar/:token", authentication.verificarCuenta)
 */
 router.get("/admin", authorization.soloAdmin, (req, res) => res.sendFile(__dirname + "/pages/admin/admin.html"));
+router.get("/admin/clientes", authorization.soloAdmin, (req, res) => res.sendFile(__dirname + "/pages/admin/gestion_clientes.html"));
+
 
 
 export default router

@@ -6,7 +6,7 @@ const insertProvincia = 'INSERT INTO provincias SET ?';
 const insertCiudad = 'INSERT INTO ciudades SET ?';
 const insertLocalidad = 'INSERT INTO localidades SET ?';
 
-//consultar datos de usuario
+//consultar
 const selectNombrePaises = 'SELECT nombre FROM paises ORDER BY nombre ASC';
 const selectNombreProvincias = 'SELECT nombre FROM provincias ORDER BY nombre ASC';
 const selectNombreCiudades = 'SELECT nombre FROM ciudades ORDER BY nombre ASC';
@@ -27,6 +27,12 @@ const selectLocalidadByNombreYIdCiudad = 'SELECT * FROM localidades WHERE nombre
 const selectProvinciasByPais = 'SELECT pr.id_provincia, pr.nombre, pa.nombre AS pais FROM provincias pr LEFT JOIN paises pa ON pr.id_pais = pa.id_pais WHERE pa.nombre = ?';
 const selectCiudadesByProvincia = 'SELECT c.id_ciudad, c.nombre, p.nombre AS provincia FROM ciudades c LEFT JOIN provincias p ON c.id_provincia = p.id_provincia WHERE p.nombre = ?';
 const selectLocalidadesByLocalidad = 'SELECT l.id_localidad, l.nombre, c.nombre ciudad AS  FROM localidades l LEFT JOIN ciudades c ON l.id_ciudad = c.id_ciudad WHERE c.nombre = ?';
+
+//info completa de localidad
+const selectFullLocalidades = 'SELECT pa.nombre as pais, pr.nombre as provincia, c.nombre as ciudad, l.nombre as localidad FROM localidades l LEFT JOIN ciudades c ON l.id_ciudad = c.id_ciudad LEFT JOIN provincias pr ON c.id_provincia = pr.id_provincia LEFT JOIN paises pa ON pa.id_pais = pr.id_pais ORDER BY pa.nombre ASC, pr.nombre ASC, c.nombre ASC, l.nombre ASC';
+const selectFullLocalidadById = 'SELECT pa.nombre as pais, pr.nombre as provincia, c.nombre as ciudad, l.nombre as localidad FROM localidades l LEFT JOIN ciudades c ON l.id_ciudad = c.id_ciudad LEFT JOIN provincias pr ON c.id_provincia = pr.id_provincia LEFT JOIN paises pa ON pa.id_pais = pr.id_pais WHERE l.id_localidad = ?';
+const selectFullLocalidadByNombre = 'SELECT pa.nombre as pais, pr.nombre as provincia, c.nombre as ciudad, l.nombre as localidad FROM localidades l LEFT JOIN ciudades c ON l.id_ciudad = c.id_ciudad LEFT JOIN provincias pr ON c.id_provincia = pr.id_provincia LEFT JOIN pises pa ON pa.id_pais = pr.id_pais WHERE l.nombre = ?';
+
 
 //registrar
 async function agregarPais(pais) {
@@ -115,7 +121,7 @@ async function getNombreLocalidades() {
 
 async function getProvincias() {
     try {
-        const rows = await pool.query(selectProvincias, []);
+        const rows = await pool.query(selectProvincias);
         if (rows.length > 0) {
             return rows;
         } else {
@@ -129,7 +135,7 @@ async function getProvincias() {
 
 async function getCiudades() {
     try {
-        const rows = await pool.query(selectCiudades, []);
+        const rows = await pool.query(selectCiudades);
         if (rows.length > 0) {
             return rows;
         } else {
@@ -143,7 +149,7 @@ async function getCiudades() {
 
 async function getLocalidades() {
     try {
-        const rows = await pool.query(selectLocalidades, []);
+        const rows = await pool.query(selectLocalidades);
         if (rows.length > 0) {
             return rows;
         } else {
@@ -155,6 +161,20 @@ async function getLocalidades() {
     }
 };
 
+
+async function getFullInfoLocalidades() {
+    try {
+        const rows = await pool.query(selectFullLocalidades);
+        if (rows.length > 0) {
+            return rows;
+        } else {
+            return null;
+        }
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
 
 async function getPaisPorNombre(pais) {
     try {
@@ -202,9 +222,9 @@ async function getCiudadPorNombre(ciudad) {
     try {
         const rows = await pool.query(selectCiudadByNombre, [ciudad]);
         if (rows.length > 0) {
-            return rows[0]; 
+            return rows[0];
         } else {
-            return null; 
+            return null;
         }
     } catch (err) {
         console.error(err);
@@ -212,13 +232,13 @@ async function getCiudadPorNombre(ciudad) {
     }
 };
 
-async function getCiudadPorNombreYIdProvincia(ciudad,id_provincia) {
+async function getCiudadPorNombreYIdProvincia(ciudad, id_provincia) {
     try {
         const rows = await pool.query(selectCiudadByNombreYIdProvincia, [ciudad, id_provincia]);
         if (rows.length > 0) {
-            return rows[0]; 
+            return rows[0];
         } else {
-            return null; 
+            return null;
         }
     } catch (err) {
         console.error(err);
@@ -230,9 +250,9 @@ async function getLocalidadPorNombre(localidad) {
     try {
         const rows = await pool.query(selectLocalidadByNombre, [localidad]);
         if (rows.length > 0) {
-            return rows[0]; 
+            return rows[0];
         } else {
-            return null; 
+            return null;
         }
     } catch (err) {
         console.error(err);
@@ -244,9 +264,9 @@ async function getLocalidadPorNombreYIdCiudad(localidad, id_ciudad) {
     try {
         const rows = await pool.query(selectLocalidadByNombreYIdCiudad, [localidad, id_ciudad]);
         if (rows.length > 0) {
-            return rows[0]; 
+            return rows[0];
         } else {
-            return null; 
+            return null;
         }
     } catch (err) {
         console.error(err);
@@ -274,5 +294,6 @@ export const methods = {
     getCiudadPorNombre,
     getCiudadPorNombreYIdProvincia,
     getLocalidadPorNombre,
-    getLocalidadPorNombreYIdCiudad
+    getLocalidadPorNombreYIdCiudad,
+    getFullInfoLocalidades
 }

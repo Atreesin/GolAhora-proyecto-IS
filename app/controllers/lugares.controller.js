@@ -53,6 +53,12 @@ async function nombreLocalidades(req, res){
     return res.send(localidades);
 };
 
+async function fullInfoLocalidades(req, res){
+    const localidades = await dbLugarQuery.getFullInfoLocalidades();
+    
+    return res.send(localidades);
+}
+
 async function idPais(req, res){
     
     const paisBuscado = await dbLugarQuery.getPaisPorNombre(req.params.pais);
@@ -121,6 +127,7 @@ export const methods = {
     nombreProvincias,
     nombreCiudades,
     nombreLocalidades,
+    fullInfoLocalidades
     /*
     paises,
     provincias,

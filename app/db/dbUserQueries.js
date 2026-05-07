@@ -1,5 +1,5 @@
-import pool from "./databaseConnection.js"
-
+import pool from "./databaseConnection.js";
+import {methods as helper} from "../helpers/utilsHelper.js";
 //registrar usuario
 const insertUser = 'INSERT INTO users SET ?';
 //registrar direccion de usuario
@@ -41,11 +41,12 @@ const selectUserByEmail = 'SELECT u.username, u.nombre, u.apellido, n.nombre AS 
 const selectUserLoginOptionByEmail = 'SELECT username, password, user_level FROM users WHERE email = ?';
 const selectUserLoginOptionByUsername = 'SELECT username, password, user_level FROM users WHERE username = ?';
 const selectFullUserById = 'SELECT u.username, u.nombre, u.apellido, n.nombre AS nacionalidad, u.dni, g.genero, u.fecha_nacimiento, u.telefono, u.email, d.calle, d.numero, d.codigo_postal, pa.nombre AS pais, pr.nombre AS provincia, c.nombre AS ciudad, l.nombre AS localidad, u.user_level, u.fecha_registro  FROM users u LEFT JOIN generos g ON u.genero = g.id_genero LEFT JOIN paises n ON u.nacionalidad = n.id_pais LEFT JOIN direcciones d ON u.id_usuario = d.id_usuario LEFT JOIN paises pa ON d.id_pais = pa.id_pais LEFT JOIN provincias pr ON d.id_provincia = pr.id_provincia LEFT JOIN ciudades c ON d.id_ciudad = c.id_ciudad LEFT JOIN localidades l ON d.id_localidad = l.id_localidad WHERE u.id_usuario = ?';
+const selectFullUserByEmail = 'SELECT u.username, u.nombre, u.apellido, n.nombre AS nacionalidad, u.dni, g.genero, u.fecha_nacimiento, u.telefono, u.email, d.calle, d.numero, d.codigo_postal, pa.nombre AS pais, pr.nombre AS provincia, c.nombre AS ciudad, l.nombre AS localidad, u.user_level, u.fecha_registro  FROM users u LEFT JOIN generos g ON u.genero = g.id_genero LEFT JOIN paises n ON u.nacionalidad = n.id_pais LEFT JOIN direcciones d ON u.id_usuario = d.id_usuario LEFT JOIN paises pa ON d.id_pais = pa.id_pais LEFT JOIN provincias pr ON d.id_provincia = pr.id_provincia LEFT JOIN ciudades c ON d.id_ciudad = c.id_ciudad LEFT JOIN localidades l ON d.id_localidad = l.id_localidad WHERE u.email = ?';
 const selectFullUsersByDni = 'SELECT u.username, u.nombre, u.apellido, n.nombre AS nacionalidad, u.dni, g.genero, u.fecha_nacimiento, u.telefono, u.email, d.calle, d.numero, d.codigo_postal, pa.nombre AS pais, pr.nombre AS provincia, c.nombre AS ciudad, l.nombre AS localidad, u.user_level, u.fecha_registro  FROM users u LEFT JOIN generos g ON u.genero = g.id_genero LEFT JOIN paises n ON u.nacionalidad = n.id_pais LEFT JOIN direcciones d ON u.id_usuario = d.id_usuario LEFT JOIN paises pa ON d.id_pais = pa.id_pais LEFT JOIN provincias pr ON d.id_provincia = pr.id_provincia LEFT JOIN ciudades c ON d.id_ciudad = c.id_ciudad LEFT JOIN localidades l ON d.id_localidad = l.id_localidad WHERE u.dni LIKE ? ORDER BY u.apellido, u.nombre';
 const selectFullUsersByApellido = 'SELECT u.username, u.nombre, u.apellido, n.nombre AS nacionalidad, u.dni, g.genero, u.fecha_nacimiento, u.telefono, u.email, d.calle, d.numero, d.codigo_postal, pa.nombre AS pais, pr.nombre AS provincia, c.nombre AS ciudad, l.nombre AS localidad, u.user_level, u.fecha_registro  FROM users u LEFT JOIN generos g ON u.genero = g.id_genero LEFT JOIN paises n ON u.nacionalidad = n.id_pais LEFT JOIN direcciones d ON u.id_usuario = d.id_usuario LEFT JOIN paises pa ON d.id_pais = pa.id_pais LEFT JOIN provincias pr ON d.id_provincia = pr.id_provincia LEFT JOIN ciudades c ON d.id_ciudad = c.id_ciudad LEFT JOIN localidades l ON d.id_localidad = l.id_localidad WHERE u.apellido LIKE ? ORDER BY u.apellido, u.nombre';
 //consultar direcciones
-const selectDireccionByid ='SELECT d.calle, d.numero, d.codigo_postal, pa.nombre AS pais, pr.nombre AS provincia, l.nombre AS localidad FROM direcciones d LEFT JOIN paises pa ON d.id_pais = pa.id_pais LEFT JOIN provincias pr ON d.id_provincia = pr.id_provincia LEFT JOIN ciudades c ON d.id_ciudad = c.id_ciudad LEFT JOIN localidades l ON d.id_localidad = l.id_localidad WHERE d.id_direccion = ?';
-const selectDireccionByUser ='SELECT d.calle, d.numero, d.codigo_postal, pa.nombre AS pais, pr.nombre AS provincia, l.nombre AS localidad FROM direcciones d LEFT JOIN paises pa ON d.id_pais = pa.id_pais LEFT JOIN provincias pr ON d.id_provincia = pr.id_provincia LEFT JOIN ciudades c ON d.id_ciudad = c.id_ciudad LEFT JOIN localidades l ON d.id_localidad = l.id_localidad WHERE d.id_usuario = ?';
+const selectDireccionByid = 'SELECT d.calle, d.numero, d.codigo_postal, pa.nombre AS pais, pr.nombre AS provincia, l.nombre AS localidad FROM direcciones d LEFT JOIN paises pa ON d.id_pais = pa.id_pais LEFT JOIN provincias pr ON d.id_provincia = pr.id_provincia LEFT JOIN ciudades c ON d.id_ciudad = c.id_ciudad LEFT JOIN localidades l ON d.id_localidad = l.id_localidad WHERE d.id_direccion = ?';
+const selectDireccionByUser = 'SELECT d.calle, d.numero, d.codigo_postal, pa.nombre AS pais, pr.nombre AS provincia, l.nombre AS localidad FROM direcciones d LEFT JOIN paises pa ON d.id_pais = pa.id_pais LEFT JOIN provincias pr ON d.id_provincia = pr.id_provincia LEFT JOIN ciudades c ON d.id_ciudad = c.id_ciudad LEFT JOIN localidades l ON d.id_localidad = l.id_localidad WHERE d.id_usuario = ?';
 //eliminar
 
 //utils
@@ -76,10 +77,11 @@ async function getCantidadUsuarios() {
     }
 };
 
-async function getUsuarios(){
+async function getUsuarios() {
     try {
         const rows = await pool.query(selectAllUsers);
         if (rows.length > 0) {
+            
             return rows;
         } else {
             return null;
@@ -90,7 +92,7 @@ async function getUsuarios(){
     }
 };
 
-async function getSeccionDeUsuarios(cantidad, desde){
+async function getSeccionDeUsuarios(cantidad, desde) {
     try {
         const rows = await pool.query(selectAllUsersLimit, [cantidad, desde]);
         if (rows.length > 0) {
@@ -104,7 +106,7 @@ async function getSeccionDeUsuarios(cantidad, desde){
     }
 };
 
-async function getUsuariosByLevel(user_level){
+async function getUsuariosByLevel(user_level) {
     try {
         const rows = await pool.query(selectAllUserByLevel, user_level);
         if (rows.length > 0) {
@@ -118,7 +120,7 @@ async function getUsuariosByLevel(user_level){
     }
 };
 
-async function getSeccionDeUsuariosByLevel(user_level, cantidad, desde){
+async function getSeccionDeUsuariosByLevel(user_level, cantidad, desde) {
     try {
         const rows = await pool.query(selectUsersByLevelLimit, [user_level, cantidad, desde]);
         if (rows.length > 0) {
@@ -150,6 +152,7 @@ async function getUserByEmail(email) {
     try {
         const rows = await pool.query(selectUserByEmail, email);
         if (rows.length > 0) {
+            rows[0].user_level = helper.tipoUsuario(rows[0].user_level);
             return rows[0];
         } else {
             return null;
@@ -216,7 +219,6 @@ async function getUserByEmailOrDni(email, dni) {
     }
 };
 
-
 async function getUsersByGenero(genero) {
     try {
         const rows = await pool.query(selectUsersByGenero, genero);
@@ -246,7 +248,7 @@ async function getUsersByNacionalidad(nacionalidad) {
 }
 
 //full user
-async function getFullUserById(id){
+async function getFullUserById(id) {
     try {
         const rows = await pool.query(selectFullUserById, id);
         if (rows.length > 0) {
@@ -260,7 +262,22 @@ async function getFullUserById(id){
     }
 };
 
-async function getFullUsersByDni(dni){
+async function getFullUserByEmail(email) {
+    try {
+        const rows = await pool.query(selectFullUserByEmail, email);
+        if (rows.length > 0) {
+            rows[0].user_level = helper.tipoUsuario(rows[0].user_level);
+            return rows[0];
+        } else {
+            return null;
+        }
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+
+async function getFullUsersByDni(dni) {
     try {
         const rows = await pool.query(selectFullUsersByDni, dni);
         if (rows.length > 0) {
@@ -303,7 +320,7 @@ async function getDireccionById(id) {
     }
 };
 
-async function getDireccionByUserId(id_usuario){
+async function getDireccionByUserId(id_usuario) {
     try {
         const rows = await pool.query(selectDireccionByUser, id_usuario);
         if (rows.length > 0) {
@@ -324,7 +341,7 @@ async function getNextUserId() {
 
     const result = await pool.query(nextUserId);
     console.log(result);
-    if (result.length > 0){  
+    if (result.length > 0) {
 
         return result[0].id_usuario + 1;
     }
@@ -348,6 +365,7 @@ export const methods = {
     getUsersByGenero,
     getUsersByNacionalidad,
     getFullUserById,
+    getFullUserByEmail,
     getFullUsersByDni,
     getFullUsersByApelido,
     getDireccionById,

@@ -1,7 +1,8 @@
 import bcryptjs from "bcryptjs";
 import jsonwebtoken from "jsonwebtoken";
 
-import { JWT_SECRET, JWT_EXPIRATION, JWT_COOKIE_EXPIRES, CLIENT_USER_LEVEL } from "../config.js";
+import { JWT_SECRET, JWT_EXPIRATION, JWT_COOKIE_EXPIRES, CLIENT_USER_LEVEL, ADMIN_USER_LEVEL } from "../config.js";
+import { methods as validator} from "../helpers/utilsHelper.js";
 import { methods as dbUserQuery } from "../db/dbUserQueries.js";
 import { methods as dbLugarQuery } from "../db/dbLugaresQueries.js";
 import { methods as dbGeneroQuery } from "../db/dbGenerosQueries.js";
@@ -29,13 +30,13 @@ async function login(req, res) {
     const usuarioARevisar = await dbUserQuery.getUserLoginOptionByEmail(email);
 
     if (!usuarioARevisar) {
-        return res.status(400).send({ status: "Error", message: "Login incorrecto" })
+        return res.status(401).send({ status: "Error", message: "Login incorrecto" })
     }
 
     const loginCorrecto = await bcryptjs.compare(password, usuarioARevisar.password);
 
     if (!loginCorrecto) {
-        return res.status(400).send({ status: "Error", message: "Login incorrecto" })
+        return res.status(401).send({ status: "Error", message: "Login incorrecto" })
     }
     
     const token = jsonwebtoken.sign(
@@ -53,6 +54,9 @@ async function login(req, res) {
         res.send({ status: "ok", message: "Usuario loggeado", redirect: "/profile" })
     }
     if (req.headers.plataform === "windows") {
+        if(usuarioARevisar.user_level != ADMIN_USER_LEVEL){
+            return res.status(403).send({ status: "Error", message: "Acceso denegado" })
+        }
         res.send({ status: "ok", message: "Usuario loggeado", token: token, expires: cookieOpption.expires })
     }
     if(req.headers.plataform != "web" && req.headers.plataform != "windows"){
@@ -89,12 +93,28 @@ async function register(req, res) {
     const localidad = req.body.localidad;
 
     if (!nombre || !apellido || !dni || !genero || !fecha_nacimiento || !email || !telefono || !password || !confirm_password || !calle || !numero || !localidad || !ciudad || !provincia || !pais) {
-        console.log(provincia);
+        
         return res.status(400).send({ status: "Error", message: "Algunos campos estan vacios" })
     }
 
 
-    if (!esPasswordFuerte(password)) {
+    if (!validator.validarNombreApellido(nombre)) {
+        return res.status(400).send({ status: "Error", message: "Ingrese un Nombre valido"})
+    }
+    if (!validator.validarNombreApellido(apellido)) {
+        return res.status(400).send({ status: "Error", message: "Ingrese un Apellido valido"})
+    }
+    if (!validator.validarDNI(dni)) {
+        return res.status(400).send({ status: "Error", message: "Ingrese un DNI valido"})
+    }
+    if (!validator.validarFechaNacimiento(fecha_nacimiento)) {
+        return res.status(400).send({ status: "Error", message: "Ingrese una fecha de nacimiento valida"})
+    }
+    if (!validator.validarTelefono(telefono)) {
+        return res.status(400).send({ status: "Error", message: "Ingrese un número de telefono valido"})
+    }
+    
+    if (!validator.esPasswordFuerte(password)) {
         return res.status(400).send({
             status: "Error",
             message: "La contraseña es muy débil"
@@ -102,7 +122,10 @@ async function register(req, res) {
     }
     if (!(password === confirm_password)) {
 
-        return res.status(400).send({ status: "Error", message: "Las contraseñas no coinciden" })
+        return res.status(400).send({ 
+            status: "Error",
+            message: "Las contraseñas no coinciden" 
+        });
     }
 
     const usuarioExiste = await dbUserQuery.getUserByEmailOrDni(email, dni);
@@ -260,7 +283,7 @@ async function verificarCuenta(req, res) {
         res.redirect("/")
     }
 }
-*/
+
 
 function esPasswordFuerte(password) {
     const tieneMayuscula = /[A-Z]/.test(password);
@@ -271,7 +294,7 @@ function esPasswordFuerte(password) {
 
     return tieneMayuscula && tieneMinuscula && tieneNumero && tieneEspecial && longitudValida;
 }
-
+*/
 export const methods = {
     login,
     register

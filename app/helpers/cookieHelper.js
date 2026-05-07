@@ -56,8 +56,6 @@ function decodificarCookie(cookieJWT) {
     return jsonwebtoken.verify(cookieJWT, JWT_SECRET);
 }
 
-
-
 export const methods = {
     revisarCookie,
     comprobarAdmin,
