@@ -18,6 +18,7 @@ export const EMAIL_SECURE = process.env.EMAIL_SECURE
 export const EMAIL_USER = process.env.EMAIL_USER
 export const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD
 export const DEFAULT_PASSWORD = process.env.DEFAULT_PASSWORD
+export const EMAIL_SENDGRID_KEY = process.env.EMAIL_SENDGRID_KEY
 
 
 export const database = {
