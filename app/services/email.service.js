@@ -1,9 +1,12 @@
 import nodemailer from "nodemailer";
-import { EMAIL_USER, EMAIL_PASSWORD } from "../config.js";
+import { EMAIL_USER, EMAIL_PASSWORD, EMAIL_HOST, EMAIL_PORT, EMAIL_SECURE } from "../config.js";
 import e from "connect-flash";
 
 const transporter = nodemailer.createTransport({
-  service: "gmail", // Podés usar "Outlook", "Yahoo", o SMTP de tu dominio
+  //service: "gmail", // Podés usar "Outlook", "Yahoo", o SMTP de tu dominio
+  host: EMAIL_HOST,
+  PORT: EMAIL_PORT,
+  SECURE: EMAIL_SECURE,
   auth: {
     user: EMAIL_USER, // tu correo
     pass: EMAIL_PASSWORD  // App Password

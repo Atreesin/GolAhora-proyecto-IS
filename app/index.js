@@ -55,7 +55,6 @@ app.use("/api-docs", swaggerUi.serve, (req, res, next) => {
     },
     ...swaggerDocument.servers
   ];
-  console.log(spec)
   swaggerUi.setup(spec)(req, res, next);
 });
 
