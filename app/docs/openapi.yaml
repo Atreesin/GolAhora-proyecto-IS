@@ -46,7 +46,7 @@ components:
       in: cookie
       name: jwt
       description: Autenticación vía cookie JWT (plataform=web)
-    authotization:
+    authorization:
       type: apiKey
       in: header
       name: authorization
