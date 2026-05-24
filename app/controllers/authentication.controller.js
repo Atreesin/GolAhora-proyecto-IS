@@ -132,7 +132,7 @@ async function register(req, res) {
     apellido = validator.capitalizarPalabras(apellido);
     nacionalidad = validator.capitalizarPalabras(nacionalidad);
     genero = validator.capitalizarPalabras(genero);
-    telegono = validator.normalizarTelefono(telefono);
+    telefono = validator.normalizarTelefono(telefono);
     email = email.toLowerCase();
     calle = validator.capitalizarPalabras(calle);
     pais = validator.capitalizarPalabras(pais);
