@@ -1,11 +1,12 @@
 import bcryptjs from "bcryptjs";
 import jsonwebtoken from "jsonwebtoken";
 
-import { JWT_SECRET, JWT_EXPIRATION, JWT_COOKIE_EXPIRES, CLIENT_USER_LEVEL, ADMIN_USER_LEVEL } from "../config.js";
-import { methods as validator} from "../helpers/utilsHelper.js";
+import { JWT_SECRET, JWT_EXPIRATION, JWT_COOKIE_EXPIRES, CLIENT_USER_LEVEL, ADMIN_USER_LEVEL, DEFAULT_PASSWORD } from "../config.js";
+import { methods as validator } from "../helpers/utilsHelper.js";
 import { methods as dbUserQuery } from "../db/dbUserQueries.js";
 import { methods as dbLugarQuery } from "../db/dbLugaresQueries.js";
 import { methods as dbGeneroQuery } from "../db/dbGenerosQueries.js";
+import { enviarBienvenidaEmail } from '../services/email.service.js';
 
 /**
 * Realiza el login de un usuario comprobando si existe usuario, si el usuario esta verificado,
@@ -38,9 +39,9 @@ async function login(req, res) {
     if (!loginCorrecto) {
         return res.status(401).send({ status: "Error", message: "Login incorrecto" })
     }
-    
+
     const token = jsonwebtoken.sign(
-        { email: email},
+        { email: email },
         JWT_SECRET,
         { expiresIn: JWT_EXPIRATION });
 
@@ -48,18 +49,18 @@ async function login(req, res) {
         expires: new Date(Date.now() + JWT_COOKIE_EXPIRES * 24 * 60 * 1000),
         path: "/"
     }
-    
+
     if (req.headers.plataform === "web") {
         res.cookie("jwt", token, cookieOpption);
         res.send({ status: "ok", message: "Usuario loggeado", redirect: "/profile" })
     }
     if (req.headers.plataform === "windows") {
-        if(usuarioARevisar.user_level != ADMIN_USER_LEVEL){
+        if (usuarioARevisar.user_level != ADMIN_USER_LEVEL) {
             return res.status(403).send({ status: "Error", message: "Acceso denegado" })
         }
         res.send({ status: "ok", message: "Usuario loggeado", token: token, expires: cookieOpption.expires })
     }
-    if(req.headers.plataform != "web" && req.headers.plataform != "windows"){
+    if (req.headers.plataform != "web" && req.headers.plataform != "windows") {
         res.status(400).send({ status: "Error", message: "Error de solicitud" })
     }
 }
@@ -74,66 +75,77 @@ async function login(req, res) {
  */
 async function register(req, res) {
 
-    const nombre = req.body.nombre;
-    const apellido = req.body.apellido;
-    const nacionalidad = req.body.nacionalidad;
+    let nombre = req.body.nombre;
+    let apellido = req.body.apellido;
+    let nacionalidad = req.body.nacionalidad;
     const dni = req.body.dni;
-    const genero = req.body.genero;
+    let genero = req.body.genero;
     const fecha_nacimiento = req.body.fecha_nacimiento;
-    const telefono = req.body.telefono;
-    const email = req.body.email;
+    let telefono = req.body.telefono;
+    let email = req.body.email;
     const password = req.body.password;
     const confirm_password = req.body.confirm_password;
-    const calle = req.body.calle;
-    const numero = req.body.numero;
+    let calle = req.body.calle;
+    let numero = req.body.numero;
     const codigo_postal = req.body.codigo_postal;
-    const pais = req.body.pais;
-    const provincia = req.body.provincia;
-    const ciudad = req.body.ciudad;
-    const localidad = req.body.localidad;
+    let pais = req.body.pais;
+    let provincia = req.body.provincia;
+    let ciudad = req.body.ciudad;
+    let localidad = req.body.localidad;
 
-    if (!nombre || !apellido || !dni || !genero || !fecha_nacimiento || !email || !telefono || !password || !confirm_password || !calle || !numero || !localidad || !ciudad || !provincia || !pais) {
-        
+    if (!nombre || !apellido || !dni || !genero || !fecha_nacimiento || !email || !telefono || ((!password || !confirm_password) && req.headers.plataform != "windows") || !calle || !numero || !localidad || !ciudad || !provincia || !pais) {
+
         return res.status(400).send({ status: "Error", message: "Algunos campos estan vacios" })
     }
-
-
     if (!validator.validarNombreApellido(nombre)) {
-        return res.status(400).send({ status: "Error", message: "Ingrese un Nombre valido"})
+        return res.status(400).send({ status: "Error", message: "Ingrese un Nombre valido" })
     }
     if (!validator.validarNombreApellido(apellido)) {
-        return res.status(400).send({ status: "Error", message: "Ingrese un Apellido valido"})
+        return res.status(400).send({ status: "Error", message: "Ingrese un Apellido valido" })
     }
     if (!validator.validarDNI(dni)) {
-        return res.status(400).send({ status: "Error", message: "Ingrese un DNI valido"})
+        return res.status(400).send({ status: "Error", message: "Ingrese un DNI valido" })
     }
     if (!validator.validarFechaNacimiento(fecha_nacimiento)) {
-        return res.status(400).send({ status: "Error", message: "Ingrese una fecha de nacimiento valida"})
+        return res.status(400).send({ status: "Error", message: "Ingrese una fecha de nacimiento valida" })
     }
     if (!validator.validarTelefono(telefono)) {
-        return res.status(400).send({ status: "Error", message: "Ingrese un número de telefono valido"})
+        return res.status(400).send({ status: "Error", message: "Ingrese un número de telefono valido" })
     }
-    
-    if (!validator.esPasswordFuerte(password)) {
-        return res.status(400).send({
-            status: "Error",
-            message: "La contraseña es muy débil"
-        });
-    }
-    if (!(password === confirm_password)) {
+    if (req.headers.plataform != "windows") {
+        if (!validator.esPasswordFuerte(password)) {
+            return res.status(400).send({
+                status: "Error",
+                message: "La contraseña es muy débil"
+            });
+        }
+        if (!(password === confirm_password)) {
 
-        return res.status(400).send({ 
-            status: "Error",
-            message: "Las contraseñas no coinciden" 
-        });
+            return res.status(400).send({
+                status: "Error",
+                message: "Las contraseñas no coinciden"
+            });
+        }
     }
+
+    nombre = validator.capitalizarPalabras(nombre);
+    apellido = validator.capitalizarPalabras(apellido);
+    nacionalidad = validator.capitalizarPalabras(nacionalidad);
+    genero = validator.capitalizarPalabras(genero);
+    telegono = validator.normalizarTelefono(telefono);
+    email = email.toLowerCase();
+    calle = validator.capitalizarPalabras(calle);
+    pais = validator.capitalizarPalabras(pais);
+    provincia = validator.capitalizarPalabras(provincia);
+    ciudad = validator.capitalizarPalabras(ciudad);
+    localidad = validator.capitalizarPalabras(localidad);
 
     const usuarioExiste = await dbUserQuery.getUserByEmailOrDni(email, dni);
     if (usuarioExiste) {
         return res.status(400).send({ status: "Error", message: "Este usuario ya existe" })
     }
     const salt = await bcryptjs.genSalt(8);
-    const hashPassword = await bcryptjs.hash(password, salt);
+    const hashPassword = await bcryptjs.hash(password || DEFAULT_PASSWORD, salt);
     const tokenVerificacion = jsonwebtoken.sign(
         { email: email },
         JWT_SECRET,
@@ -169,22 +181,7 @@ async function register(req, res) {
     //Generar el username basado en el proximo Id
     const username = generateUsername(nextUserId);
 
-
-    const nuevoUsuario = {
-        username,
-        nombre,
-        apellido,
-        nacionalidad: idNacionalidad.id_pais,
-        dni,
-        genero: idGenero,
-        fecha_nacimiento,
-        telefono,
-        email,
-        password: hashPassword,
-        user_level: CLIENT_USER_LEVEL
-    }
-    await dbUserQuery.agregarUsuario(nuevoUsuario);
-    const idNuevoUsuario = await dbUserQuery.getUserIdByEmail(email);
+    
     /**  posible refactor **/
     //pais
     let idPais = await dbLugarQuery.getPaisPorNombre(pais);
@@ -232,17 +229,33 @@ async function register(req, res) {
     /**  fin posible refactor **/
 
     const direccion = {
-        id_usuario: idNuevoUsuario,
         calle,
         numero,
         codigo_postal,
-        id_pais: idPais.id_pais,
-        id_provincia: idProvincia.id_provincia,
-        id_ciudad: idCiudad.id_ciudad,
         id_localidad: idLocalidad.id_localidad
     }
-    //AGREGO LA DIRECCION A UN USUARIO
-    await dbUserQuery.agregarDireccion(direccion);
+    //AGREGO LA DIRECCION
+    const direccionAgregada = await dbUserQuery.agregarDireccion(direccion);
+    
+    const nuevoUsuario = {
+        username,
+        user_level: CLIENT_USER_LEVEL,
+        nombre,
+        apellido,
+        email,
+        password: hashPassword,
+        fecha_nacimiento,
+        dni,
+        telefono,
+        id_direccion: direccionAgregada.insertId,
+        id_genero: idGenero,
+        id_nacionalidad: idNacionalidad.id_pais,
+        id_club: 1
+    }
+    await dbUserQuery.agregarUsuario(nuevoUsuario);
+
+    //ENVIAR MAIL DE CONFIRMACION
+    await enviarBienvenidaEmail(email, `${nuevoUsuario.nombre} ${nuevoUsuario.apellido}`)
     return res.status(201).send({ status: "ok", message: `Usuario ${nuevoUsuario.username} agregado`, redirect: "/" })
 }
 
@@ -284,16 +297,6 @@ async function verificarCuenta(req, res) {
     }
 }
 
-
-function esPasswordFuerte(password) {
-    const tieneMayuscula = /[A-Z]/.test(password);
-    const tieneMinuscula = /[a-z]/.test(password);
-    const tieneNumero = /\d/.test(password);
-    const tieneEspecial = /[@$!%*?&]/.test(password);
-    const longitudValida = password.length >= 8;
-
-    return tieneMayuscula && tieneMinuscula && tieneNumero && tieneEspecial && longitudValida;
-}
 */
 export const methods = {
     login,

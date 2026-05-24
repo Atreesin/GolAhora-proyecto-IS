@@ -1,42 +1,10 @@
 // src/routes/upload.routes.js
-import express from 'express';
-import multer from 'multer';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { v4 as uuidv4 } from 'uuid';
+import { Router } from "express";
+import { __dirname } from "../index.js";
 import { methods as authorization } from "../middlewares/authorization.js";
-// Necesario para __dirname en ES Modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { upload } from "../services/fileUpload.service.js";
 
-const router = express.Router();
-
-// Configuración de almacenamiento
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, '../uploads')); // carpeta donde se guardan
-  },
-  filename: function (req, file, cb) {
-    const extension = path.extname(file.originalname);
-    const nuevoNombre = uuidv4() + extension;
-    cb(null, Date.now() + '-' + nuevoNombre);
-    //cb(null, Date.now() + '-' + file.originalname);
-  }
-});
-
-/************************************************************************************************* */
-const tiposPermitidos = ['image/jpeg', 'image/png', 'application/pdf'];
-
-const upload = multer({
-  storage,
-  fileFilter: (req, file, cb) => {
-    if (tiposPermitidos.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error('Tipo de archivo no permitido'));
-    }
-  }
-});
+const router = Router()
 
 /************************************************************************************************* */
 /**const upload = multer({ storage });
@@ -44,9 +12,14 @@ const upload = multer({
 // Ruta POST para subir archivo
 router.post('/api/upload', authorization.soloAdmin, upload.single('archivo'), (req, res) => {
   try {
+    const nombreArchivo = req.file.filename;
+
+    // aca deberia guardar el nombre del archivo en la base de datos 
+
+
     res.json({
       mensaje: 'Archivo subido correctamente',
-      nombre: req.file.filename
+      nombre: nombreArchivo
     });
   } catch (error) {
     res.status(500).json({ error: 'Error al subir archivo' });

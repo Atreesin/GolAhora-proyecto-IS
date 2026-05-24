@@ -67,7 +67,7 @@ async function getNombrePaises() {
     try {
         const rows = await pool.query(selectNombrePaises);
         if (rows.length > 0) {
-            return rows;
+            return rows.map(r => r.nombre);
         } else {
             return null;
         }
@@ -81,7 +81,7 @@ async function getNombreProvincias() {
     try {
         const rows = await pool.query(selectNombreProvincias);
         if (rows.length > 0) {
-            return rows;
+            return rows.map(r => r.nombre);
         } else {
             return null;
         }
@@ -95,7 +95,7 @@ async function getNombreCiudades() {
     try {
         const rows = await pool.query(selectNombreCiudades);
         if (rows.length > 0) {
-            return rows;
+            return rows.map(r => r.nombre);
         } else {
             return null;
         }
@@ -109,7 +109,7 @@ async function getNombreLocalidades() {
     try {
         const rows = await pool.query(selectNombreLocalidades);
         if (rows.length > 0) {
-            return rows;
+            return rows.map(r => r.nombre);
         } else {
             return null;
         }

@@ -17,7 +17,7 @@ async function getGeneros() {
     try {
         const rows = await pool.query(selectGeneros, []);
         if (rows.length > 0) {
-            return rows; // Devuelve todos los generos
+            return rows.map(r => r.genero); // Devuelve todos los generos
         } else {
             return null; // Usuario no encontrado
         }

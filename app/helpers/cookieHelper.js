@@ -3,13 +3,13 @@ import { JWT_SECRET, JWT_EXPIRATION, JWT_COOKIE_EXPIRES, ADMIN_USER_LEVEL } from
 import { methods as dbUserQuery } from '../db/dbUserQueries.js'
 
 
-async function revisarCookie(req,res) {
+async function revisarCookie(req, res) {
     try {
-        
+
         const cookieJWT = obtenerCookie(req);
-        
+
         const decodificada = decodificarCookie(cookieJWT);
-        
+
         const email = decodificada.email;
         const usuarioARevisar = await dbUserQuery.getUserLoginOptionByEmail(email);
         if (!usuarioARevisar) {
@@ -25,6 +25,7 @@ async function revisarCookie(req,res) {
 
 async function comprobarAdmin(req) {
     try {
+
         const cookieJWT = obtenerCookie(req);
         const decodificada = decodificarCookie(cookieJWT);
         const usuarioARevisar = await dbUserQuery.getUserLoginOptionByEmail(decodificada.email);
@@ -39,15 +40,22 @@ async function comprobarAdmin(req) {
     }
 }
 
-function obtenerCookie(req){
-    
+function obtenerCookie(req) {
+
+    if (req.headers["x-auth-token"] && req.headers.plataform === "web") {
+        return req.headers["x-auth-token"].slice(4);
+    }
     if (req.headers.cookie) {
+
         return req.headers.cookie.split("; ").find(cookie => cookie.startsWith("jwt=")).slice(4);
     }
     if (req.headers.plataform === "windows") {
+        
         return req.headers.authorization;
     }
-    if(req.headers.plataform != "web" && req.headers.plataform != "windows"){
+    
+
+    if (req.headers.plataform != "web" && req.headers.plataform != "windows") {
         return "error"
     }
 }

@@ -12,6 +12,10 @@ export const ADMIN_USER_LEVEL = process.env.ADMIN_USER_LEVEL
 export const CLIENT_USER_LEVEL = process.env.CLIENT_USER_LEVEL
 export const PROFESOR_USER_LEVEL = process.env.PROFESOR_USER_LEVEL
 export const ENTRENADOR_USER_LEVEL = process.env.ENTRENADOR_USER_LEVEL
+export const EMAIL_USER = process.env.EMAIL_USER
+export const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD
+export const DEFAULT_PASSWORD = process.env.DEFAULT_PASSWORD
+
 
 export const database = {
     host: process.env.DB_HOST,

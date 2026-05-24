@@ -17,3 +17,4 @@ router.get("/admin/clientes", authorization.soloAdmin, (req, res) => res.sendFil
 
 
 export default router
+

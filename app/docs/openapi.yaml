@@ -1,0 +1,661 @@
+openapi: 3.0.0
+info:
+  title: API Gol Ahora
+  version: 1.0.0
+  description: Documentación de rutas con control de acceso
+
+servers:
+  - url: https://golahora-proyecto-is.onrender.com/api
+    description: Producción
+  - url: http://localhost/api
+    description: Servidor local
+  - url: http://{ip}/api
+    description: Servidor red local
+    variables:
+      ip:
+        default: 192.168.100.66
+        description: Dirección IP del servidor
+
+
+tags:
+  - name: "Acceso: Usuarios"
+    description: Endpoints disponibles solo para usuarios autenticados (perfil, info propia).
+  - name: "Acceso: Administradores"
+    description: Endpoints restringidos a administradores.
+  - name: "Acceso: Público"
+    description: Endpoints de acceso libre, sin autenticación.
+  - name: "Módulo: Gestión de Usuarios"
+    description: CRUD de usuarios, perfiles y datos personales.
+  - name: "Módulo: Gestión de Reservas"
+    description: Endpoints para registrar, modificar y cancelar reservas.
+  - name: "Módulo: Gestión de Canchas"
+    description: Endpoints para administrar tipos de canchas y disponibilidad.
+  - name: "Módulo: Catálogos de Referencia"
+    description: Endpoints para obtener listas de datos básicos (paises, provincias, ciudades, localidades, géneros).
+  - name: "Servicio: Autenticación"
+    description: Endpoints para login, logout y manejo de tokens.
+  - name: "Servicio: Notificaciones"
+    description: Endpoints para envío de correos, alertas y recordatorios.
+  - name: "Servicio: Pagos"
+    description: Endpoints para integración con medios de pago externos.
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: jwt
+      description: Autenticación vía cookie JWT (plataform=web)
+    authotization:
+      type: apiKey
+      in: header
+      name: authorization
+      description: Autenticación vía token (plataform=windows)
+
+  schemas:
+    UsuarioRegistro:
+      type: object
+      required:
+        - nombre
+        - apellido
+        - dni
+        - genero
+        - fecha_nacimiento
+        - telefono
+        - email
+        - calle
+        - numero
+        - codigo_postal
+        - pais
+        - provincia
+        - ciudad
+        - localidad
+      properties:
+        nombre:
+          type: string
+          example: Juan
+        apellido:
+          type: string
+          example: Pérez
+        nacionalidad:
+          type: string
+          example: Argentina
+        dni:
+          type: string
+          example: 12345678
+        genero:
+          type: string
+          example: Masculino
+        fecha_nacimiento:
+          type: string
+          format: date
+          example: 1990-05-23
+        telefono:
+          type: string
+          example: +541112345678
+        email:
+          type: string
+          format: email
+          example: juan.perez@ejemplo.com
+        password:
+          type: string
+          format: password
+          example: "ContraseñaFuerte123!"
+        confirm_password:
+          type: string
+          format: password
+          example: "ContraseñaFuerte123!"
+        calle:
+          type: string
+          example: San Martín
+        numero:
+          type: string
+          example: 1234
+        codigo_postal:
+          type: string
+          example: B1888
+        pais:
+          type: string
+          example: Argentina
+        provincia:
+          type: string
+          example: Buenos Aires
+        ciudad:
+          type: string
+          example: Florencio Varela
+        localidad:
+          type: string
+          example: Centro
+
+    Usuario:
+      type: object
+      properties:
+        username:
+          type: string
+          example: user_00000000001
+        nombre:
+          type: string
+          example: Fernando
+        apellido:
+          type: string
+          example: Franco
+        nacionalidad:
+          type: string
+          example: Argentina
+        dni:
+          type: string
+          example: 12345678
+        genero:
+          type: string
+          example: Masculino
+        telefono:
+          type: string
+          example: 01152525252
+        email:
+          type: string
+          example: email@ejemplo.com
+        user_level:
+          type: string
+          example: Administrador
+        club:
+          type: string
+          example: El buen deporte
+
+    UsuarioFull:
+      type: object
+      properties:
+        username:
+          type: string
+          example: user_00000000001
+        nombre:
+          type: string
+          example: Fernando
+        apellido:
+          type: string
+          example: Franco
+        dni:
+          type: string
+          example: 12345678
+        nacionalidad:
+          type: string
+          example: Argentina
+        genero:
+          type: string
+          example: Masculino
+        fecha_nacimiento:
+          type: string
+          format: date-time
+          example: 1990-06-08T03:00:00.000Z
+        email:
+          type: string
+          format: email
+          example: email@ejemplo.com
+        telefono:
+          type: string
+          example: 01152525252
+        fecha_registro:
+          type: string
+          format: date-time
+          example: 2026-05-22T20:50:11.000Z
+        calle:
+          type: string
+          example: Avenida Calchaquí 
+        numero:
+          type: string
+          example: 6200
+        codigo_postal:
+          type: string
+          example: 1888
+        localidad:
+          type: string
+          example: Florencio Varela
+        ciudad:
+          type: string
+          example: Florencio Varela
+        provincia:
+          type: string
+          example: Buenos Aires
+        pais:
+          type: string
+          example: Argentina
+        club:
+          type: string
+          example: El buen deporte
+        user_level:
+          type: string
+          example: Administrador
+    
+    Generos:
+      type: array
+      items:
+        type: string
+        enum:
+          - Masculino
+          - Femenino
+          - Hombre trans
+          - Mujer trans
+          - No binario
+          - Género fluido
+          - Agénero
+          - Otro
+          - Prefiero no especificar
+      example:
+        - Masculino
+        - Femenino
+        - Hombre trans
+        - Mujer trans
+        - No binario
+        - Género fluido
+        - Agénero
+        - Otro
+        - Prefiero no especificar
+
+
+paths:
+  /users:
+    get:
+      tags:
+        - "Acceso: Administradores"
+        - "Módulo: Gestión de Usuarios"
+      summary: Obtener todos los usuarios
+      description: |
+        Acceso restringido a administradores.
+        - Web: requiere header `plataform: web` y cookie de sesión ( `X-Auth-Token: jwt=....` desde Swager UI).
+
+        - Windows Forms: requiere header `plataform: windows` y token en `Authorization`.
+      parameters:
+        - name: plataform
+          in: header
+          required: true
+          schema:
+            type: string
+            enum: [web, windows]
+          description: Plataforma desde la cual se accede.
+        - name: X-Auth-Token
+          in: header
+          required: false
+          schema:
+            type: string
+            pattern: '^jwt=.*$'
+          description: |
+            Autenticación vía JWT en header (Swagger UI / apps externas)
+            Se utiliza como alternativa a la cookie `jwt` para pruebas desde Swagger UI,
+            ya que Swagger no puede manejar cookies automáticamente como un navegador.
+      security:
+        - cookieAuth: []  
+        - authorization: []  
+      responses:
+        '200':
+          description: Lista de usuarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Usuario'
+        '401':
+          description: No autenticado
+        '403':
+          description: Acceso denegado
+
+  /users/user_id={id}:
+    get:
+      tags:
+        - "Acceso: Administradores"
+        - "Módulo: Gestión de Usuarios"
+      summary: Obtener datos de un usuario por ID
+      description: |
+        Acceso restringido a administradores.
+        - Web: requiere header `plataform: web` y cookie de sesión ( `X-Auth-Token: jwt=....` desde Swager UI).
+
+        - Windows Forms: requiere header `plataform: windows` y token en `Authorization`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 1
+          description: id del usuario
+        - name: plataform
+          in: header
+          required: true
+          schema:
+            type: string
+            enum: [web, windows]
+          description: Plataforma desde la cual se accede.
+        - name: X-Auth-Token
+          in: header
+          required: false
+          schema:
+            type: string
+            pattern: '^jwt=.*$'
+          description: |
+            Autenticación vía JWT en header (Swagger UI / apps externas)
+            Se utiliza como alternativa a la cookie `jwt` para pruebas desde Swagger UI,
+            ya que Swagger no puede manejar cookies automáticamente como un navegador.
+      security:
+        - cookieAuth: []
+        - authorization: []
+      responses:
+        '200':
+          description: Datos del usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '401':
+          description: No autenticado
+        '403':
+          description: Acceso denegado
+
+  /users/user_id={id}/full_info:
+    get:
+      tags:
+        - "Acceso: Administradores"
+        - "Módulo: Gestión de Usuarios"
+      summary: Obtener datos completos de un usuario por ID
+      description: |
+        Acceso restringido a administradores.
+        - Web: requiere header `plataform: web` y cookie de sesión ( `X-Auth-Token: jwt=....` desde Swager UI).
+
+        - Windows Forms: requiere header `plataform: windows` y token en `Authorization`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 1
+          description: id del usuario
+        - name: plataform
+          in: header
+          required: true
+          schema:
+            type: string
+            enum: [web, windows]
+          description: Plataforma desde la cual se accede.
+        - name: X-Auth-Token
+          in: header
+          required: false
+          schema:
+            type: string
+            pattern: '^jwt=.*$'
+          description: |
+            Autenticación vía JWT en header (Swagger UI / apps externas)
+            Se utiliza como alternativa a la cookie `jwt` para pruebas desde Swagger UI,
+            ya que Swagger no puede manejar cookies automáticamente como un navegador.
+      security:
+        - cookieAuth: []
+        - authorization: []
+      responses:
+        '200':
+          description: Datos completos del usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioFull'
+        '401':
+          description: No autenticado
+        '403':
+          description: Acceso denegado
+
+  /user_Info/Full_Info:
+    get:
+      tags:
+        - "Acceso: Usuarios"
+        - "Módulo: Gestión de Usuarios"
+      summary: Obtener información completa del usuario autenticado
+      description: |
+        Acceso restringido a usuarios autenticados.
+        - Web: requiere header `plataform: web` y cookie de sesión ( `X-Auth-Token: jwt=....` desde Swager UI).
+
+        - Windows Forms: requiere header `plataform: windows` y token en `Authorization`.
+      parameters:
+        - name: plataform
+          in: header
+          required: true
+          schema:
+            type: string
+            enum: [web, windows]
+          description: Plataforma desde la cual se accede.
+        - name: X-Auth-Token
+          in: header
+          required: false
+          schema:
+            type: string
+            pattern: '^jwt=.*$'
+          description: |
+            Autenticación vía JWT en header (Swagger UI / apps externas)
+            Se utiliza como alternativa a la cookie `jwt` para pruebas desde Swagger UI,
+            ya que Swagger no puede manejar cookies automáticamente como un navegador.
+      security:
+        - cookieAuth: []
+        - authorization: []
+      responses:
+        '200':
+          description: Información completa del usuario autenticado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioFull'
+        '401':
+          description: No autenticado
+
+  /user_Info:
+    get:
+      tags:
+        - "Acceso: Usuarios"
+        - "Módulo: Gestión de Usuarios"
+      summary: Obtener información básica del usuario autenticado
+      description: |
+        Acceso restringido a usuarios autenticados.
+        - Web: requiere header `plataform: web` y cookie de sesión ( `X-Auth-Token: jwt=....` desde Swager UI).
+
+        - Windows Forms: requiere header `plataform: windows` y token en `Authorization`.
+      parameters:
+        - name: plataform
+          in: header
+          required: true
+          schema:
+            type: string
+            enum: [web, windows]
+          description: Plataforma desde la cual se accede.
+        - name: X-Auth-Token
+          in: header
+          required: false
+          schema:
+            type: string
+            pattern: '^jwt=.*$'
+          description: |
+            Autenticación vía JWT en header (Swagger UI / apps externas)
+            Se utiliza como alternativa a la cookie `jwt` para pruebas desde Swagger UI,
+            ya que Swagger no puede manejar cookies automáticamente como un navegador.
+      security:
+        - cookieAuth: []
+        - authorization: []
+      responses:
+        '200':
+          description: Información básica del usuario autenticado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '401':
+          description: No autenticado
+
+  /paises:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Módulo: Catálogos de Referencia"
+      summary: Obtener lista de países
+      description: Devuelve la lista de países para formularios de registro.
+      responses:
+        '200':
+          description: Lista de países
+
+  /provincias:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Módulo: Catálogos de Referencia"
+      summary: Obtener lista de provincias
+      description: Devuelve la lista de provincias para formularios de dirección.
+      responses:
+        '200':
+          description: Lista de provincias
+
+  /ciudades:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Módulo: Catálogos de Referencia"
+      summary: Obtener lista de ciudades
+      description: Devuelve la lista de ciudades para formularios de dirección.
+      responses:
+        '200':
+          description: Lista de ciudades
+
+  /localidades:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Módulo: Catálogos de Referencia"
+      summary: Obtener lista de localidades
+      description: Devuelve la lista de localidades para formularios de dirección.
+      responses:
+        '200':
+          description: Lista de localidades
+
+  /localidades/full_info:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Módulo: Catálogos de Referencia"
+      summary: Obtener información completa de localidades
+      description: Devuelve información detallada de localidades (ej. relación con provincias y ciudades).
+      responses:
+        '200':
+          description: Lista de información completa de localidades
+
+  /generos:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Módulo: Catálogos de Referencia"
+      summary: Obtener lista de géneros
+      description: Devuelve la lista de géneros para formularios de registro.
+      responses:
+        '200':
+          description: Lista de géneros
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/Generos'
+  
+  /login:
+    post:
+      tags:
+        - "Servicio: Autenticación"
+      summary: Iniciar sesión
+      description: |
+        Autentica al usuario según la plataforma:
+        - **web**: devuelve cookie `jwt` y redirect.
+        - **windows**: devuelve token en JSON (solo admin).
+      parameters:
+        - in: header
+          name: plataform
+          required: true
+          schema:
+            type: string
+            enum: [web, windows]
+          description: Plataforma desde la que se realiza el login.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: usuario@ejemplo.com
+                password:
+                  type: string
+                  format: password
+                  example: "123456"
+      responses:
+        '200':
+          description: Login exitoso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: Usuario loggeado
+                  redirect:
+                    type: string
+                    example: /profile
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  expires:
+                    type: string
+                    format: date-time
+                    example: 2026-05-23T12:55:00
+        '400':
+          description: Campos faltantes o plataforma inválida
+        '401':
+          description: Credenciales incorrectas
+        '403':
+          description: Acceso denegado (Windows, no admin)
+  
+  /register:
+    post:
+      tags:
+        - Autenticación
+      summary: Registrar usuario
+      description: |
+        Crea un nuevo usuario en el sistema.  
+        - **web**: requiere contraseña y confirmación.  
+        - **windows**: puede usar contraseña por defecto.
+      parameters:
+        - in: header
+          name: plataform
+          required: true
+          schema:
+            type: string
+            enum: [web, windows]
+          description: Plataforma desde la que se realiza el registro.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsuarioRegistro'
+      responses:
+        '201':
+          description: Usuario creado correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: Usuario user_00000000001 agregado
+                  redirect:
+                    type: string
+                    example: /
+        '400':
+          description: Error en el registro (campos vacíos, datos inválidos, usuario ya existe)

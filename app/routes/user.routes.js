@@ -13,7 +13,4 @@ router.get("/user/:useriId", (req, res) => res.sendFile(__dirname + "/pages/user
 //router.get("/verificar/:token", authentication.verificarCuenta)
 
 
-
-
-
 export default router

@@ -2,6 +2,10 @@ import express from "express";
 import morgan from 'morgan';
 import cookieParser from "cookie-parser";
 
+//docs
+import swaggerUi from "swagger-ui-express";
+import yaml from "yamljs";
+
 import cors from "cors";
 
 import {PORT} from './config.js';
@@ -10,7 +14,10 @@ import uploadRoutes from './routes/upload.routes.js';
 import userRoutes from './routes/user.routes.js';
 import adminRoutes from './routes/admin.routes.js';
 import clienteRoutes from './routes/cliente.routes.js';
+import pagoRoutes from './routes/pago.routes.js';
 import apiRoutes from './routes/api.routes.js';
+
+import { methods as dbUserQuery } from "./db/dbUserQueries.js";
 
 /*
 import { methods as dbLugarQuery } from "./db/dbLugaresQueries.js";
@@ -33,6 +40,25 @@ app.listen(PORT, () => {
     console.log("servidor corriendo en puerto: ", PORT);
 });
 
+// Cargar archivo YAML
+const swaggerDocument = yaml.load("./app/docs/openapi.yaml");
+
+// Montar Swagger UI en la ruta /api-docs
+//app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api-docs", swaggerUi.serve, (req, res, next) => {
+  // Clonar el spec y modificar servers según la URL de acceso
+  const spec = JSON.parse(JSON.stringify(swaggerDocument));
+  spec.servers = [
+    {
+      url: `${req.protocol}://${req.get("host")}/api`,
+      description: "Servidor detectado automáticamente"
+    },
+    ...swaggerDocument.servers
+  ];
+  console.log(spec)
+  swaggerUi.setup(spec)(req, res, next);
+});
+
 app.use(express.static(__dirname + "/public"));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
@@ -42,35 +68,5 @@ app.use(apiRoutes);
 app.use(userRoutes);
 app.use(adminRoutes);
 app.use(clienteRoutes);
+app.use(pagoRoutes);
 app.use(cors());
-
-//rutas
-
-
-//app.get("/agregarPais/:pais", async (req, res) => await lugarController.nuevoPais(req, res));
-//app.get("/buscarOagregarPais/:pais", async (req, res) => await lugarController.idPais(req, res))
-
-
-/*
-async function nuevoPais(pais){
-    const nuevoPais = {
-            nombre: pais
-        };
-    try{
-        await dbLugarQuery.agregarPais(nuevoPais);      
-        return 'pais agregado';
-    } catch (err) {
-        console.error(err);
-        return 'el pais ya existe';
-    }
-}
-
-async function verPaises(){
-    try{   
-        const paises = await dbLugarQuery.getPaises();
-        return paises;
-    } catch (err) {
-        return {error: 'error'};
-    }
-
-}*/

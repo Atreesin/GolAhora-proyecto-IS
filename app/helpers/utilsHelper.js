@@ -62,8 +62,22 @@ function tipoUsuario(codigo) {
     if (codigo == ENTRENADOR_USER_LEVEL) {
         return "Entrenador"
     }
-    return "gorriado"
+    return "Invalido"
 };
+
+function capitalizarPalabras(texto) {
+  return texto
+    .split(" ")
+    .map(palabra => 
+      palabra.charAt(0).toUpperCase() + palabra.slice(1).toLowerCase()
+    )
+    .join(" ");
+}
+
+function normalizarTelefono(telefono) {
+  // Elimina todo lo que no sea dígito o "+"
+  return telefono.replace(/[^+\d]/g, "");
+}
 
 export const methods = {
     validarNombreApellido,
@@ -72,5 +86,7 @@ export const methods = {
     validarEmail,
     validarTelefono,
     esPasswordFuerte,
-    tipoUsuario
+    tipoUsuario,
+    capitalizarPalabras,
+    normalizarTelefono
 }
