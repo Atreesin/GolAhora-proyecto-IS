@@ -4,7 +4,7 @@ import pool from "./databaseConnection.js"
 const insertGenero = 'INSERT INTO generos SET ?';
 
 //consultar generos
-const selectGeneros = 'SELECT * FROM generos';
+const selectGeneros = 'SELECT * FROM generos ORDER BY id_genero';
 const selectGeneroById = 'SELECT genero FROM generos where id_genero = ?';
 const selectIdGeneroByGenero = 'SELECT id_genero FROM generos where genero = ?';
 
