@@ -26,18 +26,32 @@ tags:
     description: Endpoints de acceso libre, sin autenticación.
   - name: "Módulo: Gestión de Usuarios"
     description: CRUD de usuarios, perfiles y datos personales.
+  - name: "Módulo: Gestión de Clientes"
+    description: CRUD de clientes, perfiles y datos personales.
+  - name: "Módulo: Gestión de Profesores"
+    description: CRUD de profesores, perfiles y datos personales.
+  - name: "Módulo: Gestión de Entrenadores"
+    description: CRUD de entrenadores, perfiles y datos personales.
+  - name: "Módulo: Gestion de Entrenadores (certificaciones)"
+    description: Endpoints relacionados a las certificaciones de los Entrenadores
+  - name: "Módulo: Gestion de Profesores (certificaciones)"
+    description: Endpoints relacionados a las certificaciones de los Profesores
   - name: "Módulo: Gestión de Reservas"
     description: Endpoints para registrar, modificar y cancelar reservas.
   - name: "Módulo: Gestión de Canchas"
     description: Endpoints para administrar tipos de canchas y disponibilidad.
   - name: "Módulo: Catálogos de Referencia"
-    description: Endpoints para obtener listas de datos básicos (paises, provincias, ciudades, localidades, géneros).
+    description: Endpoints para obtener listas de datos básicos (paises, provincias, ciudades, localidades, géneros, etc).
   - name: "Servicio: Autenticación"
     description: Endpoints para login, logout y manejo de tokens.
   - name: "Servicio: Notificaciones"
     description: Endpoints para envío de correos, alertas y recordatorios.
   - name: "Servicio: Pagos"
     description: Endpoints para integración con medios de pago externos.
+  - name: "Servicio: Archivo/Recursos"
+    description: Endpoints para obtención de archivos binarios (imágenes, PDFs, documentos).
+  - name: "Información"
+    description: Endpoints que proveen información del sistema.
 
 components:
   securitySchemes:
@@ -160,6 +174,108 @@ components:
         club:
           type: string
           example: El buen deporte
+    
+    Cliente:
+      type: object
+      properties:
+        username:
+          type: string
+          example: user_00000000002
+        nombre:
+          type: string
+          example: Fernando
+        apellido:
+          type: string
+          example: Franco
+        nacionalidad:
+          type: string
+          example: Argentina
+        dni:
+          type: string
+          example: 12345678
+        genero:
+          type: string
+          example: Masculino
+        telefono:
+          type: string
+          example: 01152525252
+        email:
+          type: string
+          example: email@ejemplo.com
+        user_level:
+          type: string
+          example: Cliente
+        club:
+          type: string
+          example: El buen deporte
+    
+    Profesor:
+      type: object
+      properties:
+        username:
+          type: string
+          example: user_00000000003
+        nombre:
+          type: string
+          example: Fernando
+        apellido:
+          type: string
+          example: Franco
+        nacionalidad:
+          type: string
+          example: Argentina
+        dni:
+          type: string
+          example: 12345678
+        genero:
+          type: string
+          example: Masculino
+        telefono:
+          type: string
+          example: 01152525252
+        email:
+          type: string
+          example: email@ejemplo.com
+        user_level:
+          type: string
+          example: Profeosr
+        club:
+          type: string
+          example: El buen deporte
+    
+    Entrenador:
+      type: object
+      properties:
+        username:
+          type: string
+          example: user_00000000004
+        nombre:
+          type: string
+          example: Fernando
+        apellido:
+          type: string
+          example: Franco
+        nacionalidad:
+          type: string
+          example: Argentina
+        dni:
+          type: string
+          example: 12345678
+        genero:
+          type: string
+          example: Masculino
+        telefono:
+          type: string
+          example: 01152525252
+        email:
+          type: string
+          example: email@ejemplo.com
+        user_level:
+          type: string
+          example: AEntrenador
+        club:
+          type: string
+          example: El buen deporte
 
     UsuarioFull:
       type: object
@@ -225,6 +341,199 @@ components:
           type: string
           example: Administrador
     
+    ClienteFull:
+      type: object
+      properties:
+        username:
+          type: string
+          example: user_00000000002
+        nombre:
+          type: string
+          example: Fernando
+        apellido:
+          type: string
+          example: Franco
+        dni:
+          type: string
+          example: 12345678
+        nacionalidad:
+          type: string
+          example: Argentina
+        genero:
+          type: string
+          example: Masculino
+        fecha_nacimiento:
+          type: string
+          format: date-time
+          example: 1990-06-08T03:00:00.000Z
+        email:
+          type: string
+          format: email
+          example: email@ejemplo.com
+        telefono:
+          type: string
+          example: 01152525252
+        fecha_registro:
+          type: string
+          format: date-time
+          example: 2026-05-22T20:50:11.000Z
+        calle:
+          type: string
+          example: Avenida Calchaquí 
+        numero:
+          type: string
+          example: 6200
+        codigo_postal:
+          type: string
+          example: 1888
+        localidad:
+          type: string
+          example: Florencio Varela
+        ciudad:
+          type: string
+          example: Florencio Varela
+        provincia:
+          type: string
+          example: Buenos Aires
+        pais:
+          type: string
+          example: Argentina
+        club:
+          type: string
+          example: El buen deporte
+        user_level:
+          type: string
+          example: Cliente
+
+    ProfesorFull:
+      type: object
+      properties:
+        username:
+          type: string
+          example: user_00000000003
+        nombre:
+          type: string
+          example: Fernando
+        apellido:
+          type: string
+          example: Franco
+        dni:
+          type: string
+          example: 12345678
+        nacionalidad:
+          type: string
+          example: Argentina
+        genero:
+          type: string
+          example: Masculino
+        fecha_nacimiento:
+          type: string
+          format: date-time
+          example: 1990-06-08T03:00:00.000Z
+        email:
+          type: string
+          format: email
+          example: email@ejemplo.com
+        telefono:
+          type: string
+          example: 01152525252
+        fecha_registro:
+          type: string
+          format: date-time
+          example: 2026-05-22T20:50:11.000Z
+        calle:
+          type: string
+          example: Avenida Calchaquí 
+        numero:
+          type: string
+          example: 6200
+        codigo_postal:
+          type: string
+          example: 1888
+        localidad:
+          type: string
+          example: Florencio Varela
+        ciudad:
+          type: string
+          example: Florencio Varela
+        provincia:
+          type: string
+          example: Buenos Aires
+        pais:
+          type: string
+          example: Argentina
+        club:
+          type: string
+          example: El buen deporte
+        user_level:
+          type: string
+          example: Profesor
+
+    EntrenadorFull:
+      type: object
+      properties:
+        username:
+          type: string
+          example: user_00000000004
+        nombre:
+          type: string
+          example: Fernando
+        apellido:
+          type: string
+          example: Franco
+        dni:
+          type: string
+          example: 12345678
+        nacionalidad:
+          type: string
+          example: Argentina
+        genero:
+          type: string
+          example: Masculino
+        fecha_nacimiento:
+          type: string
+          format: date-time
+          example: 1990-06-08T03:00:00.000Z
+        email:
+          type: string
+          format: email
+          example: email@ejemplo.com
+        telefono:
+          type: string
+          example: 01152525252
+        fecha_registro:
+          type: string
+          format: date-time
+          example: 2026-05-22T20:50:11.000Z
+        calle:
+          type: string
+          example: Avenida Calchaquí 
+        numero:
+          type: string
+          example: 6200
+        codigo_postal:
+          type: string
+          example: 1888
+        localidad:
+          type: string
+          example: Florencio Varela
+        ciudad:
+          type: string
+          example: Florencio Varela
+        provincia:
+          type: string
+          example: Buenos Aires
+        pais:
+          type: string
+          example: Argentina
+        club:
+          type: string
+          example: El buen deporte
+        user_level:
+          type: string
+          example: Entrenador
+    
+    
     Generos:
       type: array
       items:
@@ -250,8 +559,159 @@ components:
         - Otro
         - Prefiero no especificar
 
+    Club:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Identificador único del club
+          example: 1
+        nombre:
+          type: string
+          description: Nombre del club
+          example: "El buen deporte"
+        CUIT:
+          type: string
+          description: Número de CUIT del club
+          example: "20-11111111-1"
+    
+    ClubDetalle:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Identificador único del club
+          example: 1
+        nombre:
+          type: string
+          description: Nombre del club
+          example: "El buen deporte"
+        CUIT:
+          type: string
+          description: Número de CUIT del club
+          example: "20-11111111-1"
+        telefono:
+          type: string
+          description: Teléfono de contacto del club
+          example: "1155555555"
+        email:
+          type: string
+          format: email
+          description: Correo electrónico del club
+          example: "mail@golahora.com"
+        calle:
+          type: string
+          description: Calle de la dirección del club
+          example: "calle test"
+        numero:
+          type: string
+          description: Número de la dirección
+          example: "123"
+        codigo_postal:
+          type: string
+          description: Código postal
+          example: "cp"
+        localidad:
+          type: string
+          description: Localidad del club
+          example: "Florencio Varela"
+        ciudad:
+          type: string
+          description: Ciudad del club
+          example: "Florencio Varela"
+        provincia:
+          type: string
+          description: Provincia del club
+          example: "Buenos Aires"
+        pais:
+          type: string
+          description: País del club
+          example: "Argentina"
+
+
+
 
 paths:
+  /clubes:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Información"
+      summary: Obtener lista de clubes
+      description: Devuelve la lista de todos los clubes registrados en el sistema.
+      responses:
+        '200':
+          description: Lista de clubes
+          content:
+            aplication/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Club'
+
+  /clubes/full_info:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Información"
+      summary: Obtener lista detallada de clubes
+      description: Devuelve la lista con la información completa de todos los clubes registrados en el sistema.
+      responses:
+        '200':
+          description: Lista de clubes
+          content:
+            aplication/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClubDetalle'
+
+  /clubes/club_id={id}:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Información"
+      summary: Obtener club por ID
+      description: Devuelve la información básica de un club (id, nombre, CUIT)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Información básica del club
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/Club'
+        '404':
+          description: Club no encontrado
+
+  /clubes/club_id={id}/full_info:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Información"
+      summary: Obtener lista de clubes
+      description: Devuelve la información completa de un club.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Información detallada del club
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/ClubDetalle'
+        '404':
+          description: Club no encontrado
+
   /users:
     get:
       tags:
@@ -298,6 +758,47 @@ paths:
         '403':
           description: Acceso denegado
 
+  /users/cantidad:
+    get:
+      tags:
+        - "Acceso: Administradores"
+        - "Módulo: Gestión de Usuarios"
+        - "Información"
+      summary: Obtener cantidad de usuarios registrados en el sistema.
+      description: |
+        Acceso restringido a administradores.
+        - Web: requiere header `plataform: web` y cookie de sesión ( `X-Auth-Token: jwt=....` desde Swager UI).
+
+        - Windows Forms: requiere header `plataform: windows` y token en `Authorization`.
+      parameters:
+        - name: plataform
+          in: header
+          required: true
+          schema:
+            type: string
+            enum: [web, windows]
+          description: Plataforma desde la cual se accede.
+        - name: X-Auth-Token
+          in: header
+          required: false
+          schema:
+            type: string
+            pattern: '^jwt=.*$'
+          description: |
+            Autenticación vía JWT en header (Swagger UI / apps externas)
+            Se utiliza como alternativa a la cookie `jwt` para pruebas desde Swagger UI,
+            ya que Swagger no puede manejar cookies automáticamente como un navegador.
+      security:
+        - cookieAuth: []  
+        - authorization: []
+      responses:
+        '200':
+          description: Cantidad de usuarios registrados
+          content:
+            aplication/json:
+              schema:
+                type: integer
+          
   /users/user_id={id}:
     get:
       tags:
@@ -484,6 +985,171 @@ paths:
         '401':
           description: No autenticado
 
+  /clientes:
+    get:
+      tags:
+        - "Acceso: Administradores"
+        - "Módulo: Gestión de Usuarios"
+        - "Módulo: Gestión de Clientes"
+      summary: Obtener todos los usuarios clientes
+      description: |
+        Acceso restringido a administradores.
+        - Web: requiere header `plataform: web` y cookie de sesión ( `X-Auth-Token: jwt=....` desde Swager UI).
+
+        - Windows Forms: requiere header `plataform: windows` y token en `Authorization`.
+      parameters:
+        - name: plataform
+          in: header
+          required: true
+          schema:
+            type: string
+            enum: [web, windows]
+          description: Plataforma desde la cual se accede.
+        - name: X-Auth-Token
+          in: header
+          required: false
+          schema:
+            type: string
+            pattern: '^jwt=.*$'
+          description: |
+            Autenticación vía JWT en header (Swagger UI / apps externas)
+            Se utiliza como alternativa a la cookie `jwt` para pruebas desde Swagger UI,
+            ya que Swagger no puede manejar cookies automáticamente como un navegador.
+      security:
+        - cookieAuth: []  
+        - authorization: []  
+      responses:
+        '200':
+          description: Lista de Clientes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cliente'
+        '401':
+          description: No autenticado
+        '403':
+          description: Acceso denegado
+
+  /profesores:
+    get:
+      tags:
+        - "Acceso: Administradores"
+        - "Módulo: Gestión de Usuarios"
+        - "Módulo: Gestión de Profesores"
+      summary: Obtener todos los usuarios profesores
+      description: |
+        Acceso restringido a administradores.
+        - Web: requiere header `plataform: web` y cookie de sesión ( `X-Auth-Token: jwt=....` desde Swager UI).
+
+        - Windows Forms: requiere header `plataform: windows` y token en `Authorization`.
+      parameters:
+        - name: plataform
+          in: header
+          required: true
+          schema:
+            type: string
+            enum: [web, windows]
+          description: Plataforma desde la cual se accede.
+        - name: X-Auth-Token
+          in: header
+          required: false
+          schema:
+            type: string
+            pattern: '^jwt=.*$'
+          description: |
+            Autenticación vía JWT en header (Swagger UI / apps externas)
+            Se utiliza como alternativa a la cookie `jwt` para pruebas desde Swagger UI,
+            ya que Swagger no puede manejar cookies automáticamente como un navegador.
+      security:
+        - cookieAuth: []  
+        - authorization: []  
+      responses:
+        '200':
+          description: Lista de Clientes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Profesor'
+        '401':
+          description: No autenticado
+        '403':
+          description: Acceso denegado
+
+  /profesores/registrar:
+
+  /entrenadores:
+    get:
+      tags:
+        - "Acceso: Administradores"
+        - "Módulo: Gestión de Usuarios"
+        - "Módulo: Gestión de Entrenadores"
+      summary: Obtener todos los usuarios entrenadores
+      description: |
+        Acceso restringido a administradores.
+        - Web: requiere header `plataform: web` y cookie de sesión ( `X-Auth-Token: jwt=....` desde Swager UI).
+
+        - Windows Forms: requiere header `plataform: windows` y token en `Authorization`.
+      parameters:
+        - name: plataform
+          in: header
+          required: true
+          schema:
+            type: string
+            enum: [web, windows]
+          description: Plataforma desde la cual se accede.
+        - name: X-Auth-Token
+          in: header
+          required: false
+          schema:
+            type: string
+            pattern: '^jwt=.*$'
+          description: |
+            Autenticación vía JWT en header (Swagger UI / apps externas)
+            Se utiliza como alternativa a la cookie `jwt` para pruebas desde Swagger UI,
+            ya que Swagger no puede manejar cookies automáticamente como un navegador.
+      security:
+        - cookieAuth: []  
+        - authorization: []  
+      responses:
+        '200':
+          description: Lista de Clientes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Entrenador'
+        '401':
+          description: No autenticado
+        '403':
+          description: Acceso denegado
+
+  /entrenadores/registrar:
+
+  /nombres_profesores:
+    get:
+      
+
+  /nombres_entrenadores:
+
+  /tipos_canchas:
+
+  /tipos_canchas/cancha_id={id}:
+
+  /tipos_cancha/agregar:
+
+  /canchas:
+
+  /canchas/cancha_id={id}:
+
+  /canchas/agregar:
+
+  /superficies:
+
   /paises:
     get:
       tags:
@@ -659,3 +1325,97 @@ paths:
                     example: /
         '400':
           description: Error en el registro (campos vacíos, datos inválidos, usuario ya existe)
+
+  /img/canchas/{nombre}:
+    get:
+      summary: Obtener imagen de cancha
+      description: Devuelve la imagen de una cancha por nombre de archivo. Si no existe, devuelve una imagen por defecto.
+      tags:
+        - "Acceso: Público"
+        - "Módulo: Gestión de Canchas"
+        - "Servicio: Arhivo/Recursos"
+      parameters:
+        - name: plataform
+          in: header
+          required: true
+          schema:
+            type: string
+            enum: [web, windows]
+          description: Plataforma desde la cual se accede.
+        
+        - name: nombre
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nombre del archivo de la imagen
+      responses:
+        '200':
+          description: Imagen encontrada
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Imagen no encontrada (se devuelve imagen por defecto)
+
+  /file/certificaciones/file_name={nombre}:
+    get:
+      summary: Descargar archivo de certificación
+      description: Devuelve un archivo de certificación por nombre. Requiere autenticación y permisos de administrador.
+      tags:
+        - "Acceso: Administradores"
+        - "Servicio: Archivo/Recursos"
+        - "Módulo: Gestion de Profesores (certificaciones)"
+        - "Módulo: Gestion de Entrenadores (certificaciones)"
+      parameters:
+        - name: plataform
+          in: header
+          required: true
+          schema:
+            type: string
+            enum: [web, windows]
+          description: Plataforma desde la cual se accede.
+        
+        - name: X-Auth-Token
+          in: header
+          required: false
+          schema:
+            type: string
+            pattern: '^jwt=.*$'
+          description: |
+            Autenticación vía JWT en header (Swagger UI / apps externas)
+            Se utiliza como alternativa a la cookie `jwt` para pruebas desde Swagger UI,
+            ya que Swagger no puede manejar cookies automáticamente como un navegador.
+        - name: nombre
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nombre del archivo de certificación
+      security:
+        - cookieAuth: []  
+        - authorization: []  
+      responses:
+        '200':
+          description: Archivo encontrado
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Archivo no encontrado

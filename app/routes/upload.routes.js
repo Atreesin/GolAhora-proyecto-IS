@@ -16,7 +16,6 @@ router.post('/api/upload', authorization.soloAdmin, upload.single('archivo'), (r
 
     // aca deberia guardar el nombre del archivo en la base de datos 
 
-
     res.json({
       mensaje: 'Archivo subido correctamente',
       nombre: nombreArchivo

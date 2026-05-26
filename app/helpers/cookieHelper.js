@@ -47,7 +47,7 @@ function obtenerCookie(req) {
     }
     if (req.headers.cookie) {
 
-        return req.headers.cookie.split("; ").find(cookie => cookie.startsWith("jwt=")).slice(4);
+        return req.headers.cookie.split("; ").find(cookie => cookie.startsWith("jwt="))?.slice(4);
     }
     if (req.headers.plataform === "windows") {
         
@@ -56,7 +56,8 @@ function obtenerCookie(req) {
     
 
     if (req.headers.plataform != "web" && req.headers.plataform != "windows") {
-        return "error"
+        //return "error"
+        return null
     }
 }
 

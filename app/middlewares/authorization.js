@@ -35,11 +35,21 @@ async function apiSoloAdmin(req, res, next) {
 }
 
 async function apiSoloUsers(req, res, next) {
-    console.log(req.headers)
+
     const logeado = await cookieHelper.revisarCookie(req);
     if (logeado) return next();
     if(!cookieHelper.obtenerCookie(req)){
+        console.log(cookieHelper.obtenerCookie(req))
         return res.status(401).json({ error: "Usuario no autenticado" });
+    }
+    const now = new Date(Date.now());
+    const cookieOpption = {
+        expires: now,
+        path: "/"
+    };
+    res.cookie("jwt", "", cookieOpption);
+    if (cookieHelper.obtenerCookie(req) === "error"){
+        return res.status(400).json({ error: "Error de solicitud"});
     }
     return res.status(401).json({ error: "Token inválido, expirado o credenciales incorrectas." });
 }

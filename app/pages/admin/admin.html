@@ -1,18 +1,40 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="upload.js" defer></script>
-    
+    <script src="../upload.js" defer></script>
+
 </head>
+
 <body>
     menu principal administrador
 
-<form id="formUpload">
-  <input type="file" name="archivo" id="archivo" />
-  <button type="submit">Subir</button>
-</form>
+    <form id="formUpload">
+        <label for="tipo_cancha" class="sr-only">Tipo de cancha</label>
+        <input type="text" name="tipo_cancha" id="tipo_cancha" placeholder="Nombre">
+        <label for="duracion_min" class="sr-only">Duración mínima (minutos)</label>
+        <input type="number" name="duracion_min" id="duracion_min">
+        <label for="duracion_max" class="sr-only">Duración máxima (minutos)</label>
+        <input type="number" name="duracion_max" id="duracion_max">
+        <label for="ancho" class="sr-only">Ancho (metros)</label>
+        <input type="number" name="ancho" id="ancho">
+        <label for="largo" class="sr-only">Largo (metros)</label>
+        <input type="number" name="largo" id="largo">
+        <label for="capacidad" class="sr-only">Capacidad de jugadores</label>
+        <input type="number" name="capacidad" id="capacidad">
+        <label for="id_superficie" class="sr-only">id de la superficie</label>
+        <select name="id_superficie" id="id_superficie" required>
+            <option value="">Seleccione una superficie...</option>
+            <!-- aquí se insertarán las opciones dinámicamente -->
+        </select>
+        <label for="imagen" class="sr-only">Imagen de la cancha</label>
+        <input type="file" name="imagen" id="imagen" />
+        <p class="error escondido">Error al registrarse</p>
+        <button type="submit">Subir</button>
+    </form>
 </body>
+
 </html>

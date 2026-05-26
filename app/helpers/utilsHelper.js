@@ -49,7 +49,7 @@ function esPasswordFuerte(password) {
 }
 
 function tipoUsuario(codigo) {
-    
+    console.log(codigo)
     if (codigo == ADMIN_USER_LEVEL) {
         return "Administrador"
     }
@@ -74,9 +74,37 @@ function capitalizarPalabras(texto) {
     .join(" ");
 }
 
+function capitalizarPrimera(palabra) {
+  if (!palabra || palabra.length === 0) return "";
+  return palabra.charAt(0).toUpperCase() + palabra.slice(1).toLowerCase();
+}
+
 function normalizarTelefono(telefono) {
   // Elimina todo lo que no sea dígito o "+"
   return telefono.replace(/[^+\d]/g, "");
+}
+
+function convertirADecimalValidado(valor, decimalesPermitidos = 0) {
+  const numero = Number(valor);
+
+  if (!Number.isNaN(numero)) {
+    const factor = Math.pow(10, decimalesPermitidos);
+    if (Number.isInteger(numero * factor)) {
+      return numero;
+    }
+  }
+  return false;
+}
+
+function estaEnRango(valor, minimo, maximo) {
+  const numero = Number(valor);
+  if (Number.isNaN(numero)) return false;
+  return numero >= minimo && numero <= maximo;
+}
+function esPar(valor) {
+  const numero = Number(valor);
+  if (Number.isNaN(numero)) return false;
+  return numero % 2 === 0;
 }
 
 export const methods = {
@@ -88,5 +116,9 @@ export const methods = {
     esPasswordFuerte,
     tipoUsuario,
     capitalizarPalabras,
-    normalizarTelefono
+    capitalizarPrimera,
+    normalizarTelefono,
+    convertirADecimalValidado,
+    estaEnRango,
+    esPar
 }
