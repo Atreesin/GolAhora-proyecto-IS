@@ -6,7 +6,7 @@ import { borrarArchivoSiExiste } from "../helpers/archivoHelper.js";
 
 //registrar
 async function registrarTipoCancha(req, res) {
-    
+
     const tipo_cancha = req.body.tipo_cancha;
     let duracion_min = req.body.duracion_min;
     let duracion_max = req.body.duracion_max;
@@ -50,7 +50,7 @@ async function registrarTipoCancha(req, res) {
     if (!superficie) {
 
         borrarArchivoSiExiste(req.file);
-        return res.status(404).send({ status: "Error", message: "Tipo de superficie con ese id no encontrada" })
+        return res.status(404).send({ status: "Error", message: `Tipo de superficie con id: ${id_superficie} no encontrada` })
     }
 
     if (duracion_min > duracion_max) {
@@ -94,36 +94,69 @@ async function registrarTipoCancha(req, res) {
         id_superficie
     }
     await dbCanchaQuery.agregarTipoCancha(nuevo_tipo_cancha);
-    console.log(req.file)
+    //console.log(req.file)
     return res.status(201).send({ status: "ok", message: `Tipo de cancha ${nuevo_tipo_cancha.tipo_cancha} agregado`, redirect: "/" })
 }
 
 async function registrarCancha(req, res) {
-    const nombre = req.body.nombre? req.body.nombre : "";
-    const tiempo_cancelacion = req.body.tiempo_cancelacion;
-    const precio_hora_reserva = req.body.precio_hora_reserva;
-    const id_tipo_de_cancha = req.body.id_tipo_de_cancha;
+    const nombre = req.body.nombre;
+    let tiempo_cancelacion = req.body.tiempo_cancelacion;
+    let precio_hora_reserva = req.body.precio_hora_reserva;
+    let id_tipo_de_cancha = req.body.id_tipo_de_cancha;
     // id del club que gestiona el Administrador
     const email = helper.decodificarCookie(helper.obtenerCookie(req));
-    const id_club = dbUserQuery.getUserIdByEmail(email) || 1;
+    const id_club = dbUserQuery.getUserIdByEmail(email);
 
-    if (!nombre, !tiempo_cancelacion){
-
+    if ([nombre, tiempo_cancelacion, precio_hora_reserva, id_tipo_de_cancha, id_club].some(v => v === undefined || v === null || v === "")) {
+        return res.status(400).send({ status: "Error", message: "Algunos campos estan vacios" })
     }
+
+    tiempo_cancelacion = helper.convertirADecimalValidado(5);
+    precio_hora_reserva = helper.convertirADecimalValidado(10, 2);
+
+    const existeCancha = await dbCanchaQuery.getTipoCanchaByNombreAndIdClub(nombre, id_club);
+    if (existeCancha) {
+        return res.status(409).send({
+            status: "Error",
+            message: `La cancha '${nombre}' ya existe.`
+        });
+    }
+
+    if (tiempo_cancelacion < 0) {
+        return res.status(400).send({ status: "Error", message: "El tiempo de cancelación no puede ser menor a 0"})
+    }
+    if (precio_hora_reserva <= 0) {
+        return res.status(400).send({ status: "Error", message: "El precio por hora de reserva debe ser mayor a 0"})
+    }
+    const tipo_de_cancha = await dbCanchaQuery.getTipoCanchaById(id_tipo_de_cancha);
+    if (!tipo_de_cancha) {
+        return res.status(404).send({ status: "Error", message: `Tipo de cancha con el id: ${id_tipo_de_cancha}  no encontrada` })
+    }
+
+    const nueva_cancha = {
+        nombre,
+        tiempo_cancelacion,
+        precio_hora_reserva,
+        id_tipo_de_cancha,
+        id_club
+    }
+
+    await dbCanchaQuery.agregarCancha(nueva_cancha);
+    return res.status(201).send({ status: "ok", message: `Cancha ${nombre} agregada`, redirect: "/" })
 }
 
 // consultar
 async function getSuperficies(req, res) {
 
-    res.send(await dbCanchaQuery.getSuperficies())
+    res.send(await dbCanchaQuery.getSuperficies() || [])
 }
 
 async function getTipoCanchas(req, res) {
-    res.send(await dbCanchaQuery.getTipoCanchas())
+    res.send(await dbCanchaQuery.getTipoCanchas() || [])
 }
 
 async function getCanchas(req, res) {
-    res.send(await dbCanchaQuery.getCanchas())
+    res.send(await dbCanchaQuery.getCanchas() || [])
 }
 
 async function getTipoCanchaById(req, res) {
@@ -131,7 +164,12 @@ async function getTipoCanchaById(req, res) {
     if (!id_tipo_de_cancha) {
         return res.status(400).send({ status: "Error", message: "Ingrese el id del tipo de cancha" })
     }
-    res.send(await dbCanchaQuery.getTipoCanchaById(id_tipo_de_cancha))
+    const tipo_cancha = await dbCanchaQuery.getTipoCanchaById(id_tipo_de_cancha)
+    if (!tipo_cancha) {
+        return res.status(404).send({ status: "Error", message: `No existe un tipo de cancha con el id ${id_tipo_de_cancha}` })
+    }
+
+    res.send(tipo_cancha)
 }
 
 async function getCanchaById(req, res) {
@@ -139,12 +177,17 @@ async function getCanchaById(req, res) {
     if (!id_cancha) {
         return res.status(400).send({ status: "Error", message: "Ingrese el id de la cancha" })
     }
-    res.send(await dbCanchaQuery.getCanchaById(id_cancha))
+    const cancha = await dbCanchaQuery.getCanchaById(id_cancha)
+    if (!cancha) {
+        return res.status(404).send({ status: "Error", message: `No existe la cancha con el id ${id_cancha}` })
+    }
+    res.send(cancha)
 }
 
 
 export const methods = {
     registrarTipoCancha,
+    registrarCancha,
     getSuperficies,
     getTipoCanchas,
     getTipoCanchaById,

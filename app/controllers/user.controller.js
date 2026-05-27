@@ -4,11 +4,11 @@ import { CLIENT_USER_LEVEL, PROFESOR_USER_LEVEL, ENTRENADOR_USER_LEVEL } from '.
 
 async function getUsuarios(req, res){
     
-    res.send(await dbUserQuery.getUsuarios())
+    res.send(await dbUserQuery.getUsuarios() || [])
 }
 async function getCantidadUsuarios(req, res){
     
-    res.send(await dbUserQuery.getCantidadUsuarios())
+    res.send(await dbUserQuery.getCantidadUsuarios() || 0)
 }
 
 async function getFullDatosUsuario(req, res){
@@ -32,7 +32,11 @@ async function getFullDatosUsuarioById(req, res){
     if(!id_usuario){
         return res.status(400).send({ status: "Error", message: "Ingrese el id del Usuario" })
     }
-    res.send(await dbUserQuery.getFullUserById(id_usuario))
+    const usuario = await dbUserQuery.getFullUserById(id_usuario)
+    if(!usuario){
+        return res.status(404).send({ status: "Error", message: `No existe el usuario con el id ${id_usuario}` })
+    }
+    res.send(usuario)
 }
 
 async function getDatosUsuarioById(req, res){
@@ -40,24 +44,29 @@ async function getDatosUsuarioById(req, res){
     if(!id_usuario){
         return res.status(400).send({ status: "Error", message: "Ingrese el id del Usuario" })
     }
-    res.send(await dbUserQuery.getUserById(id_usuario))
+    const usuario = await dbUserQuery.getUserById(id_usuario)
+    if(!usuario){
+        return res.status(404).send({ status: "Error", message: `No existe el usuario con el id ${id_usuario}` })
+    }
+    res.send(usuario)
 }
 
-// clientes
+// tipos de usuarios
 async function getClientes(req, res){
-    res.send(await dbUserQuery.getUsuariosByLevel(CLIENT_USER_LEVEL))
+    res.send(await dbUserQuery.getUsuariosByLevel(CLIENT_USER_LEVEL) || [])
 }
 async function getProfesores(req, res){
-    res.send(await dbUserQuery.getUsuariosByLevel(PROFESOR_USER_LEVEL))
+    res.send(await dbUserQuery.getUsuariosByLevel(PROFESOR_USER_LEVEL) || [])
 }
 async function getEntrenadores(req, res){
-    res.send(await dbUserQuery.getUsuariosByLevel(ENTRENADOR_USER_LEVEL))
+    res.send(await dbUserQuery.getUsuariosByLevel(ENTRENADOR_USER_LEVEL) || [])
 }
+// nombres de profesionales
 async function getNombresProfesores(req, res){
-    res.send(await dbUserQuery.getNombresUsuariosByLevel(PROFESOR_USER_LEVEL))
+    res.send(await dbUserQuery.getNombresUsuariosByLevel(PROFESOR_USER_LEVEL) || [])
 }
 async function getNombresEntrenadores(req, res){
-    res.send(await dbUserQuery.getNombresUsuariosByLevel(ENTRENADOR_USER_LEVEL))
+    res.send(await dbUserQuery.getNombresUsuariosByLevel(ENTRENADOR_USER_LEVEL) || [])
 }
 
 export const methods = {

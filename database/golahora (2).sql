@@ -96,38 +96,65 @@ CREATE TABLE tipos_de_cancha (
     ),
     FOREIGN KEY (id_superficie) REFERENCES superficies(id_superficie)
 );
-CREATE TABLE ocupaciones (
-    id_ocupacion SERIAL PRIMARY KEY,
-    tipo_ocupacion VARCHAR(55) NOT NULL,
-    hora_inicio DATETIME NOT NULL,
-    hora_fin DATETIME
-);
+
 CREATE TABLE canchas (
     id_cancha SERIAL PRIMARY KEY,
     nombre VARCHAR(80) NOT NULL,
     tiempo_cancelacion INT NOT NULL,
-    precio_hora_reserva DECIMAL(10,2)
+    precio_hora_reserva DECIMAL(10,2) NOT NULL,
     id_tipo_de_cancha BIGINT UNSIGNED NOT NULL,
     id_club BIGINT UNSIGNED NOT NULL,
     constraint chk_tiempo_cancelacion CHECK (tiempo_cancelacion >= 0),
     FOREIGN KEY (id_tipo_de_cancha) REFERENCES tipos_de_cancha(id_tipo_de_cancha),
     FOREIGN KEY (id_club) REFERENCES clubes(id_club)
 );
-CREATE TABLE ocupaciones_cancha (
+
+-- reserva, mantenimiento, clase, entrenamiento, liga, torneo
+CREATE TABLE tipos_de_ocupaciones (
+    id_tipo_ocupacion SERIAL PRIMARY KEY,
+    tipo_ocupacion VARCHAR(55) UNIQUE NOT NULL
+);
+
+-- representa si una cancha esta ocupada ese dia en ese horario
+CREATE TABLE ocupaciones_cancha (  
     id_ocupacion_cancha SERIAL PRIMARY KEY,
-    id_ocupacion BIGINT UNSIGNED NOT NULL,
+    fecha DATE NOT NULL,
+    hora_inicio TIME NOT NULL,
+    hora_fin TIME NOT NULL,
+    id_tipo_ocupacion BIGINT UNSIGNED NOT NULL,
     id_cancha BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (id_ocupacion) REFERENCES ocupaciones(id_ocupacion),
+
+    FOREIGN KEY (id_tipo_ocupacion) REFERENCES tipos_de_ocupaciones(id_tipo_ocupacion),
     FOREIGN KEY (id_cancha) REFERENCES canchas(id_cancha)
 );
-CREATE TABLE horarios (
-    id_horario SERIAL PRIMARY KEY,
-    dia DATE NOT NULL,
+
+-- segun la cancha y el dia de la semana
+CREATE TABLE disponibilidad (
+    id_disponibilidad SERIAL PRIMARY KEY,
+    dia_semana ENUM('Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo') NOT NULL,
     hora_inicio TIME NOT NULL,
     hora_fin TIME NOT NULL,
     id_cancha BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (id_cancha) REFERENCES canchas(id_cancha)
+    FOREIGN KEY (id_cancha) REFERENCES canchas(id_cancha),
+    UNIQUE KEY u_disponibilidad ( dia_semana, id_cancha)
+); 
+
+-- feriados, etc (si id_cancha es 0 aplica a todas las canchas)
+CREATE TABLE disponibilidad_excepciones (
+    id_disponibilidad SERIAL PRIMARY KEY,
+    motivo VARCHAR(100),
+    dia DATE NOT NULL,    
+    hora_inicio TIME NOT NULL,
+    hora_fin TIME NOT NULL,
+    id_cancha BIGINT UNSIGNED NOT NULL DEFAULT 0,
+    FOREIGN KEY (id_cancha) REFERENCES canchas(id_cancha),
+    UNIQUE KEY u_disponibilidad_excepciones (dia, id_cancha)
 );
+
+--
+
+
+
 -- usuarios y relacionados
 CREATE TABLE generos (
     id_genero SERIAL PRIMARY KEY,
@@ -199,11 +226,11 @@ CREATE TABLE recibos (
 );
 CREATE TABLE reservas (
     id_reserva SERIAL PRIMARY KEY,
-    id_ocupacion BIGINT UNSIGNED NOT NULL,
+    id_ocupacion_cancha BIGINT UNSIGNED NOT NULL,
     id_usuario BIGINT UNSIGNED NOT NULL,
     id_cancha BIGINT UNSIGNED NOT NULL,
     id_cobro BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (id_ocupacion) REFERENCES ocupaciones(id_ocupacion),
+    FOREIGN KEY (id_ocupacion_cancha) REFERENCES ocupaciones_cancha(id_ocupacion_cancha),
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario),
     FOREIGN KEY (id_cancha) REFERENCES canchas(id_cancha),
     FOREIGN KEY (id_cobro) REFERENCES cobros(id_cobro)
@@ -213,21 +240,26 @@ CREATE TABLE estado_capacitaciones (
     id_estado_capacitacion SERIAL PRIMARY KEY,
     estado VARCHAR(55) UNIQUE NOT NULL
 );
+
+-- no se usa?
 CREATE TABLE dias (
     id_dia SERIAL PRIMARY KEY,
     nombre VARCHAR(10) UNIQUE NOT NULL
 );
+
+
 CREATE TABLE asistencias (
     id_asistencia SERIAL PRIMARY KEY,
     estado VARCHAR(55) UNIQUE NOT NULL
 );
+
 CREATE TABLE clases (
     id_clase SERIAL PRIMARY KEY,
     id_asistencia BIGINT UNSIGNED NOT NULL,
     id_usuario BIGINT UNSIGNED NOT NULL,
     id_profesional BIGINT UNSIGNED NOT NULL,
     id_estado_capacitaciones BIGINT UNSIGNED NOT NULL,
-    id_ocupacion BIGINT UNSIGNED NOT NULL,
+    id_ocupacion_cancha BIGINT UNSIGNED NOT NULL,
     id_club BIGINT UNSIGNED NOT NULL,
     id_cancha BIGINT UNSIGNED NOT NULL,
     id_cobro BIGINT UNSIGNED NOT NULL,
@@ -236,7 +268,7 @@ CREATE TABLE clases (
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario),
     FOREIGN KEY (id_profesional) REFERENCES usuarios(id_usuario),
     FOREIGN KEY (id_estado_capacitaciones) REFERENCES estado_capacitaciones(id_estado_capacitacion),
-    FOREIGN KEY (id_ocupacion) REFERENCES ocupaciones(id_ocupacion),
+    FOREIGN KEY (id_ocupacion_cancha) REFERENCES ocupaciones_cancha(id_ocupacion_cancha),
     FOREIGN KEY (id_club) REFERENCES clubes(id_club),
     FOREIGN KEY (id_cancha) REFERENCES canchas(id_cancha)
 );
@@ -245,14 +277,14 @@ CREATE TABLE entrenamientos (
     capacidad_max TINYINT UNSIGNED NOT NULL,
     id_profesional BIGINT UNSIGNED NOT NULL,
     id_estado_capacitaciones BIGINT UNSIGNED NOT NULL,
-    id_ocupacion BIGINT UNSIGNED NOT NULL,
+    id_ocupacion_cancha BIGINT UNSIGNED NOT NULL,
     id_club BIGINT UNSIGNED NOT NULL,
     id_cancha BIGINT UNSIGNED NOT NULL,
     id_cobro BIGINT UNSIGNED NOT NULL,
     FOREIGN KEY (id_cobro) REFERENCES cobros(id_cobro),
     FOREIGN KEY (id_profesional) REFERENCES usuarios(id_usuario),
     FOREIGN KEY (id_estado_capacitaciones) REFERENCES estado_capacitaciones(id_estado_capacitacion),
-    FOREIGN KEY (id_ocupacion) REFERENCES ocupaciones(id_ocupacion),
+    FOREIGN KEY (id_ocupacion_cancha) REFERENCES ocupaciones_cancha(id_ocupacion_cancha),
     FOREIGN KEY (id_club) REFERENCES clubes(id_club),
     FOREIGN KEY (id_cancha) REFERENCES canchas(id_cancha)
 );

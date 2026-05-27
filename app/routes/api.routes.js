@@ -48,7 +48,7 @@ router.get("/api/nombres_entrenadores", wrapper(userController.getNombresEntrena
 
 // canchas
 router.get("/api/tipos_canchas", wrapper(canchaController.getTipoCanchas));
-router.get("/api/tipos_canchas/cancha_id=:id", wrapper(canchaController.getTipoCanchaById));
+router.get("/api/tipos_canchas/tipo_cancha_id=:id", wrapper(canchaController.getTipoCanchaById));
 router.get("/api/canchas", wrapper(canchaController.getCanchas));
 router.get("/api/canchas/cancha_id=:id", wrapper(canchaController.getCanchaById));
 //superficies
@@ -70,7 +70,7 @@ router.post("/api/tipos_cancha/agregar", authorization.apiSoloUsers, authorizati
         }
         next();
     })
-}, wrapper(canchaController.registrarTipoCancha))
-router.post("/api/canchas/agregar", (req, res) => res.send(""))
+}, wrapper(canchaController.registrarTipoCancha));
+router.post("/api/canchas/agregar", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(canchaController.registrarCancha));
 
 export default router

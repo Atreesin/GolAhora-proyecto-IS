@@ -4,9 +4,9 @@ import { methods as dbGeneroQuery } from "../db/dbGenerosQueries.js";
 
 async function generos(req, res){
     
-    const paises = await dbGeneroQuery.getGeneros();
+    const generos = await dbGeneroQuery.getGeneros();
     
-    return res.send(paises);
+    return res.send(generos);
 };
 
 
