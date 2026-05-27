@@ -106,6 +106,7 @@ CREATE TABLE canchas (
     id_cancha SERIAL PRIMARY KEY,
     nombre VARCHAR(80) NOT NULL,
     tiempo_cancelacion INT NOT NULL,
+    precio_hora_reserva DECIMAL(10,2)
     id_tipo_de_cancha BIGINT UNSIGNED NOT NULL,
     id_club BIGINT UNSIGNED NOT NULL,
     constraint chk_tiempo_cancelacion CHECK (tiempo_cancelacion >= 0),

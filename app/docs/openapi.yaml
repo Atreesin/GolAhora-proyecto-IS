@@ -628,6 +628,93 @@ components:
           description: País del club
           example: "Argentina"
 
+    TipoCancha:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Identificador único del tipo de cancha
+          example: 1
+        tipo:
+          type: string
+          description: Nombre del tipo de cancha
+          example: "Futbol 5 (sintetico)"
+        duracion_min:
+          type: integer
+          description: Duración mínima de reserva en minutos
+          example: 60
+        duracion_max:
+          type: integer
+          description: Duración máxima de reserva en minutos
+          example: 240
+        ancho:
+          type: string
+          description: Longitud del ancho de la cancha en metros
+          example: "32.50"
+        largo:
+          type: string
+          description: Longitud del ancho de la cancha en metros
+          example: "75.00"
+        capacidad:
+          type: integer
+          description: "Capacidad de jugadores en la cancha (numero par menor o igual 22)"
+          example: 10
+        superficie:
+          type: string
+          description: Tipo de superficie del suelo
+          example: "Césped sintético (artificial)"
+        descripcion_superficie:
+          type: string
+          description: Descripcion del tipo de superficie
+          example: "Base de caucho y arena con fibras plásticas. Dureza media, buen agarre y bajo mantenimiento. Uso recomendado en complejos deportivos y fútbol 5/7."
+        imagen_url:
+          type: string
+          description: URL de la imagen
+          example: "/img/cancha.png"
+
+    TipoCanchaRegistro:
+      type: object
+      requirded:
+        - tipo_cancha
+        - duracion_min
+        - duracion_max
+        - ancho
+        - largo
+        - capacidad
+        - id_superficie
+      properties:
+        tipo_cancha:
+          type: string
+          description: Nombre del tipo de cancha
+          example: "Futbol 5 (sintetico)"
+        duracion_min:
+          type: integer
+          description: Duración mínima de reserva en minutos
+          example: 60
+        duracion_max:
+          type: integer
+          description: Duración máxima de reserva en minutos
+          example: 240
+        ancho:
+          type: number
+          description: Longitud del ancho de la cancha en metros
+          example: 32.50
+        largo:
+          type: number
+          description: Longitud del ancho de la cancha en metros
+          example: 75.00
+        capacidad:
+          type: integer
+          description: "Capacidad de jugadores en la cancha (numero par menor o igual 22)"
+          example: 10
+        id_superficie:
+          type: integer
+          description: Id del Tipo de superficie del suelo
+          example: 1
+        imagen:
+          type: string
+          format: binary
+          description: Imagen opcional de la cancha
 
 
 
@@ -694,7 +781,7 @@ paths:
       tags:
         - "Acceso: Público"
         - "Información"
-      summary: Obtener lista de clubes
+      summary: Obtener clube detallado por ID
       description: Devuelve la información completa de un club.
       parameters:
         - name: id
@@ -1132,15 +1219,137 @@ paths:
 
   /nombres_profesores:
     get:
-      
+      tags:
+        - "Acceso: Público"
+        - "Módulo: Gestión de Usuarios"
+        - "Módulo: Gestión de Profesores"
+        - "Información"
+      summary: Obrener la lista de nombre y apellido de los profesores
+      description: Información pública de los profesores (nombre, apellido, tipo de usuario)
+      responses:
+        '200':
+          description: Lista de profesores
+          content:
+            aplication/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    nombre:
+                      type: string
+                      example: "Juan"
+                    apellido:
+                      type: string
+                      example: Priñeiro
+                    user_level:
+                      type: string
+                      example: Profesor
+
 
   /nombres_entrenadores:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Módulo: Gestión de Usuarios"
+        - "Módulo: Gestión de Entrenadores"
+        - "Información"
+      summary: Obrener la lista de nombre y apellido de los entrenadores
+      description: Información pública de los entrenadores (nombre, apellido, tipo de usuario)
+      responses:
+        '200':
+          description: Lista de profesores
+          content:
+            aplication/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    nombre:
+                      type: string
+                      example: "Juan"
+                    apellido:
+                      type: string
+                      example: Priñeiro
+                    user_level:
+                      type: string
+                      example: Entrenador
 
   /tipos_canchas:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Módulo: Gestión de Canchas"
+      summary: Obtener lista de tipos de cancha
+      description: Devuelve la lista de tipos de cancha registrados en el sistema.
+      responses:
+        '200':
+          description: Lista de Clientes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TipoCancha'
+
 
   /tipos_canchas/cancha_id={id}:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Módulo: Gestión de Canchas"
+      summary: Obtener lista de tipos de cancha
+      description: Devuelve la lista de tipos de cancha registrados en el sistema.
+      responses:
+        '200':
+          description: Lista de Clientes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TipoCancha'
 
   /tipos_cancha/agregar:
+    post:
+      tags:
+        - "Acceso: Administradores"
+        - "Gestión de Canchas"
+      summary: Registrar tipo de cancha
+      description: |
+        Acceso restringido a administradores.
+        - Web: requiere header `plataform: web` y cookie de sesión ( `X-Auth-Token: jwt=....` desde Swager UI).
+
+        - Windows Forms: requiere header `plataform: windows` y token en `Authorization`.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TipoCanchaRegistro'
+      parameters:
+        - name: plataform
+          in: header
+          required: true
+          schema:
+            type: string
+            enum: [web, windows]
+          description: Plataforma desde la cual se accede.
+        - name: X-Auth-Token
+          in: header
+          required: false
+          schema:
+            type: string
+            pattern: '^jwt=.*$'
+          description: |
+            Autenticación vía JWT en header (Swagger UI / apps externas)
+            Se utiliza como alternativa a la cookie `jwt` para pruebas desde Swagger UI,
+            ya que Swagger no puede manejar cookies automáticamente como un navegador.
+      security:
+        - cookieAuth: []
+        - authorization: []
+      responses:
+        '200':
+          description: Registro exitoso
 
   /canchas:
 

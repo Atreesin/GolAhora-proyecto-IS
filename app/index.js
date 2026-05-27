@@ -39,7 +39,7 @@ app.use("/api-docs", swaggerUi.serve, (req, res, next) => {
   const spec = JSON.parse(JSON.stringify(swaggerDocument));
   spec.servers = [
     {
-      url: `${req.protocol}://${req.get("host")}/api`,
+      url: `${req.protocol}s://${req.get("host")}/api`,
       description: "Servidor detectado automáticamente"
     },
     ...swaggerDocument.servers

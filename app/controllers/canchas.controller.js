@@ -1,7 +1,8 @@
 import { stat } from "fs";
 import { methods as dbCanchaQuery } from "../db/dbCanchasQueries.js";
-import { methods as helper } from "../helpers/utilsHelper.js"
-import { borrarArchivoSiExiste } from "../helpers/archivoHelper.js"
+import { methods as dbUserQuery } from "../db/dbUserQueries copy.js";
+import { methods as helper } from "../helpers/utilsHelper.js";
+import { borrarArchivoSiExiste } from "../helpers/archivoHelper.js";
 
 //registrar
 async function registrarTipoCancha(req, res) {
@@ -14,17 +15,13 @@ async function registrarTipoCancha(req, res) {
     let capacidad = req.body.capacidad;
     let id_superficie = req.body.id_superficie;
     const imagen_url = req.file
-        ? '/img/canchas/img/' + req.file.filename
-        : '/img/canchas/img/cancha.png';
+        ? '/img/canchas/' + req.file.filename
+        : '/img/canchas/cancha.png';
 
     if ([tipo_cancha, duracion_min, duracion_max, ancho, largo, capacidad, id_superficie].some(v => v === undefined || v === null || v === "")) {
         borrarArchivoSiExiste(req.file);
         return res.status(400).send({ status: "Error", message: "Algunos campos estan vacios" })
-    }/*
-    if (!tipo_cancha, !duracion_min, !duracion_max, !ancho, !largo, !capacidad, !id_superficie) {
-        borrarArchivoSiExiste(req.file);
-        return res.status(400).send({ status: "Error", message: "Algunos campos estan vacios" })
-    }*/
+    }
 
     duracion_min = helper.convertirADecimalValidado(duracion_min);
     duracion_max = helper.convertirADecimalValidado(duracion_max);
@@ -99,6 +96,20 @@ async function registrarTipoCancha(req, res) {
     await dbCanchaQuery.agregarTipoCancha(nuevo_tipo_cancha);
     console.log(req.file)
     return res.status(201).send({ status: "ok", message: `Tipo de cancha ${nuevo_tipo_cancha.tipo_cancha} agregado`, redirect: "/" })
+}
+
+async function registrarCancha(req, res) {
+    const nombre = req.body.nombre? req.body.nombre : "";
+    const tiempo_cancelacion = req.body.tiempo_cancelacion;
+    const precio_hora_reserva = req.body.precio_hora_reserva;
+    const id_tipo_de_cancha = req.body.id_tipo_de_cancha;
+    // id del club que gestiona el Administrador
+    const email = helper.decodificarCookie(helper.obtenerCookie(req));
+    const id_club = dbUserQuery.getUserIdByEmail(email) || 1;
+
+    if (!nombre, !tiempo_cancelacion){
+
+    }
 }
 
 // consultar

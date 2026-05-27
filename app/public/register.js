@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   try {
     const response = await fetch("/api/paises");
     paises = await response.json(); 
-    // Suponiendo formato: [ { id: 1, nombre: "Argentina" }, { id: 2, nombre: "Brasil" } ]
+    
   } catch (error) {
     console.error("Error al cargar países:", error);
   }
@@ -139,7 +139,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const div = document.createElement("div");
         div.textContent = p.nombre;
         div.addEventListener("click", () => {
-          paisInput.value = p.nombre; // o p.id si querés guardar el ID
+          paisInput.value = p.nombre; 
           suggestionsBox.style.display = "none";
         });
         suggestionsBox.appendChild(div);

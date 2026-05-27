@@ -88,7 +88,7 @@ async function getUsuarios() {
         if (rows.length > 0) {
             const usuarios = rows.map(u => ({
                 ...u,
-                user_level: helper.tipoUsuario(u.user_level) // reemplazamos el valor numérico por string
+                user_level: helper.tipoUsuario(u.user_level) 
             }));
             return usuarios;
         } else {
@@ -120,7 +120,7 @@ async function getUsuariosByLevel(user_level) {
         if (rows.length > 0) {
             const usuarios = rows.map(u => ({
                 ...u,
-                user_level: helper.tipoUsuario(u.user_level) // reemplazamos el valor numérico por string
+                user_level: helper.tipoUsuario(u.user_level) 
             }));
             return usuarios;
         } else {
@@ -139,7 +139,7 @@ async function getNombresUsuariosByLevel(user_level) {
             const usuarios = rows.map(u => ({
                 nombre: u.nombre,
                 apellido: u.apellido,
-                user_level: helper.tipoUsuario(u.user_level) // reemplazamos el valor numérico por string
+                user_level: helper.tipoUsuario(u.user_level) 
             }));
             return usuarios;
         } else {

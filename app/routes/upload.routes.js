@@ -1,4 +1,4 @@
-// src/routes/upload.routes.js
+
 import { Router } from "express";
 import { __dirname } from "../index.js";
 import { methods as authorization } from "../middlewares/authorization.js";
@@ -6,9 +6,6 @@ import { upload } from "../services/fileUpload.service.js";
 
 const router = Router()
 
-/************************************************************************************************* */
-/**const upload = multer({ storage });
-*/
 // Ruta POST para subir archivo
 router.post('/api/upload', authorization.soloAdmin, upload.single('archivo'), (req, res) => {
   try {

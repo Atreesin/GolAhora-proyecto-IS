@@ -6,7 +6,6 @@ import { ejecutarConManejoDeErrores as wrapper } from "../middlewares/error-wrap
 import { methods as auth } from '../middlewares/authorization.js';
 
 const router = Router();
-//const __filename = fileURLToPath(import.meta.url);
 
 router.get("/api/img/canchas/:nombre", wrapper((req, res) => {
   const nombreArchivo = req.params.nombre;
