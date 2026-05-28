@@ -58,8 +58,4 @@ app.use(userRoutes);
 app.use(adminRoutes);
 app.use(clienteRoutes);
 app.use(pagoRoutes);
-app.use(cors({
-  origin: "*",   // el dominio de tu frontend local
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["*"]               // habilita cookies y headers de sesión
-}));
+app.use(cors());
