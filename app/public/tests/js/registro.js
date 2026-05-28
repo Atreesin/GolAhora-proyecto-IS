@@ -12,11 +12,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   let paises = [];
 
-  // Obtener países desde la API
   try {
 
     const response = await fetch(API + "/paises");
     paises = await response.json();
+
+    console.log("Paises:", paises);
 
   } catch (error) {
 
@@ -24,7 +25,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   }
 
-  // Evento escritura
   paisInput.addEventListener("input", () => {
 
     const query = paisInput.value.toLowerCase();
@@ -38,9 +38,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 
-    // Filtrar países
     const matches = paises.filter(p =>
-      p.nombre.toLowerCase().includes(query)
+      p.toLowerCase().includes(query)
     );
 
     if (matches.length > 0) {
@@ -49,11 +48,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const div = document.createElement("div");
 
-        div.textContent = p.nombre;
+        div.textContent = p;
 
         div.addEventListener("click", () => {
 
-          paisInput.value = p.nombre;
+          paisInput.value = p;
 
           suggestionsBox.style.display = "none";
 
@@ -66,20 +65,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       suggestionsBox.style.display = "block";
 
     } else {
-
-      suggestionsBox.style.display = "none";
-
-    }
-
-  });
-
-  // Ocultar sugerencias
-  document.addEventListener("click", (e) => {
-
-    if (
-      !suggestionsBox.contains(e.target) &&
-      e.target !== paisInput
-    ) {
 
       suggestionsBox.style.display = "none";
 
@@ -99,11 +84,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   let generos = [];
 
-  // Obtener géneros desde la API
   try {
 
     const response = await fetch(API + "/generos");
     generos = await response.json();
+
+    console.log("Generos:", generos);
 
   } catch (error) {
 
@@ -111,7 +97,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   }
 
-  // Evento escritura
   generoInput.addEventListener("input", () => {
 
     const query = generoInput.value.toLowerCase();
@@ -125,9 +110,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 
-    // Filtrar géneros
     const matches = generos.filter(g =>
-      g.genero.toLowerCase().includes(query)
+      g.toLowerCase().includes(query)
     );
 
     if (matches.length > 0) {
@@ -136,11 +120,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const div = document.createElement("div");
 
-        div.textContent = g.genero;
+        div.textContent = g;
 
         div.addEventListener("click", () => {
 
-          generoInput.value = g.genero;
+          generoInput.value = g;
 
           suggestionsBox.style.display = "none";
 
@@ -153,20 +137,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       suggestionsBox.style.display = "block";
 
     } else {
-
-      suggestionsBox.style.display = "none";
-
-    }
-
-  });
-
-  // Ocultar sugerencias
-  document.addEventListener("click", (e) => {
-
-    if (
-      !suggestionsBox.contains(e.target) &&
-      e.target !== generoInput
-    ) {
 
       suggestionsBox.style.display = "none";
 
@@ -186,7 +156,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   let paises = [];
 
-  // Obtener países desde la API
   try {
 
     const response = await fetch(API + "/paises");
@@ -198,7 +167,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   }
 
-  // Evento escritura
   paisInput.addEventListener("input", () => {
 
     const query = paisInput.value.toLowerCase();
@@ -212,9 +180,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 
-    // Filtrar países
     const matches = paises.filter(p =>
-      p.nombre.toLowerCase().includes(query)
+      p.toLowerCase().includes(query)
     );
 
     if (matches.length > 0) {
@@ -223,11 +190,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const div = document.createElement("div");
 
-        div.textContent = p.nombre;
+        div.textContent = p;
 
         div.addEventListener("click", () => {
 
-          paisInput.value = p.nombre;
+          paisInput.value = p;
 
           suggestionsBox.style.display = "none";
 
@@ -240,20 +207,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       suggestionsBox.style.display = "block";
 
     } else {
-
-      suggestionsBox.style.display = "none";
-
-    }
-
-  });
-
-  // Ocultar sugerencias
-  document.addEventListener("click", (e) => {
-
-    if (
-      !suggestionsBox.contains(e.target) &&
-      e.target !== paisInput
-    ) {
 
       suggestionsBox.style.display = "none";
 
