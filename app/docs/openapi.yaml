@@ -716,6 +716,56 @@ components:
           format: binary
           description: Imagen opcional de la cancha
 
+CanchaListaRespuesta: 
+      type: object
+      properties:
+        id:
+          type: string
+          example: "Futbol 5"
+        tipo_cancha:
+          $ref: '#/components/schemas/TipoCancha'
+        club:
+          type: string
+          example: "Club Atlético River Plate"
+        imagen_url:
+          type: string
+          example: "/img/cancha.png"
+
+CanchaCrear:
+      type: object
+      required:
+        - id_tipo_cancha
+        - id_club
+      properties:
+        id_tipo_cancha:
+          type: integer
+          description: Id del tipo de cancha a crear
+          example: 1
+        id_club:
+          type: integer
+          description: Id del club al que pertenece la cancha
+          example: 1
+        imagen:
+          type: string
+          format: binary
+          description: Imagen opcional de la cancha
+
+SuperficieRespuesta:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Id del tipo de superficie
+          example: 1
+        tipo_superficie:
+          type: string
+          description: Nombre del tipo de superficie
+          example: "Césped sintético (artificial)"
+        descripcion_superficie:
+          type: string
+          description: Descripcion del tipo de superficie
+          example: "Base de caucho y arena con fibras plásticas. Dureza media, buen agarre y bajo mantenimiento. Uso recomendado en complejos deportivos y fútbol 5/7."
+
 
 
 paths:
@@ -1293,7 +1343,6 @@ paths:
                 items:
                   $ref: '#/components/schemas/TipoCancha'
 
-
   /tipos_canchas/cancha_id={id}:
     get:
       tags:
@@ -1352,12 +1401,100 @@ paths:
           description: Registro exitoso
 
   /canchas:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Módulo: Gestión de Canchas"
+      summary: Obtener lista de canchas
+      description: Devuelve la lista de canchas registradas en el sistema.
+      responses:
+        '200':
+          description: Lista de canchas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CanchaListaRespuesta'
 
   /canchas/cancha_id={id}:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Módulo: Gestión de Canchas"
+      summary: Obtener cancha por ID
+      description: Devuelve la información de una cancha por su ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de la cancha
+      responses:
+        '200':
+          description: Información de la cancha
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CanchaListaRespuesta'
+        '404':
+          description: Cancha no encontrada
 
   /canchas/agregar:
+    post:
+      tags:
+        - "Acceso: Administradores"
+        - "Módulo: Gestión de Canchas"
+      summary: Agregar nueva cancha
+      description: |
+        Acceso restringido a administradores.
+        - Web: requiere header `plataform: web` y cookie de sesión (`X-Auth-Token: jwt=....` desde Swagger UI).
+        - Windows Forms: requiere header `plataform: windows` y token en `Authorization`.
+      parameters:
+        - name: plataform
+          in: header
+          required: true
+          schema:
+            type: string
+            enum: [web, windows]
+          description: Plataforma desde la cual se accede.
+        - name: X-Auth-Token
+          in: header
+          required: false
+          schema:
+            type: string
+            pattern: '^jwt=.*$'
+          description: Autenticación alternativa para pruebas desde Swagger UI.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CanchaCrear'
+      security:
+        - cookieAuth: []
+        - authorization: []
+      responses:
+        '200':
+          description: Cancha agregada exitosamente
 
   /superficies:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Módulo: Gestión de Canchas"
+      summary: Obtener lista de tipos de superficie
+      description: Devuelve la lista de tipos de superficie registrados en el sistema.
+      responses:
+        '200':
+          description: Lista de tipos de superficie
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SuperficieRespuesta'
 
   /paises:
     get:
