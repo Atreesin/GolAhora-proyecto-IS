@@ -128,7 +128,7 @@ CREATE TABLE ocupaciones_cancha (
     FOREIGN KEY (id_cancha) REFERENCES canchas(id_cancha)
 );
 
--- segun la cancha y el dia de la semana
+-- segun la cancha y el dia de la semana representa si esta diponible
 CREATE TABLE disponibilidad (
     id_disponibilidad SERIAL PRIMARY KEY,
     dia_semana ENUM('Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo') NOT NULL,
@@ -139,7 +139,7 @@ CREATE TABLE disponibilidad (
     UNIQUE KEY u_disponibilidad ( dia_semana, id_cancha)
 ); 
 
--- feriados, etc (si id_cancha es 0 aplica a todas las canchas)
+-- feriados, etc (si id_cancha es 0 aplica a todas las canchas) representa horario disponible 
 CREATE TABLE disponibilidad_excepciones (
     id_disponibilidad SERIAL PRIMARY KEY,
     motivo VARCHAR(100),
@@ -147,8 +147,9 @@ CREATE TABLE disponibilidad_excepciones (
     hora_inicio TIME NOT NULL,
     hora_fin TIME NOT NULL,
     id_cancha BIGINT UNSIGNED NOT NULL DEFAULT 0,
-    FOREIGN KEY (id_cancha) REFERENCES canchas(id_cancha),
-    UNIQUE KEY u_disponibilidad_excepciones (dia, id_cancha)
+    cerrado BOOLEAN GENERATED ALWAYS AS (hora_inicio = hora_fin) STORED,
+    CONSTRAINT chk_horario CHECK (hora_inicio <= hora_fin OR hora_inicio = hora_fin),
+    FOREIGN KEY (id_cancha) REFERENCES canchas(id_cancha)
 );
 
 --
