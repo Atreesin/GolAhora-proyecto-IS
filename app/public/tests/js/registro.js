@@ -1,51 +1,202 @@
-const API = "https://golahora-proyecto-is.onrender.com/api"; //Esta CONSTANTE es para no llamar a la URL completa cada vez.
+const mensajeError = document.getElementsByClassName("error")[0];
 
-// Busca el input y el div de sugerencias en el HTML
-const inputGenero = document.getElementById("genero");
-const sugerenciasGenero = document.getElementById("genero-suggestions");
-
-// Variable donde guardamos los géneros cuando carga la página
-let listaGeneros = [];
-
-// 1. Cuando carga la página trae todos los géneros de la API
+//nacionalidad
 document.addEventListener("DOMContentLoaded", async () => {
-    try {
-        const res = await fetch(API + "/generos");
-        listaGeneros = await res.json();
-    } catch (error) {
-        console.error("Error al cargar géneros:", error);
+  const paisInput = document.getElementById("nacionalidad");
+  const suggestionsBox = document.getElementById("nacionalidad-suggestions");
+
+  let paises = [];
+
+  // Obtener lista de países desde la API
+  try {
+    const response = await fetch("/api/paises");
+    paises = await response.json(); 
+    // Suponiendo formato: [ { id: 1, nombre: "Argentina" }, { id: 2, nombre: "Brasil" } ]
+  } catch (error) {
+    console.error("Error al cargar países:", error);
+  }
+
+  // Evento de escritura en el input
+  paisInput.addEventListener("input", () => {
+    const query = paisInput.value.toLowerCase();
+    suggestionsBox.innerHTML = "";
+
+    if (query.length === 0) {
+      suggestionsBox.style.display = "none";
+      return;
     }
-});
 
-// 2. Cuando el usuario escribe en el input filtra las sugerencias
-inputGenero.addEventListener("input", () => {
+    // Filtrar países que coincidan
+    const matches = paises.filter(p => p.nombre.toLowerCase().includes(query));
 
-    // Lo que escribió el usuario en minúsculas
-    const texto = inputGenero.value.toLowerCase();
-
-    // Limpia las sugerencias anteriores
-    sugerenciasGenero.innerHTML = "";
-
-    // Si no escribió nada no muestra nada
-    if (texto === "") return;
-
-    // Filtra los géneros que contienen lo que escribió
-    const filtrados = listaGeneros.filter(genero =>
-        genero.toLowerCase().includes(texto)
-    );
-
-    // Por cada género filtrado crea un elemento en el div de sugerencias
-    filtrados.forEach(genero => {
-        const item = document.createElement("div");
-        item.textContent = genero;
-        item.classList.add("sugerencia-item");
-
-        // Cuando el usuario hace clic en una sugerencia la pone en el input
-        item.addEventListener("click", () => {
-            inputGenero.value = genero;
-            sugerenciasGenero.innerHTML = ""; // oculta las sugerencias
+    if (matches.length > 0) {
+      matches.forEach(p => {
+        const div = document.createElement("div");
+        div.textContent = p.nombre;
+        div.addEventListener("click", () => {
+          paisInput.value = p.nombre; 
+          suggestionsBox.style.display = "none";
         });
+        suggestionsBox.appendChild(div);
+      });
+      suggestionsBox.style.display = "block";
+    } else {
+      suggestionsBox.style.display = "none";
+    }
+  });
 
-        sugerenciasGenero.appendChild(item);
-    });
+  // Ocultar sugerencias si se hace click fuera
+  document.addEventListener("click", (e) => {
+    if (!suggestionsBox.contains(e.target) && e.target !== paisInput) {
+      suggestionsBox.style.display = "none";
+    }
+  });
 });
+
+//genero
+document.addEventListener("DOMContentLoaded", async () => {
+  const generoInput = document.getElementById("genero");
+  const suggestionsBox = document.getElementById("genero-suggestions");
+
+  let generos = [];
+
+  // Obtener lista de países desde la API
+  try {
+    const response = await fetch("/api/generos");
+    generos = await response.json(); 
+  } catch (error) {
+    console.error("Error al cargar países:", error);
+  }
+
+  // Evento de escritura en el input
+  generoInput.addEventListener("input", () => {
+    const query = generoInput.value.toLowerCase();
+    suggestionsBox.innerHTML = "";
+
+    if (query.length === 0) {
+      suggestionsBox.style.display = "none";
+      return;
+    }
+
+    // Filtrar países que coincidan
+    const matches = generos.filter(g => g.genero.toLowerCase().includes(query));
+
+    if (matches.length > 0) {
+      matches.forEach(g => {
+        const div = document.createElement("div");
+        div.textContent = g.genero;
+        div.addEventListener("click", () => {
+          generoInput.value = g.genero; 
+          suggestionsBox.style.display = "none";
+        });
+        suggestionsBox.appendChild(div);
+      });
+      suggestionsBox.style.display = "block";
+    } else {
+      suggestionsBox.style.display = "none";
+    }
+  });
+
+  // Ocultar sugerencias si se hace click fuera
+  document.addEventListener("click", (e) => {
+    if (!suggestionsBox.contains(e.target) && e.target !== generoInput) {
+      suggestionsBox.style.display = "none";
+    }
+  });
+});
+
+//pais
+document.addEventListener("DOMContentLoaded", async () => {
+  const paisInput = document.getElementById("pais");
+  const suggestionsBox = document.getElementById("pais-suggestions");
+
+  let paises = [];
+
+  // Obtener lista de países desde la API
+  try {
+    const response = await fetch("/api/paises");
+    paises = await response.json(); 
+    
+  } catch (error) {
+    console.error("Error al cargar países:", error);
+  }
+
+  // Evento de escritura en el input
+  paisInput.addEventListener("input", () => {
+    const query = paisInput.value.toLowerCase();
+    suggestionsBox.innerHTML = "";
+
+    if (query.length === 0) {
+      suggestionsBox.style.display = "none";
+      return;
+    }
+
+    // Filtrar países que coincidan
+    const matches = paises.filter(p => p.nombre.toLowerCase().includes(query));
+
+    if (matches.length > 0) {
+      matches.forEach(p => {
+        const div = document.createElement("div");
+        div.textContent = p.nombre;
+        div.addEventListener("click", () => {
+          paisInput.value = p.nombre; 
+          suggestionsBox.style.display = "none";
+        });
+        suggestionsBox.appendChild(div);
+      });
+      suggestionsBox.style.display = "block";
+    } else {
+      suggestionsBox.style.display = "none";
+    }
+  });
+
+  // Ocultar sugerencias si se hace click fuera
+  document.addEventListener("click", (e) => {
+    if (!suggestionsBox.contains(e.target) && e.target !== paisInput) {
+      suggestionsBox.style.display = "none";
+    }
+  });
+});
+
+
+document.getElementById("register-form").addEventListener("submit",async(e)=>{
+    e.preventDefault();
+    
+    const res = await fetch("/api/register",{
+        method:"POST",
+        headers:{
+            "Content-Type" : "application/json",
+            "plataform" : "web"
+        },
+        body: JSON.stringify({
+            nombre: e.target.children.nombre.value,
+            apellido: e.target.children.apellido.value,
+            nacionalidad: e.target.children.nacionalidad.value,
+            dni: e.target.children.dni.value,
+            genero: e.target.children.genero.value,
+            fecha_nacimiento: e.target.children.fecha_nacimiento.value,
+            telefono: e.target.children.telefono.value,
+            email: e.target.children.email.value,
+            password: e.target.children.password.value,
+            confirm_password: e.target.children.confirm_password.value,
+            calle: e.target.children.calle.value,
+            numero: e.target.children.numero.value,
+            codigo_postal: e.target.children.codigo_postal.value,
+            pais: e.target.children.pais.value,
+            provincia: e.target.children.provincia.value,
+            ciudad: e.target.children.ciudad.value,
+            localidad: e.target.children.localidad.value
+        })
+    });
+    
+    if(!res.ok){
+      mensajeError.innerHTML = (await res.json()).message;
+      return mensajeError.classList.toggle("escondido", false);
+    } 
+    
+    const resJson = await res.json();
+    
+    if(resJson.redirect){
+        window.location.href = resJson.redirect;
+    }
+})
