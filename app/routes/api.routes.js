@@ -45,7 +45,7 @@ router.get("/api/profesores", authorization.apiSoloUsers, authorization.apiSoloA
 router.get("/api/entrenadores", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(userController.getEntrenadores))
 router.get("/api/nombres_profesores", wrapper(userController.getNombresProfesores))
 router.get("/api/nombres_entrenadores", wrapper(userController.getNombresEntrenadores))
-
+router.get("/api/administradores",authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(userController.getAdministradores))
 // canchas
 router.get("/api/tipos_canchas", wrapper(canchaController.getTipoCanchas));
 router.get("/api/tipos_canchas/tipo_cancha_id=:id", wrapper(canchaController.getTipoCanchaById));

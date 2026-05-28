@@ -167,12 +167,7 @@ async function register(req, res) {
 
     let idGenero = await dbGeneroQuery.getIdGeneroByGenero(genero);
     if (!idGenero) {
-        const nuevoGenero = {
-            genero
-        };
-
-        await dbGeneroQuery.agregarGenero(nuevoGenero);
-        idGenero = await dbGeneroQuery.getIdGeneroByGenero(genero);
+        return res.status(400).send({ status: "Error", message: "Genero invalido"})
     }
     /**  fin posible refactor **/
 

@@ -1,4 +1,4 @@
-import pool from "./databaseConnection.js";
+import pool from './databaseConnection.js';
 
 const insertTipoOcupacion = `INSERT INTO tipos_de_ocupaciones SET ?`;
 const insertOcupacionCancha = `INSERT INTO ocupacion_cancha SET ?`;
@@ -8,12 +8,17 @@ const selectTiposOcupaciones = `SELECT id_tipo_ocupacion AS id, tipo_ocupacion A
 const selectTipoOcupacionById = `SELECT id_tipo_ocupacion AS id, tipo_ocupacion AS tipo FROM tipos_de_ocupaciones WHERE id_tipo_ocupacion = ?`;
 const selectTipoOcupacionByTipo = `SELECT id_tipo_ocupacion AS id, tipo_ocupacion AS tipo FROM tipos_de_ocupaciones WHERE tipo_ocupacion = ?`;
 
-const selectOcupacionesCanchas = `SELECT oc.id_ocupacion_cancha AS id, oc.fecha, CASE DAYOFWEEK(oc.fecha) WHEN 1 THEN "Domingo" WHEN 2 THEN "Lunes" WHEN 3 THEN "Martes" WHEN 3 THEN "Miércoles" WHEN 4 THEN "Jueves" WHEN 5 THEN "Viernes" WHEN 7 THEN "Sábado" END AS dia_semana, oc.hora_inicio, oc.hora_fin, JSON_OBJECT('id', to.id_tipo_ocupacion, 'tipo', to.tipo_ocupacion) AS ocupacion, JSON_OBJECT('id', can.id_cancha, 'nombre', can.nombre) AS cancha FROM ocupaciones_cancha oc LEFT JOIN tipo_de_ocupaciones to ON oc.id_tipo_ocupacion = to.id_tipo_ocupacion LEFT JOIN canchas can ON oc.id_cancha = can.id_cancha`;
-const selectSuperposicionOcupacionesCanchas = `SELECT COUNT(*) FROM ocupaciones_cancha WHERE fecha = ? AND (hora_inicio < ? AND hora_fin > ?)`;
-const selectOcupacionCanchaById = `SELECT oc.id_ocupacion_cancha AS id, oc.fecha, CASE DAYOFWEEK(oc.fecha) WHEN 1 THEN "Domingo" WHEN 2 THEN "Lunes" WHEN 3 THEN "Martes" WHEN 3 THEN "Miércoles" WHEN 4 THEN "Jueves" WHEN 5 THEN "Viernes" WHEN 7 THEN "Sábado" END AS dia_semana, oc.hora_inicio, oc.hora_fin, JSON_OBJECT('id', to.id_tipo_ocupacion, 'tipo', to.tipo_ocupacion) AS ocupacion, JSON_OBJECT('id', can.id_cancha, 'nombre', can.nombre) AS cancha FROM ocupaciones_cancha oc LEFT JOIN tipo_de_ocupaciones to ON oc.id_tipo_ocupacion = to.id_tipo_ocupacion LEFT JOIN canchas can ON oc.id_cancha = can.id_cancha WHERE oc.id_ocupacion_cancha = ?`;
-const selectOcupacionesCanchasByFecha = `SELECT oc.id_ocupacion_cancha AS id, oc.fecha, CASE DAYOFWEEK(oc.fecha) WHEN 1 THEN "Domingo" WHEN 2 THEN "Lunes" WHEN 3 THEN "Martes" WHEN 3 THEN "Miércoles" WHEN 4 THEN "Jueves" WHEN 5 THEN "Viernes" WHEN 7 THEN "Sábado" END AS dia_semana, oc.hora_inicio, oc.hora_fin, JSON_OBJECT('id', to.id_tipo_ocupacion, 'tipo', to.tipo_ocupacion) AS ocupacion, JSON_OBJECT('id', can.id_cancha, 'nombre', can.nombre) AS cancha FROM ocupaciones_cancha oc LEFT JOIN tipo_de_ocupaciones to ON oc.id_tipo_ocupacion = to.id_tipo_ocupacion LEFT JOIN canchas can ON oc.id_cancha = can.id_cancha WHERE oc.fecha = ?`;
-const selectOcupacionesCanchasByTipoOcupacionId = `SELECT oc.id_ocupacion_cancha AS id, oc.fecha, CASE DAYOFWEEK(oc.fecha) WHEN 1 THEN "Domingo" WHEN 2 THEN "Lunes" WHEN 3 THEN "Martes" WHEN 3 THEN "Miércoles" WHEN 4 THEN "Jueves" WHEN 5 THEN "Viernes" WHEN 7 THEN "Sábado" END AS dia_semana, oc.hora_inicio, oc.hora_fin, JSON_OBJECT('id', to.id_tipo_ocupacion, 'tipo', to.tipo_ocupacion) AS ocupacion, JSON_OBJECT('id', can.id_cancha, 'nombre', can.nombre) AS cancha FROM ocupaciones_cancha oc LEFT JOIN tipo_de_ocupaciones to ON oc.id_tipo_ocupacion = to.id_tipo_ocupacion LEFT JOIN canchas can ON oc.id_cancha = can.id_cancha WHERE oc.id_tipo_ocupacion = ?`;
-const selectOcupacionesCanchasByCanchaId = `SELECT oc.id_ocupacion_cancha AS id, oc.fecha, CASE DAYOFWEEK(oc.fecha) WHEN 1 THEN "Domingo" WHEN 2 THEN "Lunes" WHEN 3 THEN "Martes" WHEN 3 THEN "Miércoles" WHEN 4 THEN "Jueves" WHEN 5 THEN "Viernes" WHEN 7 THEN "Sábado" END AS dia_semana, oc.hora_inicio, oc.hora_fin, JSON_OBJECT('id', to.id_tipo_ocupacion, 'tipo', to.tipo_ocupacion) AS ocupacion, JSON_OBJECT('id', can.id_cancha, 'nombre', can.nombre) AS cancha FROM ocupaciones_cancha oc LEFT JOIN tipo_de_ocupaciones to ON oc.id_tipo_ocupacion = to.id_tipo_ocupacion LEFT JOIN canchas can ON oc.id_cancha = can.id_cancha WHERE oc.id_cancha = ?`;
+const selectOcupacionesCanchas = `SELECT oc.id_ocupacion_cancha AS id, oc.fecha, CASE DAYOFWEEK(oc.fecha) WHEN 1 THEN 'Domingo' WHEN 2 THEN 'Lunes' WHEN 3 THEN 'Martes' WHEN 3 THEN 'Miércoles' WHEN 4 THEN 'Jueves' WHEN 5 THEN 'Viernes' WHEN 7 THEN 'Sábado' END AS dia_semana, oc.hora_inicio, oc.hora_fin, JSON_OBJECT('id', to.id_tipo_ocupacion, 'tipo', to.tipo_ocupacion) AS ocupacion, JSON_OBJECT('id', can.id_cancha, 'nombre', can.nombre) AS cancha FROM ocupaciones_cancha oc LEFT JOIN tipo_de_ocupaciones to ON oc.id_tipo_ocupacion = to.id_tipo_ocupacion LEFT JOIN canchas can ON oc.id_cancha = can.id_cancha`;
+const selectSuperposicionOcupacionesCanchas = `SELECT id_ocupacion_cancha AS id, fecha, CASE DAYOFWEEK(oc.fecha) WHEN 1 THEN 'Domingo' WHEN 2 THEN 'Lunes' WHEN 3 THEN 'Martes' WHEN 3 THEN 'Miércoles' WHEN 4 THEN 'Jueves' WHEN 5 THEN 'Viernes' WHEN 7 THEN 'Sábado' END AS dia_semana, hora_inicio, JSON_OBJECT('id', to.id_tipo_ocupacion, 'tipo', to.tipo_ocupacion) AS ocupacion, JSON_OBJECT('id', can.id_cancha, 'nombre', can.nombre) AS cancha FROM ocupaciones_cancha oc LEFT JOIN tipo_de_ocupaciones to ON oc.id_tipo_ocupacion = to.id_tipo_ocupacion LEFT JOIN canchas can ON oc.id_cancha = can.id_cancha WHERE fecha = ? AND ((hora_fin >= ? AND hora_inicio <= ?) OR (hora_fin <= ? AND hora_inicio >= ?))`;
+const selectOcupacionCanchaById = `SELECT oc.id_ocupacion_cancha AS id, oc.fecha, CASE DAYOFWEEK(oc.fecha) WHEN 1 THEN 'Domingo' WHEN 2 THEN 'Lunes' WHEN 3 THEN 'Martes' WHEN 3 THEN 'Miércoles' WHEN 4 THEN 'Jueves' WHEN 5 THEN 'Viernes' WHEN 7 THEN 'Sábado' END AS dia_semana, oc.hora_inicio, oc.hora_fin, JSON_OBJECT('id', to.id_tipo_ocupacion, 'tipo', to.tipo_ocupacion) AS ocupacion, JSON_OBJECT('id', can.id_cancha, 'nombre', can.nombre) AS cancha FROM ocupaciones_cancha oc LEFT JOIN tipo_de_ocupaciones to ON oc.id_tipo_ocupacion = to.id_tipo_ocupacion LEFT JOIN canchas can ON oc.id_cancha = can.id_cancha WHERE oc.id_ocupacion_cancha = ?`;
+const selectOcupacionesCanchasByFecha = `SELECT oc.id_ocupacion_cancha AS id, oc.fecha, CASE DAYOFWEEK(oc.fecha) WHEN 1 THEN 'Domingo' WHEN 2 THEN 'Lunes' WHEN 3 THEN 'Martes' WHEN 3 THEN 'Miércoles' WHEN 4 THEN 'Jueves' WHEN 5 THEN 'Viernes' WHEN 7 THEN 'Sábado' END AS dia_semana, oc.hora_inicio, oc.hora_fin, JSON_OBJECT('id', to.id_tipo_ocupacion, 'tipo', to.tipo_ocupacion) AS ocupacion, JSON_OBJECT('id', can.id_cancha, 'nombre', can.nombre) AS cancha FROM ocupaciones_cancha oc LEFT JOIN tipo_de_ocupaciones to ON oc.id_tipo_ocupacion = to.id_tipo_ocupacion LEFT JOIN canchas can ON oc.id_cancha = can.id_cancha WHERE oc.fecha = ?`;
+const selectOcupacionesCanchasByTipoOcupacionId = `SELECT oc.id_ocupacion_cancha AS id, oc.fecha, CASE DAYOFWEEK(oc.fecha) WHEN 1 THEN 'Domingo' WHEN 2 THEN 'Lunes' WHEN 3 THEN 'Martes' WHEN 3 THEN 'Miércoles' WHEN 4 THEN 'Jueves' WHEN 5 THEN 'Viernes' WHEN 7 THEN 'Sábado' END AS dia_semana, oc.hora_inicio, oc.hora_fin, JSON_OBJECT('id', to.id_tipo_ocupacion, 'tipo', to.tipo_ocupacion) AS ocupacion, JSON_OBJECT('id', can.id_cancha, 'nombre', can.nombre) AS cancha FROM ocupaciones_cancha oc LEFT JOIN tipo_de_ocupaciones to ON oc.id_tipo_ocupacion = to.id_tipo_ocupacion LEFT JOIN canchas can ON oc.id_cancha = can.id_cancha WHERE oc.id_tipo_ocupacion = ?`;
+const selectOcupacionesCanchasByCanchaId = `SELECT oc.id_ocupacion_cancha AS id, oc.fecha, CASE DAYOFWEEK(oc.fecha) WHEN 1 THEN 'Domingo' WHEN 2 THEN 'Lunes' WHEN 3 THEN 'Martes' WHEN 3 THEN 'Miércoles' WHEN 4 THEN 'Jueves' WHEN 5 THEN 'Viernes' WHEN 7 THEN 'Sábado' END AS dia_semana, oc.hora_inicio, oc.hora_fin, JSON_OBJECT('id', to.id_tipo_ocupacion, 'tipo', to.tipo_ocupacion) AS ocupacion, JSON_OBJECT('id', can.id_cancha, 'nombre', can.nombre) AS cancha FROM ocupaciones_cancha oc LEFT JOIN tipo_de_ocupaciones to ON oc.id_tipo_ocupacion = to.id_tipo_ocupacion LEFT JOIN canchas can ON oc.id_cancha = can.id_cancha WHERE oc.id_cancha = ?`;
+
+const selectOcupacionCanchaFechaHoraInicioFin = `SELECT id_ocupacion_cancha AS id, fecha, CASE DAYOFWEEK(oc.fecha) WHEN 1 THEN 'Domingo' WHEN 2 THEN 'Lunes' WHEN 3 THEN 'Martes' WHEN 3 THEN 'Miércoles' WHEN 4 THEN 'Jueves' WHEN 5 THEN 'Viernes' WHEN 7 THEN 'Sábado' END AS dia_semana, hora_inicio, JSON_OBJECT('id', to.id_tipo_ocupacion, 'tipo', to.tipo_ocupacion) AS ocupacion, JSON_OBJECT('id', can.id_cancha, 'nombre', can.nombre) AS cancha FROM ocupaciones_cancha oc LEFT JOIN tipo_de_ocupaciones to ON oc.id_tipo_ocupacion = to.id_tipo_ocupacion LEFT JOIN canchas can ON oc.id_cancha = can.id_cancha WHERE (id_cancha = ? AND fecha = ? AND hora_fin > ? AND hora_inicio < ? ))`;
+
+
+const estaOcupada = `SELECT EXISTS (SELECT 1 FROM ocupaciones_cancha WHERE (id_cancha = ? AND fecha = ? AND ((hora_fin >= ? AND hora_inicio <= ?) OR (hora_fin <= ? AND hora_inicio >= ?)))`
 
 
 // registrar
@@ -141,14 +146,24 @@ async function getOcupacionesCanchaByCanchaId(id_cancha) {
 }
 
 // extra
-async function existeSuperposicionOcupacionesCanchas(fecha, hora_inicio, hora_fin) {
+async function getSuperposicionOcupacionesCanchas(fecha, hora_inicio, hora_fin) {
     try {
-        const rows = await pool.query(selectSuperposicionOcupacionesCanchas, [fecha, hora_fin, hora_inicio]);
+        const rows = await pool.query(selectSuperposicionOcupacionesCanchas, [fecha, hora_inicio, hora_inicio, hora_fin, hora_fin]);
         if (rows.length > 0) {
-            return true;
+            return rows;
         } else {
-            return false;
+            return null;
         }
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+}
+
+async function existeOcupacionCancha(fecha, hora_inicio, hora_fin) {
+    try {
+        const resultado = await pool.query(estaOcupada, [fecha, hora_inicio, hora_inicio, hora_fin, hora_fin]);
+        return resultado[0];
     } catch (err) {
         console.error(err);
         throw err;
@@ -167,5 +182,6 @@ export const methods = {
     getOcupacionesCanchasByFecha,
     getOcupacionCanchasByIipoOcupacionId,
     getOcupacionesCanchaByCanchaId,
-    existeSuperposicionOcupacionesCanchas
+    getSuperposicionOcupacionesCanchas,
+    existeOcupacionCancha
 }

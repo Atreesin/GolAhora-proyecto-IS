@@ -7,12 +7,13 @@ document.getElementById("login-form").addEventListener("submit",async (e)=>{
     const res = await fetch("/api/login",{
         method: "POST",
         headers:{
-            "content-Type":"application/json",
+            "Content-Type":"application/json",
             "plataform":"web"
         },
         body: JSON.stringify({
             email, password
-        })
+        }),
+        credentials: "include"
     });
     if(!res.ok) return mensajeError.classList.toggle("escondido",false);
     const resJson = await res.json();

@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const selectSuperficie = document.getElementById("id_superficie");
 
   try {
-    const res = await fetch("https://golahora-proyecto-is.onrender.com/api/superficies");
+    const res = await fetch("http://localhost/api/superficies");
     if (!res.ok) throw new Error("Error al obtener superficies");
 
     const superficies = await res.json();

@@ -185,6 +185,32 @@ async function getCanchaById(req, res) {
 }
 
 
+// DISPONIBILIDAD
+async function registrarDisponibilidad(req, res) {
+    const todos_los_dias = req.body.todos_los_dias;
+    let dia_semana = 0;
+    if (!todos_los_dias) {
+        dia_semana = req.body.dia_semana
+    };
+    let hora_inicio = req.body.hora_inicio;
+    let hora_fin = req.body.hora_fin;
+    let id_cancha = req.body.id_cancha;
+
+    if ([hora_inicio, hora_fin, id_cancha].some(v => v === undefined || v === null || v === "")) {
+        
+        return res.status(400).send({ status: "Error", message: "Algunos campos estan vacios" })
+    }
+
+    
+
+
+    if (!todos_los_dias && (dia_semana <= 0 || dia_semana > 7)){
+        return res.status(400).send({ status: "Error", message: "Día de la semana inválido"})
+    }
+
+}
+
+
 export const methods = {
     registrarTipoCancha,
     registrarCancha,

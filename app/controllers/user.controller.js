@@ -1,6 +1,6 @@
 import {methods as cookieHelper} from '../helpers/cookieHelper.js'; 
 import {methods as dbUserQuery} from "../db/dbUserQueries.js";
-import { CLIENT_USER_LEVEL, PROFESOR_USER_LEVEL, ENTRENADOR_USER_LEVEL } from '../config.js';
+import { CLIENT_USER_LEVEL, PROFESOR_USER_LEVEL, ENTRENADOR_USER_LEVEL, ADMIN_USER_LEVEL } from '../config.js';
 
 async function getUsuarios(req, res){
     
@@ -61,6 +61,10 @@ async function getProfesores(req, res){
 async function getEntrenadores(req, res){
     res.send(await dbUserQuery.getUsuariosByLevel(ENTRENADOR_USER_LEVEL) || [])
 }
+
+async function getAdministradores(req, res){
+    res.send(await dbUserQuery.getUsuariosByLevel(ADMIN_USER_LEVEL_USER_LEVEL) || [])
+}
 // nombres de profesionales
 async function getNombresProfesores(req, res){
     res.send(await dbUserQuery.getNombresUsuariosByLevel(PROFESOR_USER_LEVEL) || [])
@@ -80,5 +84,6 @@ export const methods = {
     getProfesores,
     getEntrenadores,
     getNombresProfesores,
-    getNombresEntrenadores
+    getNombresEntrenadores,
+    getAdministradores
 }
