@@ -95,7 +95,7 @@ async function getTipoCanchaById(id_tipo_de_cancha) {
 
 async function getTipoCanchaByNombre(nombre) {
     try {
-        const rows = await pool.query(selectTipoCanchaByNombreAndClubId, nombre);
+        const rows = await pool.query(selectTipoCanchaByNombre, nombre);
         if (rows.length > 0) {
             return rows[0];
         } else {
