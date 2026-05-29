@@ -25,14 +25,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    const matches = paises.filter(p => p.nombre.toLowerCase().includes(query));
+    // Lista simple de strings
+    const matches = paises.filter(p => p.toLowerCase().includes(query));
 
     if (matches.length > 0) {
       matches.forEach(p => {
         const div = document.createElement("div");
-        div.textContent = p.nombre;
+        div.textContent = p;
         div.addEventListener("click", () => {
-          paisInput.value = p.nombre;
+          paisInput.value = p;
           suggestionsBox.style.display = "none";
         });
         suggestionsBox.appendChild(div);
@@ -75,7 +76,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    // Géneros es lista simple de strings
+    // Lista simple de strings
     const matches = generos.filter(g => g.toLowerCase().includes(query));
 
     if (matches.length > 0) {
@@ -126,14 +127,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    const matches = paises.filter(p => p.nombre.toLowerCase().includes(query));
+    // Lista simple de strings
+    const matches = paises.filter(p => p.toLowerCase().includes(query));
 
     if (matches.length > 0) {
       matches.forEach(p => {
         const div = document.createElement("div");
-        div.textContent = p.nombre;
+        div.textContent = p;
         div.addEventListener("click", () => {
-          paisInput.value = p.nombre;
+          paisInput.value = p;
           suggestionsBox.style.display = "none";
         });
         suggestionsBox.appendChild(div);
