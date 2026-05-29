@@ -1,51 +1,179 @@
-const API = "https://golahora-proyecto-is.onrender.com/api"; //Esta CONSTANTE es para no llamar a la URL completa cada vez.
+const API = "https://golahora-proyecto-is.onrender.com";
 
-// Busca el input y el div de sugerencias en el HTML
-const inputGenero = document.getElementById("genero");
-const sugerenciasGenero = document.getElementById("genero-suggestions");
+const mensajeError = document.getElementsByClassName("error")[0];
 
-// Variable donde guardamos los géneros cuando carga la página
-let listaGeneros = [];
-
-// 1. Cuando carga la página trae todos los géneros de la API
+// ==========================================
+// NACIONALIDAD CON AUTOCOMPLETADO
+// ==========================================
 document.addEventListener("DOMContentLoaded", async () => {
+    const paisInput = document.getElementById("nacionalidad");
+    const suggestionsBox = document.getElementById("nacionalidad-suggestions");
+    let paises = [];
+
     try {
-        const res = await fetch(API + "/generos");
-        listaGeneros = await res.json();
+        const response = await fetch(API + "/api/paises");
+        paises = await response.json();
+    } catch (error) {
+        console.error("Error al cargar nacionalidades:", error);
+    }
+
+    paisInput.addEventListener("input", () => {
+        const query = paisInput.value.toLowerCase();
+        suggestionsBox.innerHTML = "";
+        if (query.length === 0) { suggestionsBox.style.display = "none"; return; }
+
+        const matches = paises.filter(p => p.nombre.toLowerCase().includes(query));
+        if (matches.length > 0) {
+            matches.forEach(p => {
+                const div = document.createElement("div");
+                div.textContent = p.nombre;
+                div.addEventListener("click", () => {
+                    paisInput.value = p.nombre;
+                    suggestionsBox.style.display = "none";
+                });
+                suggestionsBox.appendChild(div);
+            });
+            suggestionsBox.style.display = "block";
+        } else {
+            suggestionsBox.style.display = "none";
+        }
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!suggestionsBox.contains(e.target) && e.target !== paisInput) {
+            suggestionsBox.style.display = "none";
+        }
+    });
+});
+
+// ==========================================
+// GÉNERO CON AUTOCOMPLETADO
+// ==========================================
+document.addEventListener("DOMContentLoaded", async () => {
+    const generoInput = document.getElementById("genero");
+    const suggestionsBox = document.getElementById("genero-suggestions");
+    let generos = [];
+
+    try {
+        const response = await fetch(API + "/api/generos");
+        generos = await response.json();
     } catch (error) {
         console.error("Error al cargar géneros:", error);
     }
+
+    generoInput.addEventListener("input", () => {
+        const query = generoInput.value.toLowerCase();
+        suggestionsBox.innerHTML = "";
+        if (query.length === 0) { suggestionsBox.style.display = "none"; return; }
+
+        const matches = generos.filter(g => g.toLowerCase().includes(query));
+        if (matches.length > 0) {
+            matches.forEach(g => {
+                const div = document.createElement("div");
+                div.textContent = g;
+                div.addEventListener("click", () => {
+                    generoInput.value = g;
+                    suggestionsBox.style.display = "none";
+                });
+                suggestionsBox.appendChild(div);
+            });
+            suggestionsBox.style.display = "block";
+        } else {
+            suggestionsBox.style.display = "none";
+        }
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!suggestionsBox.contains(e.target) && e.target !== generoInput) {
+            suggestionsBox.style.display = "none";
+        }
+    });
 });
 
-// 2. Cuando el usuario escribe en el input filtra las sugerencias
-inputGenero.addEventListener("input", () => {
+// ==========================================
+// PAÍS CON AUTOCOMPLETADO
+// ==========================================
+document.addEventListener("DOMContentLoaded", async () => {
+    const paisInput = document.getElementById("pais");
+    const suggestionsBox = document.getElementById("pais-suggestions");
+    let paises = [];
 
-    // Lo que escribió el usuario en minúsculas
-    const texto = inputGenero.value.toLowerCase();
+    try {
+        const response = await fetch(API + "/api/paises");
+        paises = await response.json();
+    } catch (error) {
+        console.error("Error al cargar países:", error);
+    }
 
-    // Limpia las sugerencias anteriores
-    sugerenciasGenero.innerHTML = "";
+    paisInput.addEventListener("input", () => {
+        const query = paisInput.value.toLowerCase();
+        suggestionsBox.innerHTML = "";
+        if (query.length === 0) { suggestionsBox.style.display = "none"; return; }
 
-    // Si no escribió nada no muestra nada
-    if (texto === "") return;
-
-    // Filtra los géneros que contienen lo que escribió
-    const filtrados = listaGeneros.filter(genero =>
-        genero.toLowerCase().includes(texto)
-    );
-
-    // Por cada género filtrado crea un elemento en el div de sugerencias
-    filtrados.forEach(genero => {
-        const item = document.createElement("div");
-        item.textContent = genero;
-        item.classList.add("sugerencia-item");
-
-        // Cuando el usuario hace clic en una sugerencia la pone en el input
-        item.addEventListener("click", () => {
-            inputGenero.value = genero;
-            sugerenciasGenero.innerHTML = ""; // oculta las sugerencias
-        });
-
-        sugerenciasGenero.appendChild(item);
+        const matches = paises.filter(p => p.nombre.toLowerCase().includes(query));
+        if (matches.length > 0) {
+            matches.forEach(p => {
+                const div = document.createElement("div");
+                div.textContent = p.nombre;
+                div.addEventListener("click", () => {
+                    paisInput.value = p.nombre;
+                    suggestionsBox.style.display = "none";
+                });
+                suggestionsBox.appendChild(div);
+            });
+            suggestionsBox.style.display = "block";
+        } else {
+            suggestionsBox.style.display = "none";
+        }
     });
+
+    document.addEventListener("click", (e) => {
+        if (!suggestionsBox.contains(e.target) && e.target !== paisInput) {
+            suggestionsBox.style.display = "none";
+        }
+    });
+});
+
+// ==========================================
+// ENVÍO DEL FORMULARIO
+// ==========================================
+document.getElementById("register-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const res = await fetch(API + "/api/register", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "plataform": "web"
+        },
+        body: JSON.stringify({
+            nombre: e.target.children.nombre.value,
+            apellido: e.target.children.apellido.value,
+            nacionalidad: e.target.children.nacionalidad.value,
+            dni: e.target.children.dni.value,
+            genero: e.target.children.genero.value,
+            fecha_nacimiento: e.target.children.fecha_nacimiento.value,
+            telefono: e.target.children.telefono.value,
+            email: e.target.children.email.value,
+            password: e.target.children.password.value,
+            confirm_password: e.target.children.confirm_password.value,
+            calle: e.target.children.calle.value,
+            numero: e.target.children.numero.value,
+            codigo_postal: e.target.children.codigo_postal.value,
+            pais: e.target.children.pais.value,
+            provincia: e.target.children.provincia.value,
+            ciudad: e.target.children.ciudad.value,
+            localidad: e.target.children.localidad.value
+        })
+    });
+
+    if (!res.ok) {
+        mensajeError.innerHTML = (await res.json()).message;
+        return mensajeError.classList.toggle("escondido", false);
+    }
+
+    const resJson = await res.json();
+    if (resJson.redirect) {
+        window.location.href = resJson.redirect;
+    }
 });
