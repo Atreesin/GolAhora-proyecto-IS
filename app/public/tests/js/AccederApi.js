@@ -7,7 +7,8 @@ document.getElementById("login").addEventListener("submit", async (evento) => {
     // Capturamos los datos en el momento exacto del clic
     const email = document.querySelector("#email").value;
     const password = document.querySelector("#password").value;
-
+    console.log(email);
+    console.log(password);
     try {
         const Respuesta = await fetch(API_LOGIN, {
             method: "POST",
