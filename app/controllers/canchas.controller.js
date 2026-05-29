@@ -1,6 +1,7 @@
 import { stat } from "fs";
 import { methods as dbCanchaQuery } from "../db/dbCanchasQueries.js";
-import { methods as dbUserQuery } from "../db/dbUserQueries copy.js";
+import { methods as dbUserQuery } from "../db/dbUserQueries.js";
+import { methods as dbDisponibilidadQuery } from "../db/dbDisponibilidadQueries.js"
 import { methods as helper } from "../helpers/utilsHelper.js";
 import { borrarArchivoSiExiste } from "../helpers/archivoHelper.js";
 
@@ -50,7 +51,7 @@ async function registrarTipoCancha(req, res) {
     if (!superficie) {
 
         borrarArchivoSiExiste(req.file);
-        return res.status(404).send({ status: "Error", message: `Tipo de superficie con id: ${id_superficie} no encontrada` })
+        return res.status(404).send({ status: "Error", message: `Tipo de superficie con id: ${req.body.id_superficie} no encontrada` })
     }
 
     if (duracion_min > duracion_max) {
@@ -111,8 +112,8 @@ async function registrarCancha(req, res) {
         return res.status(400).send({ status: "Error", message: "Algunos campos estan vacios" })
     }
 
-    tiempo_cancelacion = helper.convertirADecimalValidado(5);
-    precio_hora_reserva = helper.convertirADecimalValidado(10, 2);
+    tiempo_cancelacion = helper.convertirADecimalValidado(tiempo_cancelacion);
+    precio_hora_reserva = helper.convertirADecimalValidado(precio_hora_reserva, 2);
 
     const existeCancha = await dbCanchaQuery.getTipoCanchaByNombreAndIdClub(nombre, id_club);
     if (existeCancha) {
@@ -123,14 +124,14 @@ async function registrarCancha(req, res) {
     }
 
     if (tiempo_cancelacion < 0) {
-        return res.status(400).send({ status: "Error", message: "El tiempo de cancelación no puede ser menor a 0"})
+        return res.status(400).send({ status: "Error", message: "El tiempo de cancelación no puede ser menor a 0" })
     }
     if (precio_hora_reserva <= 0) {
-        return res.status(400).send({ status: "Error", message: "El precio por hora de reserva debe ser mayor a 0"})
+        return res.status(400).send({ status: "Error", message: "El precio por hora de reserva debe ser mayor a 0" })
     }
     const tipo_de_cancha = await dbCanchaQuery.getTipoCanchaById(id_tipo_de_cancha);
     if (!tipo_de_cancha) {
-        return res.status(404).send({ status: "Error", message: `Tipo de cancha con el id: ${id_tipo_de_cancha}  no encontrada` })
+        return res.status(404).send({ status: "Error", message: `Tipo de cancha con el id: ${req.body.id_tipo_de_cancha}  no encontrada` })
     }
 
     const nueva_cancha = {
@@ -166,7 +167,7 @@ async function getTipoCanchaById(req, res) {
     }
     const tipo_cancha = await dbCanchaQuery.getTipoCanchaById(id_tipo_de_cancha)
     if (!tipo_cancha) {
-        return res.status(404).send({ status: "Error", message: `No existe un tipo de cancha con el id ${id_tipo_de_cancha}` })
+        return res.status(404).send({ status: "Error", message: `No existe un tipo de cancha con el id ${req.params.id}` })
     }
 
     res.send(tipo_cancha)
@@ -179,7 +180,7 @@ async function getCanchaById(req, res) {
     }
     const cancha = await dbCanchaQuery.getCanchaById(id_cancha)
     if (!cancha) {
-        return res.status(404).send({ status: "Error", message: `No existe la cancha con el id ${id_cancha}` })
+        return res.status(404).send({ status: "Error", message: `No existe la cancha con el id ${req.params.id}` })
     }
     res.send(cancha)
 }
@@ -194,22 +195,300 @@ async function registrarDisponibilidad(req, res) {
     };
     let hora_inicio = req.body.hora_inicio;
     let hora_fin = req.body.hora_fin;
-    let id_cancha = req.body.id_cancha;
-
+    let id_cancha = (req.params.id || req.body.id_cancha) ;
+    console.log("id")
+    console.log(hora_inicio)
     if ([hora_inicio, hora_fin, id_cancha].some(v => v === undefined || v === null || v === "")) {
-        
+
         return res.status(400).send({ status: "Error", message: "Algunos campos estan vacios" })
     }
-
     
+    dia_semana = helper.normalizarDia(dia_semana);
+    hora_inicio = helper.convertirAHora24(hora_inicio);
+    hora_fin = helper.convertirAHora24(hora_fin);
+    id_cancha = helper.convertirADecimalValidado(id_cancha);
 
-
-    if (!todos_los_dias && (dia_semana <= 0 || dia_semana > 7)){
-        return res.status(400).send({ status: "Error", message: "Día de la semana inválido"})
+    console.log(hora_fin)
+    const existeCancha = await dbCanchaQuery.getCanchaById(id_cancha);
+    if (!existeCancha) {
+        return res.status(404).send({ status: "Error", message: `No existe la Cancha con el id: ${req.params.id || req.body.id_cancha}` })
     }
+
+    if (!todos_los_dias && dia_semana === null) {
+        return res.status(400).send({ status: "Error", message: "Día de la semana inválido" })
+    }
+    if (!hora_inicio) {
+        return res.status(400).send({ status: "Error", message: "Horario o formato de hora de inicio inválido"})
+    }
+    if (!hora_fin) {
+        return res.status(400).send({ status: "Error", message: "Horario o formato de hora de fin inválido" })
+    }
+    if (helper.compararHoras(hora_inicio, hora_fin)) {
+        return res.status(400).send({ status: "Error", message: "La hora de inicio no puede ser mayor o igual que la hora de fin" })
+    }
+    if (helper.horaToMinutos(hora_fin) - helper.horaToMinutos(hora_inicio) < 240) {
+        return res.status(400).send({
+            status: "Error",
+            message: "El rango horario no puede ser inferior a 4 horas",
+            detale: {
+                minimo: `${240 * 60}hs`,
+                recibido: `${helper.horaToMinutos(hora_fin) - helper.horaToMinutos(hora_inicio)}`
+            }
+        })
+    }
+
+    let nuevaDisponibilidad = {
+        dia_semana,
+        hora_inicio,
+        hora_fin,
+        id_cancha
+    }
+    //si todos los dias
+    if (todos_los_dias) {
+        
+        let diasExistentes = [];
+        let diasAgregados = [];
+        let diasError = [];
+        for (let i = 0; i < 7; i++) {
+            if (!await dbDisponibilidadQuery.getDisponibilidadByDiaSemanaAndIdCancha(helper.normalizarDia(i + 1), id_cancha)) {
+                nuevaDisponibilidad.dia_semana = helper.normalizarDia(i + 1)
+                const respuesta = await dbDisponibilidadQuery.agregarDisponibilidad(nuevaDisponibilidad);
+                if (respuesta.affectedRows > 0) {
+                    diasAgregados.push(helper.normalizarDia(i + 1))
+                } else {
+                    diasError.push(helper.normalizarDia(i + 1));
+                }
+            } else {
+                diasExistentes.push(helper.normalizarDia(i + 1))
+            }
+        }
+        const resultado = {
+            diasAgregados,
+            diasExistentes,
+            diasError
+        }
+        if (diasAgregados.length === 7) {
+            return res.status(201).send({
+                status: "Success",
+                message: "Todos las disponibilidades fueron asignadas correctamente",
+                disponibilidadesAgregadas: diasAgregados.length,
+                resultado
+            })
+        }
+        if (diasAgregados.length < 7 && diasAgregados.length > 0 && diasError.length === 0) {
+            return res.status(200).send({
+                status: "Partial Success",
+                message: "Algunas disponibilidades ya existían",
+                DisponibilidadesAgregadas: diasAgregados.length,
+                DisponibilidadesExistentes: diasExistentes.length,
+                resultado
+            })
+        }
+        if (diasAgregados.length < 7 && diasAgregados.length > 0 && diasError.length > 0) {
+            return res.status(207).send({
+                status: "Partial Error",
+                message: "Error al intentar asignar algunas disponibilidades",
+                DisponibilidadesAgregadas: diasAgregados.length,
+                DisponibilidadesExistentes: diasExistentes.length,
+                DisponibilidadesNoAgregadas: diasError.length,
+                resultado
+            })
+        }
+        if (diasAgregados.length === 0 && diasError.length === 0) {
+            return res.status(409).send({
+                status: "Error",
+                message: "Todas las disponibilidades ya existían",
+                DisponibilidadesAgregadas: diasAgregados.length,
+                DisponibilidadesExistentes: diasExistentes.length,
+                DisponibilidadesNoAgregadas: diasError.length,
+                resultado
+            })
+        }
+        if (diasError.length === 7) {
+            return res.status(400).send({
+                status: "Error",
+                message: "Error al intentar asignar todas las disponibilidades",
+                DisponibilidadesAgregadas: diasAgregados.length,
+                DisponibilidadesExistentes: diasExistentes.length,
+                DisponibilidadesNoAgregadas: diasError.length,
+                resultado
+            })
+        }
+    }
+
+    if (!await dbDisponibilidadQuery.getDisponibilidadByDiaSemanaAndIdCancha(dia_semana, id_cancha)) {
+        const respuesta = await dbDisponibilidadQuery.agregarDisponibilidad(nuevaDisponibilidad);
+        console.log(respuesta)
+        if (respuesta.affectedRows > 0) {
+            return res.status(201).send({
+                status: "Success",
+                message: `La disponibilidad del dia ${dia_semana} fue asignada correctamente`,
+                disponibilidadesAgregadas: 1,
+                datos: {
+                    id_disponibilidad: respuesta.inserId,
+                    dia_semana,
+                    hora_inicio,
+                    hora_fin,
+                    id_cancha,
+                }
+            })
+        } else {
+            return res.status(400).send({
+                status: "Error",
+                message: `No se pudo asignar la disponibilidad del dia ${dia_semana}`,
+                disponibilidadesAgregadas: 0
+            })
+        }
+    } else {
+        return res.status(409).send({
+            status: "Error",
+            message: `La disponibilidad del dia ${dia_semana} ya existe`,
+            disponibilidadesAgregadas: 0,
+            disponibilidadesExistentes: 1
+        })
+    }
+}
+
+// listar
+async function getDisponibilidades(req, res) {
+    res.send(await dbDisponibilidadQuery.getDisponibilidades() || [])
+}
+async function getListaCarrados(req, res) {
+    res.send(await dbDisponibilidadQuery.getNoDisponibles() || [])
+}
+//consultar
+async function getDisponibilidadById(req, res) {
+    //id disp
+    let id_disponibilidad = req.params.id;
+    if (!id_disponibilidad) {
+        return res.status(400).send({ status: "Error", message: "Ingrese el id de la disponibilidad" })
+    }
+    id_disponibilidad = helper.convertirADecimalValidado(id_disponibilidad);
+    if (id_disponibilidad === null){
+        return res.status(400).send({ status: "Error", message: "El id debe ser un número entero" })
+    }
+    const disponibilidad = await dbDisponibilidadQuery.getDisponibilidadById(id_disponibilidad)
+    if (!disponibilidad) {
+        return res.status(404).send({ status: "Error", message: `No existe una disponibilidad con el id ${req.params.id}` })
+    }
+
+    res.send(disponibilidad)
+}
+async function getDisponibilidadesDiaSemanaNormal(req, res) {
+    //dia_semana
+    let dia_semana = req.params.dia;
+    const dias = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+    if (!dia_semana) {
+        return res.status(400).send({ status: "Error", message: "Ingrese el día de la disponibilidad" })
+    }
+    dia_semana = helper.normalizarDia(dia_semana);
+    if (dia_semana === null) {
+        return res.status(400).send({
+            status: "Error",
+            message: "El día ingresado es inválido",
+            expected: {
+                numeros: "1-7",
+                dias: dias
+            }
+        })
+    }
+    const disponibilidad = await dbDisponibilidadQuery.getDisponibilidadByDiaSemana(dia_semana) || []
+
+    res.send(disponibilidad)
+}
+async function getDisponibilidadesCancha(req, res) {
+    //id_cancha
+    let id_cancha= req.params.id;
+    if (!id_cancha) {
+        return res.status(400).send({ status: "Error", message: "Ingrese el id de la cancha" })
+    }
+    id_cancha = helper.convertirADecimalValidado(id_cancha);
+    if (id_cancha === null){
+        return res.status(400).send({ status: "Error", message: "El id de la cancha debe ser un número entero" })
+    }
+    const cancha = await dbCanchaQuery.getCanchaById(id_cancha);
+    if (!cancha){
+        return res.status(404).send({ status: "Error", message: `La cancha con el id ${req.params.id} no existe` })
+    }
+    const disponibilidad = await dbDisponibilidadQuery.getDisponibilidadByIdCancha(id_cancha)
+    if (!disponibilidad) {
+        return res.status(404).send({ status: "Error", message: `La cancha con el id ${req.params.id} no tiene ninguna disponibilidad asignada` })
+    }
+    
+    res.send(disponibilidad)
+}
+async function getDisponibilidadesCanchaDiaSemanaNormal(req, res) {
+    //dia_semana
+    //id_cancha
+    let dia_semana = req.params.dia;
+    let id_cancha= req.params.id;
+    const dias = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+    if (!id_cancha) {
+        return res.status(400).send({ status: "Error", message: "Ingrese el id de la cancha" })
+    }
+    id_cancha = helper.convertirADecimalValidado(id_cancha);
+    if (id_cancha === null){
+        return res.status(400).send({ status: "Error", message: "El id de la cancha debe ser un número entero" })
+    }
+    if (!dia_semana) {
+        return res.status(400).send({ status: "Error", message: "Ingrese el día de la disponibilidad" })
+    }
+    dia_semana = helper.normalizarDia(dia_semana);
+    if (dia_semana === null) {
+        return res.status(400).send({
+            status: "Error",
+            message: "El día ingresado es inválido",
+            expected: {
+                numeros: "1-7",
+                dias: dias
+            }
+        })
+    }
+
+    const cancha = await dbCanchaQuery.getCanchaById(id_cancha);
+    if (!cancha){
+        return res.status(404).send({ status: "Error", message: `La cancha con el id ${req.params.id} no existe` })
+    }
+
+    const disponibilidad = await dbDisponibilidadQuery.getDisponibilidadByDiaSemanaAndIdCancha(dia_semana, id_cancha)
+    if (!disponibilidad) {
+        return res.status(404).send({ status: "Error", message: `La cancha con el id ${req.params.id} no tiene disponibilidad asignada el dia ${req.params.dia}` })
+    }
+    res.send(disponibilidad)
+}
+
+
+// EXCEPCIONES
+async function registrarDisponibilidadExcepcion(req, res) {
 
 }
 
+// listar
+async function getDisponibilidadesExcepciones(req, res) {
+
+}
+
+// consultar
+async function getDisponibilidadExcepcionById(req, res) {
+
+}
+async function getDisponibilidadesExcepcionesByIdCancha(req, res) {
+
+}
+async function getDisponibilidadesExcepcionesByMotivo(req, res) {
+
+}
+async function getDisponibilidadesExcepcionesByFecha(req, res) {
+
+}
+
+async function getDisponibilidadCanchaByFecha(req, res) {
+
+}
+
+async function estadoCanchaFecha(req, res) {
+
+}
 
 export const methods = {
     registrarTipoCancha,
@@ -219,4 +498,12 @@ export const methods = {
     getTipoCanchaById,
     getCanchas,
     getCanchaById,
+    //disponibilidad
+    registrarDisponibilidad,
+    getDisponibilidades,
+    getListaCarrados,
+    getDisponibilidadById,
+    getDisponibilidadesDiaSemanaNormal,
+    getDisponibilidadesCancha,
+    getDisponibilidadesCanchaDiaSemanaNormal
 }

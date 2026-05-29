@@ -53,6 +53,15 @@ router.get("/api/canchas", wrapper(canchaController.getCanchas));
 router.get("/api/canchas/cancha_id=:id", wrapper(canchaController.getCanchaById));
 //superficies
 router.get("/api/superficies", wrapper(canchaController.getSuperficies));
+// disponibilidad
+router.get("/api/disponibilidad", wrapper(canchaController.getDisponibilidades))
+router.get("/api/disponibilidad/cerradas", wrapper(canchaController.getListaCarrados))
+router.get("/api/disponibilidad/disponibilidad_id=:id", wrapper(canchaController.getDisponibilidadById))
+router.get("/api/disponibilidad/dia=:dia", wrapper(canchaController.getDisponibilidadesDiaSemanaNormal))
+router.get("/api/disponibilidad/cancha_id=:id", wrapper(canchaController.getDisponibilidadesCancha))
+router.get("/api/canchas/cancha_id=:id/disponibilidad", wrapper(canchaController.getDisponibilidadesCancha))
+router.get("/api/disponibilidad/dia=:dia/cancha_id=:id", wrapper(canchaController.getDisponibilidadesCanchaDiaSemanaNormal))
+router.get("/api/canchas/cancha_id=:id/disponibilidad/dia=:dia", wrapper(canchaController.getDisponibilidadesCanchaDiaSemanaNormal))
 
 // api post
 // authentication
@@ -72,5 +81,6 @@ router.post("/api/tipos_cancha/agregar", authorization.apiSoloUsers, authorizati
     })
 }, wrapper(canchaController.registrarTipoCancha));
 router.post("/api/canchas/agregar", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(canchaController.registrarCancha));
-
+router.post("/api/canchas/cancha_id=:id/disponibilidad/agregar", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(canchaController.registrarDisponibilidad))
+router.post("/api/disponibilidad/agregar", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(canchaController.registrarDisponibilidad))
 export default router

@@ -63,7 +63,7 @@ async function getEntrenadores(req, res){
 }
 
 async function getAdministradores(req, res){
-    res.send(await dbUserQuery.getUsuariosByLevel(ADMIN_USER_LEVEL) || [])
+    res.send(await dbUserQuery.getUsuariosByLevel(ADMIN_USER_LEVEL_USER_LEVEL) || [])
 }
 // nombres de profesionales
 async function getNombresProfesores(req, res){
