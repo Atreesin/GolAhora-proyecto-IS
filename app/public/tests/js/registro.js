@@ -176,4 +176,21 @@ document.getElementById("register-form").addEventListener("submit", async (e) =>
       confirm_password: e.target.children.confirm_password.value,
       calle: e.target.children.calle.value,
       numero: e.target.children.numero.value,
-      codigo_postal: e.target.
+      codigo_postal: e.target.children.codigo_postal.value,
+      pais: e.target.children.pais.value,
+      provincia: e.target.children.provincia.value,
+      ciudad: e.target.children.ciudad.value,
+      localidad: e.target.children.localidad.value
+    })
+  });
+
+  if (!res.ok) {
+    mensajeError.innerHTML = (await res.json()).message;
+    return mensajeError.classList.toggle("escondido", false);
+  }
+
+  const resJson = await res.json();
+  if (resJson.redirect) {
+    window.location.href = resJson.redirect;
+  }
+});
