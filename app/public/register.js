@@ -1,150 +1,157 @@
-const API = "https://golahora-proyecto-is.onrender.com";
-
 const mensajeError = document.getElementsByClassName("error")[0];
 
-// ==========================================
-// NACIONALIDAD CON AUTOCOMPLETADO
-// ==========================================
+//nacionalidad
 document.addEventListener("DOMContentLoaded", async () => {
-    const paisInput = document.getElementById("nacionalidad");
-    const suggestionsBox = document.getElementById("nacionalidad-suggestions");
-    let paises = [];
+  const paisInput = document.getElementById("nacionalidad");
+  const suggestionsBox = document.getElementById("nacionalidad-suggestions");
 
-    try {
-        const response = await fetch(API + "/api/paises");
-        paises = await response.json();
-    } catch (error) {
-        console.error("Error al cargar nacionalidades:", error);
+  let paises = [];
+
+  try {
+    const response = await fetch("/api/paises");
+    paises = await response.json(); 
+  } catch (error) {
+    console.error("Error al cargar países:", error);
+  }
+
+  paisInput.addEventListener("input", () => {
+    const query = paisInput.value.toLowerCase();
+    suggestionsBox.innerHTML = "";
+
+    if (query.length === 0) {
+      suggestionsBox.style.display = "none";
+      return;
     }
 
-    paisInput.addEventListener("input", () => {
-        const query = paisInput.value.toLowerCase();
-        suggestionsBox.innerHTML = "";
-        if (query.length === 0) { suggestionsBox.style.display = "none"; return; }
+    const matches = paises.filter(p => p.nombre.toLowerCase().includes(query));
 
-        const matches = paises.filter(p => p.nombre.toLowerCase().includes(query));
-        if (matches.length > 0) {
-            matches.forEach(p => {
-                const div = document.createElement("div");
-                div.textContent = p.nombre;
-                div.addEventListener("click", () => {
-                    paisInput.value = p.nombre;
-                    suggestionsBox.style.display = "none";
-                });
-                suggestionsBox.appendChild(div);
-            });
-            suggestionsBox.style.display = "block";
-        } else {
-            suggestionsBox.style.display = "none";
-        }
-    });
+    if (matches.length > 0) {
+      matches.forEach(p => {
+        const div = document.createElement("div");
+        div.textContent = p.nombre;
+        div.addEventListener("click", () => {
+          paisInput.value = p.nombre; 
+          suggestionsBox.style.display = "none";
+        });
+        suggestionsBox.appendChild(div);
+      });
+      suggestionsBox.style.display = "block";
+    } else {
+      suggestionsBox.style.display = "none";
+    }
+  });
 
-    document.addEventListener("click", (e) => {
-        if (!suggestionsBox.contains(e.target) && e.target !== paisInput) {
-            suggestionsBox.style.display = "none";
-        }
-    });
+  document.addEventListener("click", (e) => {
+    if (!suggestionsBox.contains(e.target) && e.target !== paisInput) {
+      suggestionsBox.style.display = "none";
+    }
+  });
 });
 
-// ==========================================
-// GÉNERO CON AUTOCOMPLETADO
-// ==========================================
+//genero
 document.addEventListener("DOMContentLoaded", async () => {
-    const generoInput = document.getElementById("genero");
-    const suggestionsBox = document.getElementById("genero-suggestions");
-    let generos = [];
+  const generoInput = document.getElementById("genero");
+  const suggestionsBox = document.getElementById("genero-suggestions");
 
-    try {
-        const response = await fetch(API + "/api/generos");
-        generos = await response.json();
-    } catch (error) {
-        console.error("Error al cargar géneros:", error);
+  let generos = [];
+
+  try {
+    const response = await fetch("/api/generos");
+    generos = await response.json(); 
+  } catch (error) {
+    console.error("Error al cargar géneros:", error);
+  }
+
+  generoInput.addEventListener("input", () => {
+    const query = generoInput.value.toLowerCase();
+    suggestionsBox.innerHTML = "";
+
+    if (query.length === 0) {
+      suggestionsBox.style.display = "none";
+      return;
     }
 
-    generoInput.addEventListener("input", () => {
-        const query = generoInput.value.toLowerCase();
-        suggestionsBox.innerHTML = "";
-        if (query.length === 0) { suggestionsBox.style.display = "none"; return; }
+    const matches = generos.filter(g => g.toLowerCase().includes(query));
 
-        const matches = generos.filter(g => g.toLowerCase().includes(query));
-        if (matches.length > 0) {
-            matches.forEach(g => {
-                const div = document.createElement("div");
-                div.textContent = g;
-                div.addEventListener("click", () => {
-                    generoInput.value = g;
-                    suggestionsBox.style.display = "none";
-                });
-                suggestionsBox.appendChild(div);
-            });
-            suggestionsBox.style.display = "block";
-        } else {
-            suggestionsBox.style.display = "none";
-        }
-    });
+    if (matches.length > 0) {
+      matches.forEach(g => {
+        const div = document.createElement("div");
+        div.textContent = g;
+        div.addEventListener("click", () => {
+          generoInput.value = g; 
+          suggestionsBox.style.display = "none";
+        });
+        suggestionsBox.appendChild(div);
+      });
+      suggestionsBox.style.display = "block";
+    } else {
+      suggestionsBox.style.display = "none";
+    }
+  });
 
-    document.addEventListener("click", (e) => {
-        if (!suggestionsBox.contains(e.target) && e.target !== generoInput) {
-            suggestionsBox.style.display = "none";
-        }
-    });
+  document.addEventListener("click", (e) => {
+    if (!suggestionsBox.contains(e.target) && e.target !== generoInput) {
+      suggestionsBox.style.display = "none";
+    }
+  });
 });
 
-// ==========================================
-// PAÍS CON AUTOCOMPLETADO
-// ==========================================
+//pais
 document.addEventListener("DOMContentLoaded", async () => {
-    const paisInput = document.getElementById("pais");
-    const suggestionsBox = document.getElementById("pais-suggestions");
-    let paises = [];
+  const paisInput = document.getElementById("pais");
+  const suggestionsBox = document.getElementById("pais-suggestions");
 
-    try {
-        const response = await fetch(API + "/api/paises");
-        paises = await response.json();
-    } catch (error) {
-        console.error("Error al cargar países:", error);
+  let paises = [];
+
+  try {
+    const response = await fetch("/api/paises");
+    paises = await response.json(); 
+  } catch (error) {
+    console.error("Error al cargar países:", error);
+  }
+
+  paisInput.addEventListener("input", () => {
+    const query = paisInput.value.toLowerCase();
+    suggestionsBox.innerHTML = "";
+
+    if (query.length === 0) {
+      suggestionsBox.style.display = "none";
+      return;
     }
 
-    paisInput.addEventListener("input", () => {
-        const query = paisInput.value.toLowerCase();
-        suggestionsBox.innerHTML = "";
-        if (query.length === 0) { suggestionsBox.style.display = "none"; return; }
+    const matches = paises.filter(p => p.nombre.toLowerCase().includes(query));
 
-        const matches = paises.filter(p => p.nombre.toLowerCase().includes(query));
-        if (matches.length > 0) {
-            matches.forEach(p => {
-                const div = document.createElement("div");
-                div.textContent = p.nombre;
-                div.addEventListener("click", () => {
-                    paisInput.value = p.nombre;
-                    suggestionsBox.style.display = "none";
-                });
-                suggestionsBox.appendChild(div);
-            });
-            suggestionsBox.style.display = "block";
-        } else {
-            suggestionsBox.style.display = "none";
-        }
-    });
+    if (matches.length > 0) {
+      matches.forEach(p => {
+        const div = document.createElement("div");
+        div.textContent = p.nombre;
+        div.addEventListener("click", () => {
+          paisInput.value = p.nombre; 
+          suggestionsBox.style.display = "none";
+        });
+        suggestionsBox.appendChild(div);
+      });
+      suggestionsBox.style.display = "block";
+    } else {
+      suggestionsBox.style.display = "none";
+    }
+  });
 
-    document.addEventListener("click", (e) => {
-        if (!suggestionsBox.contains(e.target) && e.target !== paisInput) {
-            suggestionsBox.style.display = "none";
-        }
-    });
+  document.addEventListener("click", (e) => {
+    if (!suggestionsBox.contains(e.target) && e.target !== paisInput) {
+      suggestionsBox.style.display = "none";
+    }
+  });
 });
 
-// ==========================================
-// ENVÍO DEL FORMULARIO
-// ==========================================
-document.getElementById("register-form").addEventListener("submit", async (e) => {
+document.getElementById("register-form").addEventListener("submit",async(e)=>{
     e.preventDefault();
-
-    const res = await fetch(API + "/api/register", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "plataform": "web"
+    
+    const res = await fetch("/api/register",{
+        method:"POST",
+        headers:{
+            "Content-Type" : "application/json",
+            "plataform" : "web"
         },
         body: JSON.stringify({
             nombre: e.target.children.nombre.value,
@@ -166,14 +173,15 @@ document.getElementById("register-form").addEventListener("submit", async (e) =>
             localidad: e.target.children.localidad.value
         })
     });
-
-    if (!res.ok) {
-        mensajeError.innerHTML = (await res.json()).message;
-        return mensajeError.classList.toggle("escondido", false);
-    }
-
+    
+    if(!res.ok){
+      mensajeError.innerHTML = (await res.json()).message;
+      return mensajeError.classList.toggle("escondido", false);
+    } 
+    
     const resJson = await res.json();
-    if (resJson.redirect) {
+    
+    if(resJson.redirect){
         window.location.href = resJson.redirect;
     }
-});
+})
