@@ -20,7 +20,7 @@ const selectNoDisponibles = `SELECT de.id_disponibilidad AS id, de.motivo, de.di
 
 
 const selectDisponibilidadRealByFechaAndIdCanchaAndDiaSemana =  `SELECT IF(de.id_disponibilidad IS NULL, d.id_disponibilidad, de.id_disponibilidad) AS id, IF(de.id_disponibilidad IS NULL, 'NORMAL', de.motivo) AS tipo_disponibilidad, d.dia_semana, IF(de.id_disponibilidad IS NULL, d.hora_inicio, de.hora_inicio) AS hora_inicio, IF(de.id_disponibilidad IS NULL, d.hora_fin, de.hora_fin) AS hora_fin, JSON_OBJECT('id', c.id_cancha, 'nombre', c.nombre) AS cancha, de.cerrado FROM disponibilidad d LEFT JOIN disponibilidad_excepciones de ON (d.id_cancha = de.id_cancha OR de.id_cancha = 0) AND de.dia = ? LEFT JOIN canchas c ON d.id_cancha = c.id_cancha WHERE (d.id_cancha = ? AND d.dia_semana = ?) AND (SELECT EXIST (SELECT 1 FROM disponibilidad_excepciones dex WHERE (dex.id_cancha = d.id_cancha OR dex.id_cancha = 0) AND dex.cerrado AND dex.dia = ?))`;
-const estaCerradoidCanchaFecha = `SELECT EXISTS (SELECT 1 FROM disponibilidad_excepciones WHERE (id_cancha = ? or id_cancha = 0) AND dia = ? AND cerrado)`;
+const estaCerradoByIdCanchaFecha = `SELECT EXISTS (SELECT 1 FROM disponibilidad_excepciones WHERE (id_cancha = ? or id_cancha = 0) AND dia = ? AND cerrado)`;
 
 // registrar
 async function agregarDisponibilidad(disponibilidad) {
@@ -32,7 +32,7 @@ async function agregarDisponibilidadExcepcion(disponibilidad_excepciones) {
 }
 
 // listar
-async function getDisponibilidad() {
+async function getDisponibilidades() {
     try {
         const rows = await pool.query(selectDisponibilidad);
         if (rows.length > 0) {
@@ -46,7 +46,7 @@ async function getDisponibilidad() {
     }
 }
 
-async function getDisponibilidadExcepciones() {
+async function getDisponibilidadesExcepciones() {
     try {
         const rows = await pool.query(selectDisponibilidadExcepciones);
         if (rows.length > 0) {
@@ -62,7 +62,7 @@ async function getDisponibilidadExcepciones() {
 
 async function getNoDisponibles() {
     try {
-        const rows = await pool.query(getNoDisponibles);
+        const rows = await pool.query(selectNoDisponibles);
         if (rows.length > 0) {
             return rows;
         } else {
@@ -119,7 +119,7 @@ async function getDisponibilidadByIdCancha(id_cancha) {
 
 async function getDisponibilidadByDiaSemanaAndIdCancha(dia_semana, id_cancha) {
     try {
-        const rows = await pool.query(select, [dia_semana, id_cancha]);
+        const rows = await pool.query(selectDisponibilidadByDiaSemanaAndIdCancha, [dia_semana, id_cancha]);
         if (rows.length > 0) {
             return rows[0];
         } else {
@@ -204,9 +204,9 @@ async function getDisponibilidadReal(fecha, id_cancha, dia_semana) {
 }
 
 // extra
-async function getDisponibilidadReal(id_cancha, fecha) {
+async function estaCerradoIdCanchaFecha(id_cancha, fecha) {
     try {
-        const rows = await pool.query(estaCerradoidCanchaFecha, [id_cancha, fecha]);
+        const rows = await pool.query(estaCerradoByIdCanchaFecha, [id_cancha, fecha]);
         return rows;
     } catch (err) {
         console.error(err);
@@ -217,8 +217,8 @@ async function getDisponibilidadReal(id_cancha, fecha) {
 export const methods = {
     agregarDisponibilidad,
     agregarDisponibilidadExcepcion,
-    getDisponibilidad,
-    getDisponibilidadExcepciones,
+    getDisponibilidades,
+    getDisponibilidadesExcepciones,
     getNoDisponibles,
     getDisponibilidadById,
     getDisponibilidadExcepcionById,
@@ -228,5 +228,7 @@ export const methods = {
     getDisponibilidadExcepcionByCanchaId,
     getDisponibilidadExcepcionByMotivo,
     getDisponibilidadExcepcionFecha,
-    getDisponibilidadReal
+    getDisponibilidadReal,
+    estaCerradoIdCanchaFecha,
+    
 }

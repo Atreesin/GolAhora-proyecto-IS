@@ -1,7 +1,8 @@
 import { stat } from "fs";
 import { methods as dbCanchaQuery } from "../db/dbCanchasQueries.js";
 import { methods as dbUserQuery } from "../db/dbUserQueries.js";
-import { methods as dbDisponibilidadQuery } from "../db/dbDisponibilidadQueries.js"
+import { methods as dbDisponibilidadQuery } from "../db/dbDisponibilidadQueries.js";
+import { methods as dbOcupacionesQuery } from "../db/dbOcupacionesQueries.js"
 import { methods as helper } from "../helpers/utilsHelper.js";
 import { borrarArchivoSiExiste } from "../helpers/archivoHelper.js";
 
@@ -195,14 +196,14 @@ async function registrarDisponibilidad(req, res) {
     };
     let hora_inicio = req.body.hora_inicio;
     let hora_fin = req.body.hora_fin;
-    let id_cancha = (req.params.id || req.body.id_cancha) ;
+    let id_cancha = (req.params.id || req.body.id_cancha);
     console.log("id")
     console.log(hora_inicio)
     if ([hora_inicio, hora_fin, id_cancha].some(v => v === undefined || v === null || v === "")) {
 
         return res.status(400).send({ status: "Error", message: "Algunos campos estan vacios" })
     }
-    
+
     dia_semana = helper.normalizarDia(dia_semana);
     hora_inicio = helper.convertirAHora24(hora_inicio);
     hora_fin = helper.convertirAHora24(hora_fin);
@@ -218,7 +219,7 @@ async function registrarDisponibilidad(req, res) {
         return res.status(400).send({ status: "Error", message: "Día de la semana inválido" })
     }
     if (!hora_inicio) {
-        return res.status(400).send({ status: "Error", message: "Horario o formato de hora de inicio inválido"})
+        return res.status(400).send({ status: "Error", message: "Horario o formato de hora de inicio inválido" })
     }
     if (!hora_fin) {
         return res.status(400).send({ status: "Error", message: "Horario o formato de hora de fin inválido" })
@@ -245,7 +246,7 @@ async function registrarDisponibilidad(req, res) {
     }
     //si todos los dias
     if (todos_los_dias) {
-        
+
         let diasExistentes = [];
         let diasAgregados = [];
         let diasError = [];
@@ -364,7 +365,7 @@ async function getDisponibilidadById(req, res) {
         return res.status(400).send({ status: "Error", message: "Ingrese el id de la disponibilidad" })
     }
     id_disponibilidad = helper.convertirADecimalValidado(id_disponibilidad);
-    if (id_disponibilidad === null){
+    if (id_disponibilidad === null) {
         return res.status(400).send({ status: "Error", message: "El id debe ser un número entero" })
     }
     const disponibilidad = await dbDisponibilidadQuery.getDisponibilidadById(id_disponibilidad)
@@ -377,7 +378,7 @@ async function getDisponibilidadById(req, res) {
 async function getDisponibilidadesDiaSemanaNormal(req, res) {
     //dia_semana
     let dia_semana = req.params.dia;
-    const dias = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+    const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
     if (!dia_semana) {
         return res.status(400).send({ status: "Error", message: "Ingrese el día de la disponibilidad" })
     }
@@ -398,36 +399,36 @@ async function getDisponibilidadesDiaSemanaNormal(req, res) {
 }
 async function getDisponibilidadesCancha(req, res) {
     //id_cancha
-    let id_cancha= req.params.id;
+    let id_cancha = req.params.id;
     if (!id_cancha) {
         return res.status(400).send({ status: "Error", message: "Ingrese el id de la cancha" })
     }
     id_cancha = helper.convertirADecimalValidado(id_cancha);
-    if (id_cancha === null){
+    if (id_cancha === null) {
         return res.status(400).send({ status: "Error", message: "El id de la cancha debe ser un número entero" })
     }
     const cancha = await dbCanchaQuery.getCanchaById(id_cancha);
-    if (!cancha){
+    if (!cancha) {
         return res.status(404).send({ status: "Error", message: `La cancha con el id ${req.params.id} no existe` })
     }
     const disponibilidad = await dbDisponibilidadQuery.getDisponibilidadByIdCancha(id_cancha)
     if (!disponibilidad) {
         return res.status(404).send({ status: "Error", message: `La cancha con el id ${req.params.id} no tiene ninguna disponibilidad asignada` })
     }
-    
+
     res.send(disponibilidad)
 }
 async function getDisponibilidadesCanchaDiaSemanaNormal(req, res) {
     //dia_semana
     //id_cancha
     let dia_semana = req.params.dia;
-    let id_cancha= req.params.id;
-    const dias = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+    let id_cancha = req.params.id;
+    const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
     if (!id_cancha) {
         return res.status(400).send({ status: "Error", message: "Ingrese el id de la cancha" })
     }
     id_cancha = helper.convertirADecimalValidado(id_cancha);
-    if (id_cancha === null){
+    if (id_cancha === null) {
         return res.status(400).send({ status: "Error", message: "El id de la cancha debe ser un número entero" })
     }
     if (!dia_semana) {
@@ -446,7 +447,7 @@ async function getDisponibilidadesCanchaDiaSemanaNormal(req, res) {
     }
 
     const cancha = await dbCanchaQuery.getCanchaById(id_cancha);
-    if (!cancha){
+    if (!cancha) {
         return res.status(404).send({ status: "Error", message: `La cancha con el id ${req.params.id} no existe` })
     }
 
@@ -488,6 +489,63 @@ async function getDisponibilidadCanchaByFecha(req, res) {
 
 async function estadoCanchaFecha(req, res) {
 
+}
+
+// OCUPACIONES
+async function registrarOcupacionCancha(req, res) {
+    /*
+    fecha
+    hora_inicio
+    hora_fin
+    id_tipo_ocupacion
+    id_cancha
+    */
+    let fecha = req.body.fecha
+    let hora_inicio = req.body.hora_inicio
+    let hora_fin = req.body.hora_fin
+    let id_tipo_ocupacion = req.body.id_tipo_ocupacion
+    let id_cancha = req.params.id_cancha || req.body.id_cancha
+
+    if ([fecha, hora_inicio, hora_fin, id_tipo_ocupacion, id_cancha].some(v => v === undefined || v === null || v === "")) {
+
+        return res.status(400).send({ status: "Error", message: "Algunos campos estan vacios" })
+    }
+
+    fecha = helper.normalizarFecha(fecha);
+    hora_inicio = helper.convertirAHora24(hora_inicio);
+    hora_fin = helper.convertirAHora24(hora_fin);
+    id_tipo_ocupacion = helper.convertirADecimalValidado(id_cancha);
+    id_cancha = helper.convertirADecimalValidado(id_cancha);
+    if(!fecha){
+        return res.status(400).send({ status: "Error", message: `El formato de la fecha ${req.body.fecha} no es válido` })
+    }
+    if (!hora_inicio) {
+        return res.status(400).send({ status: "Error", message: "Horario o formato de hora de inicio inválido" })
+    }
+    if (!hora_fin) {
+        return res.status(400).send({ status: "Error", message: "Horario o formato de hora de fin inválido" })
+    }
+    if (helper.compararHoras(hora_inicio, hora_fin)) {
+        return res.status(400).send({ status: "Error", message: "La hora de inicio no puede ser mayor o igual que la hora de fin" })
+    }
+    const existe_tipoOcupacion = await dbOcupacionesQuery.getTipoOcupacionById(id_tipo_ocupacion);
+    if (!existe_tipoOcupacion){
+        return res.status(404).send({ status: "Error", message: `Tipo de ocupacion con el id: ${req.body.id_tipo_ocupacion}  no encontrada` })
+    }
+    const existeCancha = await dbCanchaQuery.getCanchaById(id_cancha);
+    if (!existeCancha) {
+        return res.status(404).send({ status: "Error", message: `No existe la Cancha con el id: ${req.params.id || req.body.id_cancha}` })
+    }
+    if (existe_tipoOcupacion.tipo === 'Reserva'){
+        const dia_semana = helper.obtenerDia(fecha)
+        const disponibilidad = await dbDisponibilidadQuery.getDisponibilidadReal(fecha, id_cancha, dia_semana)
+        
+    }
+    //   aaa
+    const canchaOcupada = await dbOcupacionesQuery.getSuperposicionOcupacionesCanchas(id_cancha, fecha, hora_inicio, hora_fin)
+    if (canchaOcupada){
+        return res.status(409).send({ status: "Error", message: `No existe la Cancha con el id: ${req.params.id || req.body.id_cancha}` })
+    }
 }
 
 export const methods = {

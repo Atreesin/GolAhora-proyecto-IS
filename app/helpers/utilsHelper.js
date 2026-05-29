@@ -37,6 +37,38 @@ function validarFechaNacimiento(fecha) {
   return (edad > 13 || (edad === 13 && mes >= 0));
 }
 
+function normalizarFecha(valor) {
+
+  const regex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!regex.test(fecha)) return false;
+
+  const fecha = new Date(valor);
+
+  // Verificar si es una fecha válida
+  if (!isNaN(fecha.getTime())) {
+    return fecha; // retorna el objeto Date
+  } else {
+    return false;  // no es fecha válida
+  }
+}
+
+function compararFechas(fecha1, fecha2) {
+  const f1 = new Date(fecha1);
+  const f2 = new Date(fecha2);
+
+  // Validar que ambas sean fechas válidas
+  if (isNaN(f1.getTime()) || isNaN(f2.getTime())) {
+    return null; // si alguna no es fecha válida
+  }
+
+  if (f1.getTime() > f2.getTime()) {
+    return 1;   // fecha1 es mayor
+  } else if (f1.getTime() < f2.getTime()) {
+    return -1;  // fecha1 es menor
+  } else {
+    return 0;   // son iguales
+  }
+}
 // Validar que la contraseña tenga al menos una mayuscula, una minuscula, un numero, un caracter especial y una longitud de 8 caracteres
 function esPasswordFuerte(password) {
   const tieneMayuscula = /[A-Z]/.test(password);
@@ -193,6 +225,12 @@ function normalizarTelefono(telefono) {
   return telefono.replace(/[^+\d]/g, "");
 }
 
+function obtenerDia(fecha) {
+  const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
+
+  return dias[(new Date("2026-05-25")).getDay()]
+}
+
 function normalizarDia(valor) {
   /*
   const dias = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
@@ -216,7 +254,7 @@ function normalizarDia(valor) {
   return null;*/
   const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
   if (convertirADecimalValidado(valor)) {
-    
+
     if (valor >= 1 && valor <= dias.length) {
       return dias[valor - 1]; // 1 = Lunes, 7 = Domingo
     } else {
@@ -277,11 +315,14 @@ export const methods = {
   capitalizarPrimera,
   normalizarTelefono,
   normalizarDia,
+  obtenerDia,
   convertirADecimalValidado,
   convertirAHora24,
   diferenciaHorasFormato,
   horaToMinutos,
   compararHoras,
   estaEnRango,
-  esPar
+  esPar,
+  compararFechas,
+  normalizarFecha
 }

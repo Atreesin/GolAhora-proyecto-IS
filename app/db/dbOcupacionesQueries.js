@@ -146,9 +146,9 @@ async function getOcupacionesCanchaByCanchaId(id_cancha) {
 }
 
 // extra
-async function getSuperposicionOcupacionesCanchas(fecha, hora_inicio, hora_fin) {
+async function getSuperposicionOcupacionesCanchas(id_cancha, fecha, hora_inicio, hora_fin) {
     try {
-        const rows = await pool.query(selectSuperposicionOcupacionesCanchas, [fecha, hora_inicio, hora_inicio, hora_fin, hora_fin]);
+        const rows = await pool.query(selectSuperposicionOcupacionesCanchas, [id_cancha, fecha, hora_inicio, hora_inicio, hora_fin, hora_fin]);
         if (rows.length > 0) {
             return rows;
         } else {
@@ -160,9 +160,9 @@ async function getSuperposicionOcupacionesCanchas(fecha, hora_inicio, hora_fin) 
     }
 }
 
-async function existeOcupacionCancha(fecha, hora_inicio, hora_fin) {
+async function existeOcupacionCancha(id_cancha, fecha, hora_inicio, hora_fin) {
     try {
-        const resultado = await pool.query(estaOcupada, [fecha, hora_inicio, hora_inicio, hora_fin, hora_fin]);
+        const resultado = await pool.query(estaOcupada, [id_cancha, fecha, hora_inicio, hora_inicio, hora_fin, hora_fin]);
         return resultado[0];
     } catch (err) {
         console.error(err);
