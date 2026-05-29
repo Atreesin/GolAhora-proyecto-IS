@@ -674,7 +674,7 @@ components:
 
     TipoCanchaRegistro:
       type: object
-      requirded:
+      required:
         - tipo_cancha
         - duracion_min
         - duracion_max
@@ -724,6 +724,10 @@ components:
           description: Identificador único de la cancha en la base de datos
           example: 1
         tipo_cancha:
+          type: string
+          description: Formato o modalidad de la cancha (Fútbol 5, 7 u 11)
+          enum: ["Fútbol 5", "Fútbol 7", "Fútbol 11"]
+          example: "Fútbol 5"
           $ref: '#/components/schemas/TipoCancha'
         club:
           type: string
@@ -735,21 +739,25 @@ components:
     CanchaCrear:
       type: object
       required:
-        - id_tipo_cancha
-        - id_club
+       - tipo_cancha
+       - id_club
       properties:
-        id_tipo_cancha:
-          type: integer
-          description: Id del tipo de cancha a crear
-          example: 1
+        tipo_cancha:
+          type: string
+          description: Selecciona el formato o modalidad de la cancha
+          enum:
+           - "Fútbol 5"
+           - "Fútbol 7"
+           - "Fútbol 11"
+          example: "Fútbol 5"
         id_club:
           type: integer
-          description: Id del club al que pertenece la cancha
+          description: Id del club al que pertenece la cancha (Ej: River Plate)
           example: 1
         imagen:
           type: string
           format: binary
-          description: Imagen opcional de la cancha
+          description: Archivo de imagen opcional de la cancha
 
     SuperficieRespuesta:
       type: object
