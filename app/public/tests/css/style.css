@@ -8944,25 +8944,14 @@ body {
     text-decoration: underline;
 }
 
-/* Sugerencias del autocompletado */
-.suggestions {
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    max-height: 150px;
-    overflow-y: auto;
-    margin-top: -12px;
-    margin-bottom: 16px;
-}
-
-.sugerencia-item {
+.suggestions div {
     padding: 8px 14px;
     color: #333;
     cursor: pointer;
     font-size: 14px;
 }
 
-.sugerencia-item:hover {
+.suggestions div:hover {
     background-color: #1a73e8;
     color: white;
 }
