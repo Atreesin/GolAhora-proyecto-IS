@@ -1,10 +1,8 @@
 const API_LOGIN = "https://golahora-proyecto-is.onrender.com/api/login";
 
-
 document.getElementById("login").addEventListener("submit", async (evento) => {
-    evento.preventDefault(); // Frenamos la recarga automática
+    evento.preventDefault(); 
 
-    // Capturamos los datos en el momento exacto del clic
     const email = document.querySelector("#email").value;
     const password = document.querySelector("#password").value;
 
@@ -20,29 +18,35 @@ document.getElementById("login").addEventListener("submit", async (evento) => {
             })   
         });
 
-        // Si la API responde con un error (ej: status 400 o 401)
         if (!Respuesta.ok) {
             throw new Error("El correo o la contraseña son incorrectos.");
         }
+        
         const datos = await Respuesta.json();
+        console.log("JSON recibido en Login:", datos); // Para verificar qué llega
+
+        // 1.  Guardamos el token para que la otra pantalla pueda usarlo
+        if (datos.token) {
+            localStorage.setItem("token", datos.token);
+        } else {
+            
+            console.warn("La API no devolvió un campo 'token'.");
+        }
     
         alert("¡Ingreso exitoso!");
         
-        // Nota: Asegúrate de que "rol" o "role" coincida exactamente con lo que devuelve tu API
-        const nivelUsuario = datos.user_info?.users_level || datos.user?.users_level;
+        
+        const nivelUsuario = datos.user_level;
 
-        if (nivelUsuario === "Administrador" ) {
-            
+        // 3. Evaluamos con los valores exactos
+        if (nivelUsuario === "Administrador") {
             window.location.href = "InterfazAdministrador.html";
-
-        } else if (nivelUsuario === "Cliente") {
+        } else if(nivelUsuario==="Cliente") {
             
-            window.location.href = "InterfazCliente.html";}
-        
-        
+            window.location.href = "InterfazCliente.html";
+        }
 
     } catch (error) {
-        // Si hay error de contraseña o de red, salta acá
         alert(error.message);
         console.error("Error detectado:", error);
     }
