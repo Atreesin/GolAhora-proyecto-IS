@@ -13,8 +13,8 @@ async function ObtenerDatosPersonales(){
         const CampoNacionalidad = document.querySelector('.input-Nacionalidad');
         const CampoGenero = document.querySelector('.input-Genero');
         const CampoFecha = document.querySelector('.input-Fecha');
-        const CampoTelefono = document.querySelector('.input-Telefono');
         const CampoEmail = document.querySelector('.input-Email');
+        const CampoTelefono = document.querySelector('.input-Telefono');
         const CampoDireccion = document.querySelector('.input-Direccion');
 
         // conecto los campos con mi DB
@@ -23,9 +23,9 @@ async function ObtenerDatosPersonales(){
         CampoDni.value = Datos.dni;
         CampoNacionalidad.value = Datos.nacionalidad;
         CampoGenero.value = Datos.genero;
-        CampoFecha.value = Datos.fecha;
-        CampoTelefono.value = Datos.telefono;
+        CampoFecha.value = Datos.fecha_nacimiento;
         CampoEmail.value = Datos.email;
+        CampoTelefono.value = Datos.telefono;
         CampoDireccion.value = Datos.direccion;
 
     }catch(error){
