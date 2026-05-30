@@ -10,7 +10,8 @@ document.getElementById("login").addEventListener("submit", async (evento) => {
         const Respuesta = await fetch(API_LOGIN, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json" 
+                "Content-Type": "application/json",
+                "plataform":"web"
             },
             body: JSON.stringify({
                 email: email,
@@ -23,15 +24,7 @@ document.getElementById("login").addEventListener("submit", async (evento) => {
         }
         
         const datos = await Respuesta.json();
-        console.log("JSON recibido en Login:", datos); // Para verificar qué llega
-
-        // 1.  Guardamos el token para que la otra pantalla pueda usarlo
-        if (datos.token) {
-            localStorage.setItem("token", datos.token);
-        } else {
-            
-            console.warn("La API no devolvió un campo 'token'.");
-        }
+       
     
         alert("¡Ingreso exitoso!");
         
