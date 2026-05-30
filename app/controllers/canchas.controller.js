@@ -4,6 +4,7 @@ import { methods as dbUserQuery } from "../db/dbUserQueries.js";
 import { methods as dbDisponibilidadQuery } from "../db/dbDisponibilidadQueries.js";
 import { methods as dbOcupacionesQuery } from "../db/dbOcupacionesQueries.js"
 import { methods as helper } from "../helpers/utilsHelper.js";
+import { methods as cookieHelper } from "../helpers/cookieHelper.js";
 import { borrarArchivoSiExiste } from "../helpers/archivoHelper.js";
 
 //registrar
@@ -106,7 +107,7 @@ async function registrarCancha(req, res) {
     let precio_hora_reserva = req.body.precio_hora_reserva;
     let id_tipo_de_cancha = req.body.id_tipo_de_cancha;
     // id del club que gestiona el Administrador
-    const email = helper.decodificarCookie(helper.obtenerCookie(req));
+    const email = cookieHelper.decodificarCookie(cookieHelper.obtenerCookie(req));
     const id_club = dbUserQuery.getUserIdByEmail(email);
 
     if ([nombre, tiempo_cancelacion, precio_hora_reserva, id_tipo_de_cancha, id_club].some(v => v === undefined || v === null || v === "")) {
