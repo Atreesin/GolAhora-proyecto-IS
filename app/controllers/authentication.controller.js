@@ -52,7 +52,7 @@ async function login(req, res) {
 
     if (req.headers.plataform === "web") {
         res.cookie("jwt", token, cookieOpption);
-        res.send({ status: "ok", message: "Usuario loggeado", redirect: "/profile", validator.tipoUsuario(usuarioARevisar.user_level)  })
+        res.send({ status: "ok", message: "Usuario loggeado", redirect: "/profile", user_level: validator.tipoUsuario(usuarioARevisar.user_level)  })
     }
     if (req.headers.plataform === "windows") {
         if (usuarioARevisar.user_level != ADMIN_USER_LEVEL) {
