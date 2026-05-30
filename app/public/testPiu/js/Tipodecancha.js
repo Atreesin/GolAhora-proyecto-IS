@@ -1,19 +1,17 @@
-// 1. DEFINIMOS EL MOLDE (LA CLASE) PARA NUESTROS OBJETOS
 class Cancha {
-    constructor(id, tipo, duracion_min, duracion_max, ancho, largo, capacidad, superficie, descripcion_superficie, imagen_url) {
+    constructor(id, tipo_cancha, duracion_min, duracion_max, ancho, largo, capacidad, nombre_superficie, descripcion, imagen_url) {
         this.id = id;
-        this.tipo = tipo;
+        this.tipo_cancha = tipo_cancha;
         this.duracion_min = duracion_min;
         this.duracion_max = duracion_max;
         this.ancho = ancho;
         this.largo = largo;
         this.capacidad = capacidad;
-        this.superficie = superficie;
-        this.descripcion_superficie = descripcion_superficie;
+        this.nombre_superficie = nombre_superficie;
+        this.descripcion = descripcion || "Sin descripción disponible."; // Evita el 'undefined'
         this.imagen_url = imagen_url;
     }
 
-    // Método propio del objeto para armar únicamente su tarjeta horizontal
    generarHTML() {
         const columna = document.createElement("div");
         columna.className = "col-12 mb-4 d-flex justify-content-center";
@@ -70,14 +68,13 @@ class Cancha {
     }
 }
 
-// 2. ARREGLO GLOBAL DONDE GUARDAREMOS LOS OBJETOS INSTANCIADOS
 let listaCanchasObjetos = [];
 
-// 3. CONSULTA A LA API Y CREACIÓN DE OBJETOS
 document.addEventListener("DOMContentLoaded", () => {
     const API_URL = "https://golahora-proyecto-is.onrender.com/api/tipos_canchas";
-    // APUNTAMOS AL ID DE LA FILA INTERNA PARA NO BORRAR EL FONDO NI EL TÍTULO
     const contenedor = document.getElementById("tarjetas-canchas");
+
+    if (!contenedor) return;
 
     fetch(API_URL)
         .then(respuesta => {
@@ -89,37 +86,38 @@ document.addEventListener("DOMContentLoaded", () => {
             listaCanchasObjetos = [];  
 
             datosCrudos.forEach(data => {
-                // CORREGIDO: Emparejamos los parámetros exactos con las propiedades del JSON de tu Backend
+                let textoDescripcion = data.descripcion;
+                if (!textoDescripcion && data.superficie) {
+                    textoDescripcion = data.superficie.descripcion;
+                }
+
                 const nuevaCancha = new Cancha(
                     data.id,
-                    data.tipo,
+                    data.tipo_cancha,
                     data.duracion_min,
                     data.duracion_max,
                     data.ancho,
                     data.largo,
                     data.capacidad,
-                    data.superficie,
-                    data.descripcion_superficie,
+                    data.superficie ? data.superficie.tipo : "No especificada",
+                    textoDescripcion,
                     data.imagen_url
                 );
 
                 listaCanchasObjetos.push(nuevaCancha);
                 contenedor.appendChild(nuevaCancha.generarHTML());
             });
-
-            console.log("¡Objetos de canchas creados e inyectados!", listaCanchasObjetos);
         })
         .catch(error => {
             console.error("Error:", error);
-            contenedor.innerHTML = `<p class="text-white text-center py-4">Error al procesar las canchas del servidor.</p>`;
+            contenedor.innerHTML = `<p class="text-white text-center py-4 w-100">Error al procesar las canchas del servidor.</p>`;
         });
 });
 
-// Función de respuesta al hacer clic
 function seleccionarCancha(id) {
-    const canchaSeleccionada = listaCanchasObjetos.find(c => c.id === id);
-    if (canchaSeleccionada) {
-        // CORREGIDO: Ajustado para usar .tipo en lugar de .nombre que ya no existe en tu clase
-        alert(`Elegiste el tipo de cancha: ${canchaSeleccionada.tipo.toUpperCase()}\nCapacidad máxima: ${canchaSeleccionada.capacidad} personas.`);
-    }
+    // 1. Guardamos el ID del tipo de cancha seleccionado en el almacenamiento del navegador (localStorage)
+    localStorage.setItem("tipo_cancha", id);
+
+    // 2. Redireccionamos a la nueva pantalla que va a mostrar las canchas físicas de ese tipo
+    window.location.href = "canchas.html";
 }

@@ -1,122 +1,71 @@
-class Cancha {
-    constructor(id, tipo_cancha, duracion_min, duracion_max, ancho, largo, capacidad, nombre_superficie, descripcion, imagen_url) {
-        this.id = id;
-        this.tipo_cancha = tipo_cancha;
-        this.duracion_min = duracion_min;
-        this.duracion_max = duracion_max;
-        this.ancho = ancho;
-        this.largo = largo;
-        this.capacidad = capacidad;
-        this.nombre_superficie = nombre_superficie;
-        this.descripcion = descripcion || "Sin descripción disponible."; // Evita el 'undefined'
-        this.imagen_url = imagen_url;
-    }
-
-   generarHTML() {
-        const columna = document.createElement("div");
-        columna.className = "col-12 mb-4 d-flex justify-content-center";
-
-        columna.innerHTML = `
-            <div class="card text-dark shadow border-0 overflow-hidden" 
-                 style="max-width: 900px; width: 100%; border-radius: 15px; background-color: #ffffff !important;">
-                <div class="row no-gutters align-items-center">
-                    
-                    <div class="col-md-5">
-                        <img src="https://golahora-proyecto-is.onrender.com${this.imagen_url}" 
-                             class="card-img w-100" 
-                             style="height: 280px; object-fit: cover;" 
-                             alt="${this.tipo_cancha}">
-                    </div>
-                    
-                    <div class="col-md-7">
-                        <div class="card-body p-4 text-left">
-                            
-                            <h3 class="card-title font-weight-bold mb-3" 
-                                style="color: #111111 !important; font-size: 1.6rem; font-family: sans-serif;">
-                                ${this.tipo_cancha.toUpperCase()}
-                            </h3>
-                            
-                            <ul class="list-unstyled mb-3" 
-                                style="font-size: 0.95rem; line-height: 1.6; color: #333333 !important;">
-                                <li class="mb-1" style="color: #333333 !important;"><i class="fas fa-users text-primary mr-2"></i> <strong style="color: #111111 !important;">Capacidad:</strong> ${this.capacidad} jugadores</li>
-                                <li class="mb-1" style="color: #333333 !important;"><i class="fas fa-layer-group text-primary mr-2"></i> <strong style="color: #111111 !important;">Superficie:</strong> ${this.nombre_superficie}</li>
-                                <li class="mb-1" style="color: #333333 !important;"><i class="fas fa-ruler-combined text-primary mr-2"></i> <strong style="color: #111111 !important;">Medidas:</strong> ${this.largo}m x ${this.ancho}m</li>
-                                <li class="mb-1" style="color: #333333 !important;"><i class="fas fa-clock text-primary mr-2"></i> <strong style="color: #111111 !important;">Turnos:</strong> ${this.duracion_min} min a ${this.duracion_max} min</li>
-                            </ul>
-                            
-                            <p class="card-text mb-4" 
-                               style="font-size: 0.9rem; line-height: 1.4; color: #555555 !important;">
-                                ${this.descripcion}
-                            </p>
-                            
-                            <div class="text-left">
-                                <button class="btn btn-warning text-dark font-weight-bold px-4 shadow-sm" 
-                                        style="border-radius: 50px; background-color: #ffc107 !important; border: none; color: #000000 !important;" 
-                                        type="button" 
-                                        onclick="seleccionarCancha(${this.id})">
-                                    Seleccionar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        `;
-        
-        return columna;
-    }
-}
-
-let listaCanchasObjetos = [];
-
 document.addEventListener("DOMContentLoaded", () => {
-    const API_URL = "https://golahora-proyecto-is.onrender.com/api/canchas";
-    const contenedor = document.getElementById("tarjetas-canchas");
+    // 1. Recuperamos el ID que guardamos en la pantalla anterior
+    const tipoCanchaId = localStorage.getItem("tipo_cancha");
+    const contenedor = document.getElementById("tarjetas-canchas-filtradas");
 
     if (!contenedor) return;
 
+    // Si por alguna razón no hay ID, avisamos y no hacemos nada
+    if (!tipoCanchaId) {
+        contenedor.innerHTML = `<p class="text-white text-center py-4 w-100">No se seleccionó ningún tipo de cancha. Volvé atrás.</p>`;
+        return;
+    }
+
+    // 2. Armamos la URL exacta de la consulta que me pasaste
+    const API_URL = `https://golahora-proyecto-is.onrender.com/api/tipos_canchas/cancha_id=${tipoCanchaId}`;
+
+    contenedor.innerHTML = `<p class="text-white text-center py-4 w-100">Buscando canchas disponibles...</p>`;
+
+    // 3. Llamamos al backend
     fetch(API_URL)
         .then(respuesta => {
-            if (!respuesta.ok) throw new Error("Error en la API");
+            if (!respuesta.ok) throw new Error("Error al traer las canchas del servidor");
             return respuesta.json();
         })
-        .then(datosCrudos => {
-            contenedor.innerHTML = ""; 
-            listaCanchasObjetos = [];  
+        .then(canchas => {
+            contenedor.innerHTML = ""; // Limpiamos el mensaje de carga
 
-            datosCrudos.forEach(data => {
-                let textoDescripcion = data.descripcion;
-                if (!textoDescripcion && data.superficie) {
-                    textoDescripcion = data.superficie.descripcion;
-                }
+            // Si la lista viene vacía
+            if (canchas.length === 0) {
+                contenedor.innerHTML = `<p class="text-white text-center py-4 w-100">No hay canchas físicas registradas para este tipo en este momento.</p>`;
+                return;
+            }
 
-                const nuevaCancha = new Cancha(
-                    data.id,
-                    data.tipo_cancha,
-                    data.duracion_min,
-                    data.duracion_max,
-                    data.ancho,
-                    data.largo,
-                    data.capacidad,
-                    data.superficie ? data.superficie.tipo : "No especificada",
-                    textoDescripcion,
-                    data.imagen_url
-                );
+            // 4. Recorremos el listado y creamos las tarjetas en el nuevo HTML
+            canchas.forEach(cancha => {
+                const fila = document.createElement("div");
+                fila.className = "col-12 mb-3 d-flex justify-content-center";
 
-                listaCanchasObjetos.push(nuevaCancha);
-                contenedor.appendChild(nuevaCancha.generarHTML());
+                fila.innerHTML = `
+                    <div class="card text-dark shadow border-0 p-4" style="max-width: 900px; width: 100%; border-radius: 15px; background-color: #ffffff !important;">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                            <div>
+                                <h4 class="font-weight-bold mb-1" style="color: #111111 !important;">
+                                    ${cancha.nombre || 'Cancha Individual'}
+                                </h4>
+                                <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                    Estado: <span class="text-success font-weight-bold">Disponible</span>
+                                </p>
+                            </div>
+                            <button class="btn btn-warning text-dark font-weight-bold px-4 mt-2 mt-sm-0 shadow-sm" 
+                                    style="border-radius: 50px; background-color: #ffc107 !important; border: none;"
+                                    onclick="elegirHorario(${cancha.id})">
+                                Ver Horarios
+                            </button>
+                        </div>
+                    </div>
+                `;
+                contenedor.appendChild(fila);
             });
         })
         .catch(error => {
             console.error("Error:", error);
-            contenedor.innerHTML = `<p class="text-white text-center py-4 w-100">Error al procesar las canchas del servidor.</p>`;
+            contenedor.innerHTML = `<p class="text-white text-center py-4 w-100">Error al conectar con el sistema de filtrado.</p>`;
         });
 });
 
-function seleccionarCancha(id) {
-    const canchaSeleccionada = listaCanchasObjetos.find(c => c.id === id);
-    if (canchaSeleccionada) {
-        alert(`¡Cancha elegida con éxito!\nTipo: ${canchaSeleccionada.tipo_cancha.toUpperCase()}\nSuperficie: ${canchaSeleccionada.nombre_superficie}`);
-    }
+// Función para cuando elijan la cancha definitiva
+function elegirHorario(idCancha) {
+    alert(`Elegiste la cancha física con ID: ${idCancha}. Acá lo mandarías a la pantalla de turnos.`);
+    // window.location.href = `SeleccionarTurno.html?cancha_id=${idCancha}`;
 }
