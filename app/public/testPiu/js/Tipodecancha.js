@@ -32,10 +32,10 @@ class Cancha {
                         <div class="card-body bg-white p-4 text-start" id="infotipodecancha-${this.id}" style="background-color: #ffffff !important;">
                             
                             <h3 class="fs-4 fw-bold text-dark mb-3">${this.tipo.toUpperCase()}</h3>
-                            <h4 class="fs-6 text-muted mb-2">Capacidad: ${this.capacidad} jugadores</h4>
-                            <h4 class="fs-6 text-muted mb-2">Superficie: ${this.superficie}</h4>
-                            <h4 class="fs-6 text-muted mb-2">Medidas: ${this.largo}m x ${this.ancho}m</h4>
-                            <h4 class="fs-6 text-muted mb-3">Turnos: ${this.duracion_min}hs a ${this.duracion_max}hs</h4>
+                            <h4 class="fs-6 text-dark mb-2">Capacidad: ${this.capacidad} jugadores</h4>
+                            <h4 class="fs-6 text-dark mb-2">Superficie: ${this.superficie}</h4>
+                            <h4 class="fs-6 text-dark mb-2">Medidas: ${this.largo}m x ${this.ancho}m</h4>
+                            <h4 class="fs-6 text-dark mb-3">Turnos: ${this.duracion_min}hs a ${this.duracion_max}hs</h4>
                             
                             <p class="small text-secondary mb-0">${this.descripcion_superficie}</p>
                             
