@@ -15,11 +15,9 @@ class Cancha {
 
     // Método propio del objeto para armar únicamente su tarjeta horizontal
     generarHTML() {
-        // Creamos la columna contenedora (Bootstrap)
         const columna = document.createElement("div");
         columna.className = "col-12 col-md-12 mb-4 mx-auto";
 
-        // Inyectamos el molde de la CARD usando las propiedades de ESTE objeto (this)
         columna.innerHTML = `
             <div class="card card-Tipocancha overflow-hidden border-0 shadow bg-white" 
                  style="border-radius: 20px; max-width: 750px; margin: 0 auto; background-color: #ffffff !important;">
@@ -58,13 +56,15 @@ class Cancha {
         return columna;
     }
 }
+
 // 2. ARREGLO GLOBAL DONDE GUARDAREMOS LOS OBJETOS INSTANCIADOS
 let listaCanchasObjetos = [];
 
 // 3. CONSULTA A LA API Y CREACIÓN DE OBJETOS
 document.addEventListener("DOMContentLoaded", () => {
-    const API_URL =  "https://golahora-proyecto-is.onrender.com/api/tipos_canchas";
-    const contenedor = document.getElementById("contenedor-canchas");
+    const API_URL = "https://golahora-proyecto-is.onrender.com/api/tipos_canchas";
+    // APUNTAMOS AL ID DE LA FILA INTERNA PARA NO BORRAR EL FONDO NI EL TÍTULO
+    const contenedor = document.getElementById("tarjetas-canchas");
 
     fetch(API_URL)
         .then(respuesta => {
@@ -72,44 +72,41 @@ document.addEventListener("DOMContentLoaded", () => {
             return respuesta.json();
         })
         .then(datosCrudos => {
-            contenedor.innerHTML = ""; // Limpiamos la pantalla
-            listaCanchasObjetos = [];  // Limpiamos el array de objetos
+            contenedor.innerHTML = ""; 
+            listaCanchasObjetos = [];  
 
-            // Recorremos los datos que llegaron de la API
             datosCrudos.forEach(data => {
-                
-                // CREAMOS EL OBJETO instanciando la clase Cancha con los datos de la API
+                // CORREGIDO: Emparejamos los parámetros exactos con las propiedades del JSON de tu Backend
                 const nuevaCancha = new Cancha(
                     data.id,
-                    data.nombre,
-                    data.numeroCancha,
-                    data.fecha,
-                    data.horario,
-                    data.tiempo,
-                    data.imagen
+                    data.tipo,
+                    data.duracion_min,
+                    data.duracion_max,
+                    data.ancho,
+                    data.largo,
+                    data.capacidad,
+                    data.superficie,
+                    data.descripcion_superficie,
+                    data.imagen_url
                 );
 
-                // Guardamos el objeto en nuestra lista por si necesitamos usar sus datos luego
                 listaCanchasObjetos.push(nuevaCancha);
-
-                // Le pedimos al objeto que genere su HTML y lo colgamos en la página
-                const tarjetaHTML = nuevaCancha.generarHTML();
-                contenedor.appendChild(tarjetaHTML);
+                contenedor.appendChild(nuevaCancha.generarHTML());
             });
 
-            console.log("¡Objetos creados con éxito!", listaCanchasObjetos);
+            console.log("¡Objetos de canchas creados e inyectados!", listaCanchasObjetos);
         })
         .catch(error => {
             console.error("Error:", error);
-            contenedor.innerHTML = `<p class="text-white text-center">Error al procesar las canchas.</p>`;
+            contenedor.innerHTML = `<p class="text-white text-center py-4">Error al procesar las canchas del servidor.</p>`;
         });
 });
 
-// Función que se ejecuta al presionar el botón Seleccionar
+// Función de respuesta al hacer clic
 function seleccionarCancha(id) {
-    // Gracias a que guardamos los objetos, podemos buscar el objeto exacto que se seleccionó
     const canchaSeleccionada = listaCanchasObjetos.find(c => c.id === id);
-    
-    alert(`Elegiste la cancha: ${canchaSeleccionada.nombre} (Número ${canchaSeleccionada.numeroCancha})`);
-    // Aquí puedes continuar con tu lógica de reserva usando el objeto encontrado
+    if (canchaSeleccionada) {
+        // CORREGIDO: Ajustado para usar .tipo en lugar de .nombre que ya no existe en tu clase
+        alert(`Elegiste el tipo de cancha: ${canchaSeleccionada.tipo.toUpperCase()}\nCapacidad máxima: ${canchaSeleccionada.capacidad} personas.`);
+    }
 }
