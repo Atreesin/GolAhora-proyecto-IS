@@ -49,14 +49,14 @@ class Cancha {
                                 ${this.descripcion}
                             </p>
                             
-                            <div class="text-left">
-                                <button class="btn btn-warning text-dark font-weight-bold px-4 shadow-sm" 
-                                        style="border-radius: 50px; background-color: #ffc107 !important; border: none; color: #000000 !important;" 
-                                        type="button" 
-                                        onclick="seleccionarCancha(${this.id})">
-                                    Seleccionar
-                                </button>
-                            </div>
+                           <div class="text-left">
+                    <a class="btn btn-warning text-dark font-weight-bold px-4 shadow-sm" 
+                       style="border-radius: 50px; background-color: #ffc107 !important; border: none; color: #000000 !important;" 
+                           href="canchas.html"
+                           onclick="localStorage.setItem('tipo_cancha_seleccionado', ${this.id})">
+                        Seleccionar
+                        </a>
+                    </div>
                         </div>
                     </div>
 
