@@ -3,7 +3,7 @@ export function ejecutarConManejoDeErrores(controllerFn) {
     try {
       await controllerFn(req, res, next);
       
-      console.log("err.message")
+      
     } catch (err) {
       console.error(err);
       console.log(err.message)

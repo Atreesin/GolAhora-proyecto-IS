@@ -39,7 +39,7 @@ async function apiSoloUsers(req, res, next) {
     const logeado = await cookieHelper.revisarCookie(req);
     if (logeado) return next();
     if(!cookieHelper.obtenerCookie(req)){
-        console.log(cookieHelper.obtenerCookie(req))
+        
         return res.status(401).json({ error: "Usuario no autenticado" });
     }
     const now = new Date(Date.now());

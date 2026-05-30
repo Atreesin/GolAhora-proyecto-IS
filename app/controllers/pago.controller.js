@@ -2,7 +2,7 @@ import { crearPago, crearPreferencia } from "../services/mercadoPago.service.js"
 
 export const generarPago = async (req, res) => {
     try {
-        console.log(req.body)
+        
         const { monto, descripcion, metodo, email } = req.body;
 
         const pago = await crearPago({

@@ -37,16 +37,16 @@ function validarFechaNacimiento(fecha) {
   return (edad > 13 || (edad === 13 && mes >= 0));
 }
 
-function normalizarFecha(valor) {
+function normalizarFecha(fecha) {
 
   const regex = /^\d{4}-\d{2}-\d{2}$/;
   if (!regex.test(fecha)) return false;
 
-  const fecha = new Date(valor);
+  const fechaNormalizada = new Date(fecha);
 
   // Verificar si es una fecha válida
-  if (!isNaN(fecha.getTime())) {
-    return fecha; // retorna el objeto Date
+  if (!isNaN(fechaNormalizada.getTime())) {
+    return fechaNormalizada; // retorna el objeto Date
   } else {
     return false;  // no es fecha válida
   }
@@ -81,46 +81,9 @@ function esPasswordFuerte(password) {
 }
 
 // hora a 24 hs
-/*
 function convertirAHora24(valor, saltoMinutos = 30) {
   if (!valor) return false;
-  console.log(valor)
-  // Normalizar: quitar espacios y pasar a minúsculas
-  let str = String(valor).trim().toLowerCase();
-
-  // Regex para capturar hora:minutos + opcional am/pm
-  const regex = /^(\d{1,2}):(\d{2})(am|pm)?$/;
-  const match = str.match(regex);
-  if (!match) return false;
-  console.log(valor)
-  let [_, hh, mm, meridiano] = match;
-  hh = parseInt(hh, 10);
-  mm = parseInt(mm, 10);
-
-  // Validar minutos dentro de rango
-  if (mm < 0 || mm > 59) return false;
-
-  // Validar salto
-  if (mm % saltoMinutos !== 0) return false;
-
-  // Conversión AM/PM
-  if (meridiano) {
-    if (hh < 1 || hh > 12) return false; // en formato 12h solo 1–12
-    if (meridiano === "pm" && hh !== 12) hh += 12;
-    if (meridiano === "am" && hh === 12) hh = 0;
-  }
-
-  // Validar rango de horas en 24h
-  if (hh < 0 || hh > 23) return false;
-
-  // Formatear en HH:MM (24h)
-  const horaFinal = `${hh.toString().padStart(2, "0")}:${mm.toString().padStart(2, "0")}`;
-  return horaFinal;
-}*/
-
-function convertirAHora24(valor, saltoMinutos = 30) {
-  if (!valor) return false;
-  console.log(valor)
+  
   // Normalizar: quitar espacios y pasar a minúsculas
   let str = String(valor).trim().toLowerCase();
 
@@ -154,6 +117,7 @@ function convertirAHora24(valor, saltoMinutos = 30) {
   return horaFinal;
 }
 
+// retorna la cantidad de horas que hay entre una hora y la siguiente
 function diferenciaHorasFormato(horaInicio, horaFin) {
   // Crear fechas ficticias con las horas dadas
   const inicio = new Date(`1970-01-01T${horaInicio}`);
@@ -184,13 +148,14 @@ function horaToMinutos(hora) {
   return hh * 60 + mm;
 }
 
+// si hora 1 es mayor o igual retorna true
 function compararHoras(hora1, hora2) {
   return horaToMinutos(hora1) >= horaToMinutos(hora2);
 }
 
 
 function tipoUsuario(codigo) {
-  console.log(codigo)
+  
   if (codigo == ADMIN_USER_LEVEL) {
     return "Administrador"
   }

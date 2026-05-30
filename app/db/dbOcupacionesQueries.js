@@ -150,6 +150,7 @@ async function getSuperposicionOcupacionesCanchas(id_cancha, fecha, hora_inicio,
     try {
         const rows = await pool.query(selectSuperposicionOcupacionesCanchas, [id_cancha, fecha, hora_inicio, hora_inicio, hora_fin, hora_fin]);
         if (rows.length > 0) {
+            
             return rows;
         } else {
             return null;

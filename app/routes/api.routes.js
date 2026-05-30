@@ -10,6 +10,8 @@ import { methods as generoController } from "../controllers/generos.controller.j
 import { methods as userController } from "../controllers/user.controller.js";
 import { methods as clubController } from "../controllers/club.controller.js";
 import { methods as canchaController } from "../controllers/canchas.controller.js";
+import {methods as disp} from "../db/dbDisponibilidadQueries.js"
+
 
 import { uploadImagen } from "../services/imageUpload.service.js";
 
@@ -49,8 +51,10 @@ router.get("/api/administradores",authorization.apiSoloUsers, authorization.apiS
 // canchas
 router.get("/api/tipos_canchas", wrapper(canchaController.getTipoCanchas));
 router.get("/api/tipos_canchas/tipo_cancha_id=:id", wrapper(canchaController.getTipoCanchaById));
+router.get("/api/tipos_canchas/tipo_cancha_id=:id/canchas", wrapper(canchaController.getCanchaByTipoCancha));
 router.get("/api/canchas", wrapper(canchaController.getCanchas));
 router.get("/api/canchas/cancha_id=:id", wrapper(canchaController.getCanchaById));
+router.get("/api/canchas/tipo_cancha_id=:id", wrapper(canchaController.getCanchaByTipoCancha));
 //superficies
 router.get("/api/superficies", wrapper(canchaController.getSuperficies));
 // disponibilidad
@@ -62,7 +66,12 @@ router.get("/api/disponibilidad/cancha_id=:id", wrapper(canchaController.getDisp
 router.get("/api/canchas/cancha_id=:id/disponibilidad", wrapper(canchaController.getDisponibilidadesCancha))
 router.get("/api/disponibilidad/dia=:dia/cancha_id=:id", wrapper(canchaController.getDisponibilidadesCanchaDiaSemanaNormal))
 router.get("/api/canchas/cancha_id=:id/disponibilidad/dia=:dia", wrapper(canchaController.getDisponibilidadesCanchaDiaSemanaNormal))
-
+//excepciones
+router.get("/api/disponibilidad/especiales", wrapper(canchaController.getDisponibilidadesExcepciones))
+router.get("/probar", async (req, res) => {
+    const disponibilidad = await disp.getDisponibilidadReal("2026-06-08", 1)
+    
+    res.send(disponibilidad)})
 // api post
 // authentication
 router.post("/api/login", wrapper(authentication.login));
