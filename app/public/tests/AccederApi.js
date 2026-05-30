@@ -16,7 +16,8 @@ document.getElementById("login").addEventListener("submit", async (evento) => {
             body: JSON.stringify({
                 email: email,
                 password: password
-            })   
+            }),
+            credentials: include
         });
 
         if (!Respuesta.ok) {
