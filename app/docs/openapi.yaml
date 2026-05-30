@@ -739,25 +739,27 @@ components:
     CanchaCrear:
       type: object
       required:
-       - tipo_cancha
-       - id_club
+        - nombre
+        - tiempo_cancelacion
+        - precio_hora_reserva
+        - id_tipo_de_cancha
       properties:
-        tipo_cancha:
+        nombre:
           type: string
-          description: Selecciona el formato o modalidad de la cancha
-          enum:
-           - "Fútbol 5"
-           - "Fútbol 7"
-           - "Fútbol 11"
-          example: "Fútbol 5"
-        id_club:
+          example: "Monumental de Nuñez"
+        tiempo_cancelacion:
           type: integer
-          description: Id del club al que pertenece la cancha (Ej: River Plate)
-          example: 1
-        imagen:
-          type: string
-          format: binary
-          description: Archivo de imagen opcional de la cancha
+          description: Tiempo límite de cancelación en minutos (>= 0)
+          example: 60
+        precio_hora_reserva:
+          type: number
+          format: float
+          description: Precio por hora de la reserva (>= 0)
+          example: 1500.50
+        id_tipo_de_cancha:
+          type: integer
+          description: ID del tipo de superficie/cancha (debe existir)
+          example: 2
 
     SuperficieRespuesta:
       type: object
@@ -774,7 +776,25 @@ components:
           type: string
           description: Descripcion del tipo de superficie
           example: "Base de caucho y arena con fibras plásticas. Dureza media, buen agarre y bajo mantenimiento. Uso recomendado en complejos deportivos y fútbol 5/7."
-
+    
+    DisponibilidadRespuesta:
+      type: object
+      properties:
+        id_disponibilidad:
+          type: integer
+          example: 1
+        dia_semana:
+          type: integer
+          example: 1 #Ejemplo lunes=1, martes=2, miercoles=3, jueves=4, viernes=5, sabado=6, domingo=7
+        hora_inicio:
+          type: string
+          example: "08:00:00"
+        hora_fin:
+          type: string
+          example: "22:00:00"
+        id_cancha:
+          type: integer
+          example: 1
 
 paths:
   /clubes:
@@ -1455,9 +1475,10 @@ paths:
       tags:
         - "Acceso: Administradores"
         - "Módulo: Gestión de Canchas"
-      summary: Agregar nueva cancha
+      summary: Registrar una nueva cancha
       description: |
-        Acceso restringido a administradores.
+        Registra una cancha en el club administrado por el usuario autenticado.
+        El ID del club se obtiene automáticamente de la sesión/cookie del Administrador.
         - Web: requiere header `plataform: web` y cookie de sesión (`X-Auth-Token: jwt=....` desde Swagger UI).
         - Windows Forms: requiere header `plataform: windows` y token en `Authorization`.
       parameters:
@@ -1467,26 +1488,44 @@ paths:
           schema:
             type: string
             enum: [web, windows]
-          description: Plataforma desde la cual se accede.
         - name: X-Auth-Token
           in: header
           required: false
           schema:
             type: string
             pattern: '^jwt=.*$'
-          description: Autenticación alternativa para pruebas desde Swagger UI.
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
               $ref: '#/components/schemas/CanchaCrear'
       security:
         - cookieAuth: []
         - authorization: []
       responses:
-        '200':
+        '201':
           description: Cancha agregada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "ok"
+                  message:
+                    type: string
+                    example: "Cancha Central agregada"
+                  redirect:
+                    type: string
+                    example: "/"
+        '400':
+          description: Campos vacíos o valores numéricos inválidos 
+        '404':
+          description: El tipo de cancha especificado no existe
+        '409':
+          description: Ya existe una cancha con ese nombre en el club
 
   /superficies:
     get:
@@ -1504,6 +1543,337 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SuperficieRespuesta'
+   
+  /disponibilidad:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Módulo: Gestión de Canchas"
+      summary: Obtener disponibilidad de canchas
+      description: Devuelve la disponibilidad de canchas para una fecha y hora específicas.
+      parameters:
+        - name: fecha
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Fecha para consultar la disponibilidad (YYYY-MM-DD)
+        - name: hora_inicio
+          in: query
+          required: true
+          schema:
+            type: string
+            format: time
+          description: Hora de inicio para consultar la disponibilidad (HH:mm)
+        - name: hora_fin
+          in: query
+          required: true
+          schema:
+            type: string
+            format: time
+          description: Hora de fin para consultar la disponibilidad (HH:mm)
+      responses:
+        '200':
+          description: Disponibilidad de canchas para la fecha y hora especificadas
+          content: 
+            application/json: 
+              schema:
+                type: array 
+                items: 
+                  $ref: '#/components/schemas/DisponibilidadRespuesta'
+
+  /disponibilidad/cerradas:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Módulo: Gestión de Canchas"
+      summary: Obtener canchas cerradas por mantenimiento
+      description: Devuelve la lista de canchas que están cerradas por mantenimiento para una fecha específica.
+      parameters:
+        - name: fecha
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Fecha para consultar las canchas cerradas (YYYY-MM-DD)
+      responses:
+        '200':
+          description: Lista de canchas cerradas por mantenimiento para la fecha especificada
+          content: 
+            application/json:
+              schema:
+                type: array 
+                items:
+                  $ref: '#/components/schemas/DisponibilidadRespuesta' # <-Reutilizamos el mismo esquema de disponibilidad para indicar que la cancha está cerrada        
+
+  /disponibilidad/cancha_id={id}:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Módulo: Gestión de Canchas"
+      summary: Obtener disponibilidad de una cancha por ID
+      description: Devuelve la disponibilidad de una cancha específica para una fecha y hora.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de la cancha
+        - name: fecha
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Fecha para consultar la disponibilidad (YYYY-MM-DD)
+        - name: hora_inicio
+          in: query
+          required: true
+          schema:
+            type: string
+            format: time
+          description: Hora de inicio para consultar la disponibilidad (HH:mm)
+        - name: hora_fin
+          in: query
+          required: true
+          schema:
+            type: string
+            format: time
+          description: Hora de fin para consultar la disponibilidad (HH:mm)
+      responses:
+        '200':
+          description: Disponibilidad de la cancha para la fecha y hora especificadas
+          content:
+            application/json:
+              schema:
+                type: array 
+                items: 
+                  $ref: '#/components/schemas/DisponibilidadRespuesta' #<-Reutilizamos el mismo esquema de disponibilidad para indicar la disponibilidad de la cancha
+  
+
+  /disponibilidad/dia={dia}:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Módulo: Gestión de Canchas"
+      summary: Obtener disponibilidad de canchas por día de la semana
+      description: Devuelve la disponibilidad recurrente de canchas para un día específico de la semana (ej. todos los lunes).
+      parameters:
+        - name: dia
+          in: path
+          required: true
+          schema:
+            type: integer
+            enum: [1, 2, 3, 4, 5, 6, 7]
+          description: Día de la semana para consultar la disponibilidad recurrente (lunes=1, martes=2, miércoles=3, jueves=4, viernes=5, sábado=6, domingo=7)
+      responses:
+        '200':
+          description: Disponibilidad recurrente de canchas para el día de la semana especificado
+          content:
+            application/json:
+              schema:
+                type: array 
+                items: 
+                  $ref: '#/components/schemas/DisponibilidadRespuesta' 
+        '400':
+          description: El día ingresado es inválido o faltan parámetros
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Error"
+                  message:
+                    type: string
+                    example: "El día ingresado es inválido"
+
+  /disponibilidad/cancha_id={id}/disponibilidad:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Módulo: Gestión de Canchas"
+      summary: Obtener todas las disponibilidades de una cancha por ID
+      description: Devuelve todos los rangos horarios de disponibilidad configurados para una cancha específica.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de la cancha
+      responses:
+        '200':
+          description: Lista de disponibilidades de la cancha obtenida con éxito
+          content:
+            application/json:
+              schema:
+                type: array 
+                items: 
+                  $ref: '#/components/schemas/DisponibilidadRespuesta'
+
+  /canchas/cancha_id={id}/disponibilidad:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Módulo: Gestión de Canchas"
+      summary: Obtener todas las disponibilidades de una cancha por ID
+      description: Devuelve la lista completa de rangos horarios de disponibilidad configurados para una cancha específica.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID único de la cancha a consultar
+      responses:
+        '200':
+          description: Lista de disponibilidades de la cancha obtenida con éxito
+          content:
+            application/json:
+              schema:
+                type: array 
+                items:
+                  $ref: '#/components/schemas/DisponibilidadRespuesta' 
+        '400':
+          description: El ID de la cancha es inválido (debe ser un número entero)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Error"
+                  message:
+                    type: string
+                    example: "El id de la cancha debe ser un número entero"
+        '404':
+          description: La cancha no existe o no tiene disponibilidades asignadas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Error"
+                  message:
+                    type: string
+                    example: "La cancha con el id 1 no tiene ninguna disponibilidad asignada"  
+  
+  /disponibilidad/dia={dia}/cancha_id={id}:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Módulo: Gestión de Canchas"
+      summary: Obtener disponibilidad de una cancha por día de la semana
+      description: Devuelve la disponibilidad de una cancha específica para un día específico de la semana.
+      parameters:
+        - name: dia
+          in: path
+          required: true
+          schema:
+            type: integer
+            enum: [1, 2, 3, 4, 5, 6, 7]
+          description: Día de la semana (1=Lunes, 7=Domingo)
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de la cancha a consultar
+      responses:
+        '200':
+          description: Disponibilidad de la cancha para el día especificado obtenida con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisponibilidadRespuesta' # <--- Directo, sin array porque devuelve un solo objeto
+        '400':
+          description: El día o el ID ingresados son inválidos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Error"
+                  message:
+                    type: string
+                    example: "El id de la cancha debe ser un número entero"
+        '404':
+          description: La cancha no existe o no tiene disponibilidades asignadas para ese día
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Error"
+                  message:
+                    type: string
+                    example: "La cancha con el id 1 no tiene disponibilidad asignada el dia 1"
+  /canchas/cancha_id={id}/disponibilidad/dia={dia}:
+    get:
+      tags:
+        - "Acceso: Público"
+        - "Módulo: Gestión de Canchas"
+      summary: Obtener disponibilidad de una cancha por día de la semana
+      description: Devuelve la disponibilidad de una cancha específica para un día específico de la semana.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de la cancha a consultar
+        - name: dia
+          in: path
+          required: true
+          schema:
+            type: integer
+            enum: [1, 2, 3, 4, 5, 6, 7]
+          description: Día de la semana (1=Lunes, 7=Domingo)
+      responses:
+        '200':
+          description: Disponibilidad de la cancha para el día especificado obtenida con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisponibilidadRespuesta' # <--- Directo, sin array porque devuelve un solo objeto
+        '400':
+          description: El día o el ID ingresados son inválidos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Error"
+                  message:
+                    type: string
+                    example: "El id de la cancha debe ser un número entero"
+        '404':
+          description: La cancha no existe o no tiene disponibilidades asignadas para ese día
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Error"
+                  message:
+                    type: string
+                    example: "La cancha con el id 1 no tiene disponibilidad asignada el dia 1"
 
   /paises:
     get:
