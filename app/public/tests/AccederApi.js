@@ -18,8 +18,9 @@ document.getElementById("login").addEventListener("submit", async (evento) => {
                 password: password
             }),
             credentials: include
-        });
-
+        })
+    };
+        
         if (!Respuesta.ok) {
             throw new Error("El correo o la contraseña son incorrectos.");
         }
