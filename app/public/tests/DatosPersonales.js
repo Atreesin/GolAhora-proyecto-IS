@@ -9,8 +9,8 @@ async function ObtenerDatosPersonales(){
         //Busco los campos en mi html
         const CampoNombre = document.querySelector('.input-Nombre');
         const CampoApellido = document.querySelector('.input-Apellido');
-        const CampoDni = document.querySelector('.input-Dni');
         const CampoNacionalidad = document.querySelector('.input-Nacionalidad');
+        const CampoDni = document.querySelector('.input-Dni');
         const CampoGenero = document.querySelector('.input-Genero');
         const CampoFecha = document.querySelector('.input-Fecha');
         const CampoEmail = document.querySelector('.input-Email');
@@ -18,13 +18,13 @@ async function ObtenerDatosPersonales(){
         const CampoDireccion = document.querySelector('.input-Direccion');
 
         // conecto los campos con mi DB
-        CampoNombre.value = Datos.nombre || "";
-        CampoApellido.value = Datos.apellido || "";
-        CampoDni.value = Datos.dni || "";
-        CampoNacionalidad.value = Datos.nacionalidad || "";
-        CampoGenero.value = Datos.genero || "";
-        CampoTelefono.value = Datos.telefono || "";
-        CampoEmail.value = Datos.email || "";
+        CampoNombre.value = Datos.nombre ;
+        CampoApellido.value = Datos.apellido;
+        CampoNacionalidad.value = Datos.nacionalidad;
+        CampoDni.value = Datos.dni;
+        CampoGenero.value = Datos.genero;
+        CampoTelefono.value = Datos.telefono;
+        CampoEmail.value = Datos.email;
 
     }catch(error){
 
