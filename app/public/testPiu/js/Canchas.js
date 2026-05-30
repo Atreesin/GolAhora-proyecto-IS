@@ -1,54 +1,58 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Recuperamos el ID que guardamos en la pantalla anterior
-    const tipoCanchaId = localStorage.getItem("tipo_cancha");
+    // 1. Recuperamos el ID que seleccionó el usuario
+    const tipoCanchaId = localStorage.getItem("tipo_cancha_seleccionado");
     const contenedor = document.getElementById("tarjetas-canchas-filtradas");
 
     if (!contenedor) return;
 
-    // Si por alguna razón no hay ID, avisamos y no hacemos nada
     if (!tipoCanchaId) {
         contenedor.innerHTML = `<p class="text-white text-center py-4 w-100">No se seleccionó ningún tipo de cancha. Volvé atrás.</p>`;
         return;
     }
 
-    // 2. Armamos la URL exacta de la consulta que me pasaste
-    const API_URL = `https://golahora-proyecto-is.onrender.com/api/tipos_canchas/cancha_id=${tipoCanchaId}`;
+    // 2. URL del endpoint del servidor
+    const API_URL = `https://golahora-proyecto-is.onrender.com/api/tipos_canchas/tipo_cancha_id=${tipoCanchaId}/canchas`;
 
     contenedor.innerHTML = `<p class="text-white text-center py-4 w-100">Buscando canchas disponibles...</p>`;
 
-    // 3. Llamamos al backend
+    // 3. Consulta al servidor
     fetch(API_URL)
         .then(respuesta => {
-            if (!respuesta.ok) throw new Error("Error al traer las canchas del servidor");
+            if (!respuesta.ok) throw new Error("Error en la respuesta del servidor");
             return respuesta.json();
         })
-        .then(canchas => {
-            contenedor.innerHTML = ""; // Limpiamos el mensaje de carga
+        .then(datos => {
+            contenedor.innerHTML = ""; // Limpiamos el texto de carga
 
-            // Si la lista viene vacía
-            if (canchas.length === 0) {
-                contenedor.innerHTML = `<p class="text-white text-center py-4 w-100">No hay canchas físicas registradas para este tipo en este momento.</p>`;
+            // BLINDAJE: Si los datos vienen dentro de una propiedad (ej. datos.canchas), los extraemos
+            let listaCanchas = Array.isArray(datos) ? datos : (datos.canchas || []);
+
+            if (listaCanchas.length === 0) {
+                contenedor.innerHTML = `<p class="text-white text-center py-4 w-100">No hay canchas individuales registradas para este tipo en este momento.</p>`;
                 return;
             }
 
-            // 4. Recorremos el listado y creamos las tarjetas en el nuevo HTML
-            canchas.forEach(cancha => {
+            // 4. Renderizamos las canchas devueltas
+            listaCanchas.forEach(cancha => {
                 const fila = document.createElement("div");
                 fila.className = "col-12 mb-3 d-flex justify-content-center";
 
+                // Usamos las propiedades 'nombre' o 'nombre_cancha' según lo que use tu base de datos
+                const nombreMostrar = cancha.nombre || cancha.nombre_cancha || `Cancha Nro N° ${cancha.id}`;
+
                 fila.innerHTML = `
-                    <div class="card text-dark shadow border-0 p-4" style="max-width: 900px; width: 100%; border-radius: 15px; background-color: #ffffff !important;">
+                    <div class="card text-dark shadow border-0 p-4 w-100" style="max-width: 900px; border-radius: 15px; background-color: #ffffff !important;">
                         <div class="d-flex justify-content-between align-items-center flex-wrap">
                             <div>
-                                <h4 class="font-weight-bold mb-1" style="color: #111111 !important;">
-                                    ${cancha.nombre || 'Cancha Individual'}
+                                <h4 class="font-weight-bold mb-1" style="color: #111111 !important; font-family: sans-serif;">
+                                    ${nombreMostrar.toUpperCase()}
                                 </h4>
                                 <p class="text-muted mb-0" style="font-size: 0.9rem;">
-                                    Estado: <span class="text-success font-weight-bold">Disponible</span>
+                                    Estado: <span class="text-success font-weight-bold">Disponible para reservar</span>
                                 </p>
                             </div>
                             <button class="btn btn-warning text-dark font-weight-bold px-4 mt-2 mt-sm-0 shadow-sm" 
-                                    style="border-radius: 50px; background-color: #ffc107 !important; border: none;"
+                                    style="border-radius: 50px; background-color: #ffc107 !important; border: none; color: #000000 !important;"
                                     onclick="elegirHorario(${cancha.id})">
                                 Ver Horarios
                             </button>
@@ -59,13 +63,18 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         })
         .catch(error => {
-            console.error("Error:", error);
-            contenedor.innerHTML = `<p class="text-white text-center py-4 w-100">Error al conectar con el sistema de filtrado.</p>`;
+            console.error("Error detallado:", error);
+            contenedor.innerHTML = `
+                <div class="col-12 text-center py-4">
+                    <p class="text-white mb-2">Error al procesar los datos de las canchas.</p>
+                    <button class="btn btn-sm btn-outline-light" style="border-radius:20px;" onclick="location.reload()">Reintentar consulta</button>
+                </div>
+            `;
         });
 });
 
-// Función para cuando elijan la cancha definitiva
 function elegirHorario(idCancha) {
-    alert(`Elegiste la cancha física con ID: ${idCancha}. Acá lo mandarías a la pantalla de turnos.`);
+    alert(`Elegiste la cancha física con ID: ${idCancha}. ¡Acá va tu lógica para turnos!`);
+}cha física con ID: ${idCancha}. Acá lo mandarías a la pantalla de turnos.`);
     // window.location.href = `SeleccionarTurno.html?cancha_id=${idCancha}`;
 }
