@@ -8955,3 +8955,28 @@ body {
     background-color: #1a73e8;
     color: white;
 }
+
+/* ==========================================
+   TABLA CONSULTA CLIENTES
+   ========================================== */
+
+.tabla-posiciones tbody tr {
+    background-color: #1a1a1a;
+    color: white;
+}
+
+.tabla-posiciones tbody tr:nth-child(even) {
+    background-color: #2a2a2a;
+    color: white;
+}
+
+.tabla-posiciones tbody tr:hover {
+    background-color: #1a73e8;
+    color: white;
+}
+
+.tabla-posiciones tbody td {
+    color: white;
+    padding: 12px 16px;
+    border-bottom: 1px solid #333;
+}
