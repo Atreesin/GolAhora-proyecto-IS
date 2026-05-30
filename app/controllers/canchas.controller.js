@@ -117,7 +117,7 @@ async function registrarCancha(req, res) {
     tiempo_cancelacion = helper.convertirADecimalValidado(tiempo_cancelacion);
     precio_hora_reserva = helper.convertirADecimalValidado(precio_hora_reserva, 2);
 
-    const existeCancha = await dbCanchaQuery.getTipoCanchaByNombreAndIdClub(nombre, id_club);
+    const existeCancha = await dbCanchaQuery.getCanchaByNombreAndClubId(nombre, id_club);
     if (existeCancha) {
         return res.status(409).send({
             status: "Error",
