@@ -12,46 +12,47 @@ class Cancha {
         this.imagen_url = imagen_url;
     }
 
-    generarHTML() {
+   generarHTML() {
         const columna = document.createElement("div");
-        // Forzamos columnas limpias en Bootstrap 4
+        // Asegura que cada tarjeta ocupe todo el ancho disponible y tenga margen abajo
         columna.className = "col-12 mb-4 d-flex justify-content-center";
 
         columna.innerHTML = `
-            <div class="card text-dark shadow-lg border-0 overflow-hidden" 
-                 style="max-width: 800px; width: 100%; border-radius: 15px; background-color: #ffffff !important; color: #333333 !important;">
+            <div class="card text-dark shadow border-0 overflow-hidden" 
+                 style="max-width: 900px; width: 100%; border-radius: 15px; background-color: #ffffff !important;">
                 <div class="row no-gutters align-items-center">
                     
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <img src="https://golahora-proyecto-is.onrender.com${this.imagen_url}" 
                              class="card-img w-100" 
-                             style="height: 250px; object-fit: cover;" 
+                             style="height: 280px; object-fit: cover;" 
                              alt="${this.tipo_cancha}">
                     </div>
                     
-                    <div class="col-md-8">
+                    <div class="col-md-7">
                         <div class="card-body p-4 text-left">
-                            <h3 class="card-title font-weight-bold text-dark mb-3" style="color: #111111 !important;">
+                            
+                            <h3 class="card-title font-weight-bold mb-3 text-dark" style="color: #111111 !important; font-size: 1.6rem;">
                                 ${this.tipo_cancha.toUpperCase()}
                             </h3>
                             
-                            <ul class="list-unstyled text-muted mb-3" style="font-size: 0.95rem;">
+                            <ul class="list-unstyled mb-3 text-secondary" style="font-size: 0.95rem; line-height: 1.6;">
                                 <li class="mb-1"><i class="fas fa-users text-primary mr-2"></i> <strong>Capacidad:</strong> ${this.capacidad} jugadores</li>
                                 <li class="mb-1"><i class="fas fa-layer-group text-primary mr-2"></i> <strong>Superficie:</strong> ${this.nombre_superficie}</li>
                                 <li class="mb-1"><i class="fas fa-ruler-combined text-primary mr-2"></i> <strong>Medidas:</strong> ${this.largo}m x ${this.ancho}m</li>
                                 <li class="mb-1"><i class="fas fa-clock text-primary mr-2"></i> <strong>Turnos:</strong> ${this.duracion_min} min a ${this.duracion_max} min</li>
                             </ul>
                             
-                            <p class="card-text text-secondary mb-3" style="font-size: 0.9rem; line-height: 1.4;">
+                            <p class="card-text text-muted mb-4" style="font-size: 0.9rem; line-height: 1.4;">
                                 ${this.descripcion}
                             </p>
                             
-                            <div class="text-right">
+                            <div class="text-left">
                                 <button class="btn btn-warning text-dark font-weight-bold px-4 shadow-sm" 
-                                        style="border-radius: 50px;" 
+                                        style="border-radius: 50px; background-color: #ffc107; border: none;" 
                                         type="button" 
                                         onclick="seleccionarCancha(${this.id})">
-                                    Seleccionar Cancha
+                                    Seleccionar
                                 </button>
                             </div>
                         </div>
