@@ -146,4 +146,5 @@ export const methods = {
     getTipoCanchaByNombre,
     getCanchas,
     getCanchaById,
+    getCanchaByNombreAndClubId
 }
