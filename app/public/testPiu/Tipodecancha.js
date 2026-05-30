@@ -12,7 +12,7 @@ class Cancha {
         this.imagen_url = imagen_url;
     }
 
-    generarHTML() {
+   generarHTML() {
         const columna = document.createElement("div");
         columna.className = "col-12 mb-4 d-flex justify-content-center";
 
