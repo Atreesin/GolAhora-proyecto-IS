@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     // 1. Recuperamos el ID que seleccionó el usuario
-    const tipoCanchaId = localStorage.getItem("tipo_cancha_seleccionado");
+    const tipoCanchaId = localStorage.getItem("tipo_cancha");
     const contenedor = document.getElementById("tarjetas-canchas-filtradas");
 
     if (!contenedor) return;
@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // 2. URL del endpoint del servidor
-    const API_URL = `https://golahora-proyecto-is.onrender.com/api/tipos_canchas/tipo_cancha_id=${tipoCanchaId}`;
+    const API_URL = `https://golahora-proyecto-is.onrender.com/api/tipos_canchas/cancha_id=${tipoCanchaId}`;
 
     contenedor.innerHTML = `<p class="text-white text-center py-4 w-100">Buscando canchas disponibles...</p>`;
 
