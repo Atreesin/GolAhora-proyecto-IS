@@ -14,33 +14,46 @@ class Cancha {
     }
 
     // Método propio del objeto para armar únicamente su tarjeta horizontal
-    generarHTML() {
+   generarHTML() {
         const columna = document.createElement("div");
-        columna.className = "col-12 col-md-12 mb-4 mx-auto";
+        columna.className = "col-12 mb-4 d-flex justify-content-center";
 
         columna.innerHTML = `
-            <div class="card card-Tipocancha overflow-hidden border-0 shadow bg-white" 
-                 style="border-radius: 20px; max-width: 750px; margin: 0 auto; background-color: #ffffff !important;">
-                
-                <div class="row g-0 align-items-center">
+            <div class="card text-dark shadow border-0 overflow-hidden" 
+                 style="max-width: 900px; width: 100%; border-radius: 15px; background-color: #ffffff !important;">
+                <div class="row no-gutters align-items-center">
                     
-                    <div class="col-12 col-md-4" id="Fototipodecancha-${this.id}">
-                        <img src="${this.imagen_url}" class="w-100" style="height: 100%; min-height: 200px; object-fit: cover;" alt="${this.tipo}">
+                    <div class="col-md-5">
+                        <img src="https://golahora-proyecto-is.onrender.com${this.imagen_url}" 
+                             class="card-img w-100" 
+                             style="height: 280px; object-fit: cover;" 
+                             alt="${this.tipo_cancha}">
                     </div>
                     
-                    <div class="col-12 col-md-8 bg-white" style="background-color: #ffffff !important;">
-                        <div class="card-body bg-white p-4 text-start" id="infotipodecancha-${this.id}" style="background-color: #ffffff !important;">
+                    <div class="col-md-7">
+                        <div class="card-body p-4 text-left">
                             
-                            <h3 class="fs-4 fw-bold text-dark mb-3">${this.tipo.toUpperCase()}</h3>
-                            <h4 class="fs-6 text-dark mb-2">Capacidad: ${this.capacidad} jugadores</h4>
-                            <h4 class="fs-6 text-dark mb-2">Superficie: ${this.superficie}</h4>
-                            <h4 class="fs-6 text-dark mb-2">Medidas: ${this.largo}m x ${this.ancho}m</h4>
-                            <h4 class="fs-6 text-dark mb-3">Turnos: ${this.duracion_min}hs a ${this.duracion_max}hs</h4>
+                            <h3 class="card-title font-weight-bold mb-3" 
+                                style="color: #111111 !important; font-size: 1.6rem; font-family: sans-serif;">
+                                ${this.tipo_cancha.toUpperCase()}
+                            </h3>
                             
-                            <p class="small text-secondary mb-0">${this.descripcion_superficie}</p>
+                            <ul class="list-unstyled mb-3" 
+                                style="font-size: 0.95rem; line-height: 1.6; color: #333333 !important;">
+                                <li class="mb-1" style="color: #333333 !important;"><i class="fas fa-users text-primary mr-2"></i> <strong style="color: #111111 !important;">Capacidad:</strong> ${this.capacidad} jugadores</li>
+                                <li class="mb-1" style="color: #333333 !important;"><i class="fas fa-layer-group text-primary mr-2"></i> <strong style="color: #111111 !important;">Superficie:</strong> ${this.nombre_superficie}</li>
+                                <li class="mb-1" style="color: #333333 !important;"><i class="fas fa-ruler-combined text-primary mr-2"></i> <strong style="color: #111111 !important;">Medidas:</strong> ${this.largo}m x ${this.ancho}m</li>
+                                <li class="mb-1" style="color: #333333 !important;"><i class="fas fa-clock text-primary mr-2"></i> <strong style="color: #111111 !important;">Turnos:</strong> ${this.duracion_min} min a ${this.duracion_max} min</li>
+                            </ul>
                             
-                            <div class="text-end mt-3">
-                                <button class="btn btn-warning text-dark fw-bold px-4 rounded-pill" 
+                            <p class="card-text mb-4" 
+                               style="font-size: 0.9rem; line-height: 1.4; color: #555555 !important;">
+                                ${this.descripcion}
+                            </p>
+                            
+                            <div class="text-left">
+                                <button class="btn btn-warning text-dark font-weight-bold px-4 shadow-sm" 
+                                        style="border-radius: 50px; background-color: #ffc107 !important; border: none; color: #000000 !important;" 
                                         type="button" 
                                         onclick="seleccionarCancha(${this.id})">
                                     Seleccionar
@@ -49,7 +62,7 @@ class Cancha {
                         </div>
                     </div>
 
-                </div> 
+                </div>
             </div>
         `;
         
