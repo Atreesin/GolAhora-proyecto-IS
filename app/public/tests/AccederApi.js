@@ -17,7 +17,7 @@ document.getElementById("login").addEventListener("submit", async (evento) => {
                 email: email,
                 password: password
             }),
-            credentials: include
+            credentials: "include"
         });
         
         if (!Respuesta.ok) {
