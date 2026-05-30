@@ -7,7 +7,8 @@ async function obtenerToken() {
     const res = await fetch("/api/login", {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "plataform": "web"  // ← este header faltaba
         },
         body: JSON.stringify({
             email: "administrador@golahora.com",
@@ -17,7 +18,7 @@ async function obtenerToken() {
 
     const data = await res.json();
     console.log("Respuesta del login:", data);
-    return data.token; // guardamos el token
+    return data.token;
 }
 
 // ==========================================
