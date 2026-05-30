@@ -107,7 +107,7 @@ async function registrarCancha(req, res) {
     let precio_hora_reserva = req.body.precio_hora_reserva;
     let id_tipo_de_cancha = req.body.id_tipo_de_cancha;
     // id del club que gestiona el Administrador
-    const email = await cookieHelper.decodificarCookie(cookieHelper.obtenerCookie(req));
+    const email = cookieHelper.decodificarCookie(cookieHelper.obtenerCookie(req)).email;
     const id_club = await dbUserQuery.getUserIdByEmail(email);
 
     if ([nombre, tiempo_cancelacion, precio_hora_reserva, id_tipo_de_cancha, id_club].some(v => v === undefined || v === null || v === "")) {
