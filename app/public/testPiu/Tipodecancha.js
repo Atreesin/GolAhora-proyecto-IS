@@ -12,9 +12,8 @@ class Cancha {
         this.imagen_url = imagen_url;
     }
 
-   generarHTML() {
+    generarHTML() {
         const columna = document.createElement("div");
-        // Asegura que cada tarjeta ocupe todo el ancho disponible y tenga margen abajo
         columna.className = "col-12 mb-4 d-flex justify-content-center";
 
         columna.innerHTML = `
@@ -32,24 +31,27 @@ class Cancha {
                     <div class="col-md-7">
                         <div class="card-body p-4 text-left">
                             
-                            <h3 class="card-title font-weight-bold mb-3 text-dark" style="color: #111111 !important; font-size: 1.6rem;">
+                            <h3 class="card-title font-weight-bold mb-3" 
+                                style="color: #111111 !important; font-size: 1.6rem; font-family: sans-serif;">
                                 ${this.tipo_cancha.toUpperCase()}
                             </h3>
                             
-                            <ul class="list-unstyled mb-3 text-secondary" style="font-size: 0.95rem; line-height: 1.6;">
-                                <li class="mb-1"><i class="fas fa-users text-primary mr-2"></i> <strong>Capacidad:</strong> ${this.capacidad} jugadores</li>
-                                <li class="mb-1"><i class="fas fa-layer-group text-primary mr-2"></i> <strong>Superficie:</strong> ${this.nombre_superficie}</li>
-                                <li class="mb-1"><i class="fas fa-ruler-combined text-primary mr-2"></i> <strong>Medidas:</strong> ${this.largo}m x ${this.ancho}m</li>
-                                <li class="mb-1"><i class="fas fa-clock text-primary mr-2"></i> <strong>Turnos:</strong> ${this.duracion_min} min a ${this.duracion_max} min</li>
+                            <ul class="list-unstyled mb-3" 
+                                style="font-size: 0.95rem; line-height: 1.6; color: #333333 !important;">
+                                <li class="mb-1" style="color: #333333 !important;"><i class="fas fa-users text-primary mr-2"></i> <strong style="color: #111111 !important;">Capacidad:</strong> ${this.capacidad} jugadores</li>
+                                <li class="mb-1" style="color: #333333 !important;"><i class="fas fa-layer-group text-primary mr-2"></i> <strong style="color: #111111 !important;">Superficie:</strong> ${this.nombre_superficie}</li>
+                                <li class="mb-1" style="color: #333333 !important;"><i class="fas fa-ruler-combined text-primary mr-2"></i> <strong style="color: #111111 !important;">Medidas:</strong> ${this.largo}m x ${this.ancho}m</li>
+                                <li class="mb-1" style="color: #333333 !important;"><i class="fas fa-clock text-primary mr-2"></i> <strong style="color: #111111 !important;">Turnos:</strong> ${this.duracion_min} min a ${this.duracion_max} min</li>
                             </ul>
                             
-                            <p class="card-text text-muted mb-4" style="font-size: 0.9rem; line-height: 1.4;">
+                            <p class="card-text mb-4" 
+                               style="font-size: 0.9rem; line-height: 1.4; color: #555555 !important;">
                                 ${this.descripcion}
                             </p>
                             
                             <div class="text-left">
                                 <button class="btn btn-warning text-dark font-weight-bold px-4 shadow-sm" 
-                                        style="border-radius: 50px; background-color: #ffc107; border: none;" 
+                                        style="border-radius: 50px; background-color: #ffc107 !important; border: none; color: #000000 !important;" 
                                         type="button" 
                                         onclick="seleccionarCancha(${this.id})">
                                     Seleccionar
@@ -84,7 +86,6 @@ document.addEventListener("DOMContentLoaded", () => {
             listaCanchasObjetos = [];  
 
             datosCrudos.forEach(data => {
-                // Captura inteligente de la descripción por si viene en el nodo raíz o en superficie
                 let textoDescripcion = data.descripcion;
                 if (!textoDescripcion && data.superficie) {
                     textoDescripcion = data.superficie.descripcion;
