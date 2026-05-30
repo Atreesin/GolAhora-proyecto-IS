@@ -189,13 +189,11 @@ async function getCanchaById(req, res) {
 
 async function getCanchaByTipoCancha (req, res) {
     const id_tipo_de_cancha = req.params.id;
-    if (!id_cancha) {
+    if (!id_tipo_de_cancha) {
         return res.status(400).send({ status: "Error", message: "Ingrese el id del tipo cancha" })
     }
-    const cancha = await dbCanchaQuery.getCanchaByTipoCancha(id_cancha)
-    if (!cancha) {
-        return res.status(404).send({ status: "Error", message: `No existen cancha con el de ese tipo` })
-    }
+    const cancha = await dbCanchaQuery.getCanchaByTipoCancha(id_tipo_de_cancha) || []
+    
     res.send(cancha)
 }
 
