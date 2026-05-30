@@ -108,7 +108,7 @@ async function registrarCancha(req, res) {
     let id_tipo_de_cancha = req.body.id_tipo_de_cancha;
     // id del club que gestiona el Administrador
     const email = cookieHelper.decodificarCookie(cookieHelper.obtenerCookie(req)).email;
-    const id_club = await dbUserQuery.getUserIdByEmail(email);
+    const id_club = (await dbUserQuery.getUserByEmail(email)).id_club;
 
     if ([nombre, tiempo_cancelacion, precio_hora_reserva, id_tipo_de_cancha, id_club].some(v => v === undefined || v === null || v === "")) {
         return res.status(400).send({ status: "Error", message: "Algunos campos estan vacios" })
