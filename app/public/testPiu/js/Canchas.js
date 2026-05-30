@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // 2. URL del endpoint del servidor
-    const API_URL = `https://golahora-proyecto-is.onrender.com/api/tipos_canchas/tipo_cancha_id=${tipoCanchaId}/canchas`;
+    const API_URL = `https://golahora-proyecto-is.onrender.com/api/tipos_canchas/tipo_cancha_id=${tipoCanchaId}`;
 
     contenedor.innerHTML = `<p class="text-white text-center py-4 w-100">Buscando canchas disponibles...</p>`;
 
