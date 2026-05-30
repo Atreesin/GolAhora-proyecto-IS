@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function seleccionarCancha(id) {
     // 1. Guardamos el ID del tipo de cancha seleccionado en el almacenamiento del navegador (localStorage)
-    localStorage.setItem("tipo_cancha", id);
+    localStorage.setItem('tipo_cancha', ${this.id});
 
     // 2. Redireccionamos a la nueva pantalla que va a mostrar las canchas físicas de ese tipo
     window.location.href = "canchas.html";
