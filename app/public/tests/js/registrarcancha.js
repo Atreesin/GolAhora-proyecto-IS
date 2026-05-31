@@ -1,5 +1,25 @@
 const mensajeError = document.getElementsByClassName("error")[0];
 
+// ==========================================
+// LOGIN PARA OBTENER TOKEN
+// ==========================================
+async function obtenerToken() {
+    const res = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "plataform": "web"
+        },
+        credentials: "include",
+        body: JSON.stringify({
+            email: "administrador@golahora.com",
+            password: "Unaj2026@golahora"
+        })
+    });
+    const data = await res.json();
+    return data.token;
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
     const tipoCanchaInput = document.getElementById("id_tipo_cancha");
     const tipoCanchaHidden = document.getElementById("id_tipo_cancha_hidden");
@@ -43,7 +63,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 div.addEventListener("click", () => {
                     tipoCanchaInput.value = t.tipo_cancha;
                     tipoCanchaHidden.value = t.id;
-                    console.log("ID seleccionado:", tipoCanchaHidden.value);
                     suggestionsBox.style.display = "none";
                 });
                 suggestionsBox.appendChild(div);
@@ -75,22 +94,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
             mensajeError.classList.add("escondido");
 
-            const datosEnvio = {
-                nombre: formulario.nombre.value,
-                tiempo_cancelacion: parseInt(formulario.tiempo_cancelacion.value),
-                precio_hora_reserva: parseFloat(formulario.precio_hora_reserva.value),
-                id_tipo_cancha: parseInt(tipoCanchaHidden.value)
-            };
-            console.log("Datos a enviar:", datosEnvio);
+            // Login para obtener la cookie de sesión
+            const token = await obtenerToken();
+
+            // Usamos FormData igual que tipocanchas.js
+            const formData = new FormData();
+            formData.append("nombre", formulario.nombre.value);
+            formData.append("tiempo_cancelacion", formulario.tiempo_cancelacion.value);
+            formData.append("precio_hora_reserva", formulario.precio_hora_reserva.value);
+            formData.append("id_tipo_cancha", tipoCanchaHidden.value);
 
             const res = await fetch("/api/canchas/agregar", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
                     "plataform": "web"
                 },
                 credentials: "include",
-                body: JSON.stringify(datosEnvio)
+                body: formData
             });
 
             if (res.ok) {
@@ -106,7 +126,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         } catch (error) {
             console.error("Error:", error);
-            mensajeError.textContent = "Hueno un problema de red al conectar con el servidor.";
+            mensajeError.textContent = "Hubo un problema de red al conectar con el servidor.";
             mensajeError.classList.remove("escondido");
         }
     });
