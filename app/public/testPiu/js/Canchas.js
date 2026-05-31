@@ -32,7 +32,7 @@ class Cancha {
                         </p>
                     </div>
                     <div class="mt-3 mt-sm-0">
-                        <button class="btn btn-warning"  onclick="localStorage.setItem('cancha_id', ${this.id})">>
+                        <button class="btn btn-warning"  onclick="elegirHorario(${this.id})">>
                             Ver Horarios
                         </button>
                     </div>
@@ -88,10 +88,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     obtenerDatos();
 });
-function elegirHorario(cancha_id) {
-    // Guardamos el ID de la cancha seleccionada para usarlo en la siguiente página
-    localStorage.setItem("cancha_id", id);
-    
-    // Redirigimos al usuario a la página de horarios
-    window.location.href = "Disponibilidad_cancha.html"; 
+function elegirHorario(id) { // Recibe el ID
+    localStorage.setItem("cancha_id", id); // Guarda el ID recibido
+    window.location.href = "Disponibilidad_cancha.html"; // Redirige
+}
     
