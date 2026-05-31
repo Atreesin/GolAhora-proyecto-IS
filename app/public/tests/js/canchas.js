@@ -31,7 +31,7 @@ async function cargarCanchas() {
         const card = document.createElement("div");
         card.classList.add("cancha-card");
         card.innerHTML = `
-            <img src="https://golahora-proyecto-is.onrender.com${cancha.imagen_url}" alt="${cancha.tipo_cancha}">
+            <img src="${cancha.imagen_url}" alt="${cancha.tipo_cancha}"> alt="${cancha.tipo_cancha}">
             <div class="cancha-info">
                 <h3>${cancha.tipo_cancha}</h3>
                 <p><strong>Dimensiones:</strong> ${cancha.ancho}m x ${cancha.largo}m</p>
