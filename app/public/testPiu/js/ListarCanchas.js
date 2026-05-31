@@ -20,6 +20,12 @@ class Cancha {
         fila.innerHTML = `
             <div class="card text-dark shadow border-0 p-4 w-100" style="max-width: 900px; border-radius: 15px; background-color: #ffffff !important;">
                 <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div class="col-md-5">
+                        <img src="https://golahora-proyecto-is.onrender.com${this.imagen_url}" 
+                             class="card-img w-100" 
+                             style="height: 280px; object-fit: cover;" 
+                             alt="${this.tipo_cancha}">
+                    </div>
                     <div>
                         <h4 class="font-weight-bold mb-1">Cancha:${this.id}</h4>
                         <p class="text-muted mb-0">
