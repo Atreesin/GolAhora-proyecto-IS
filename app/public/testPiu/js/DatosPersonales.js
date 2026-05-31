@@ -31,7 +31,7 @@ async function ObtenerDatosPersonales(){
         CampoFecha.value = Datos.fecha_nacimiento;
         CampoTelefono.value = Datos.telefono;
         CampoEmail.value = Datos.email;
-        CampoDireccion.value = Datos.calle;
+        CampoDireccion.value = `${Datos.calle} ${Datos.numero}, ${Datos.localidad}, ${Datos.pais}`;
     }catch(error){
         console.error("Hubo un error al obtener los datos:", error);
     };
