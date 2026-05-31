@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     // 1. Asegúrate de usar la URL completa si estás en un entorno local diferente
-    const response = await fetch("https://golahora-proyecto-is.onrender.com/api/superficies");
+    const response = await fetch("/api/superficies");
     superficies = await response.json();
   } catch (error) {
     console.error("Error al cargar superficies:", error);
