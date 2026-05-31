@@ -25,7 +25,7 @@
             width: 100%;
             max-height: 180px;
             overflow-y: auto;
-            z-index: 1050; /* Mayor al del formulario para sobreponerse */
+            z-index: 1050; /* Forzamos a que flote sobre la tarjeta */
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
             border-radius: 4px;
             margin-top: 2px;
@@ -34,7 +34,7 @@
         .sugerencia-item {
             padding: 10px;
             cursor: pointer;
-            color: #222222 !important; /* Texto oscuro visible */
+            color: #222222 !important; /* Asegura contraste de texto oscuro */
             text-align: left;
             font-size: 14px;
             border-bottom: 1px solid #f0f0f0;
@@ -49,9 +49,10 @@
         .error {
             background-color: #dc3545;
             color: white;
-            padding: 10px;
+            padding: 12px;
             border-radius: 4px;
             text-align: center;
+            font-weight: 500;
         }
 
         .escondido {
@@ -101,7 +102,7 @@
 
                         <div class="form-group">
                             <label for="nombre">Nombre de la Cancha</label>
-                            <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ej: Cancha Principal" required>
+                            <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ej: Cancha de Fútbol 5 Profesional" required>
                         </div>
 
                         <div class="row">
@@ -144,6 +145,7 @@
             </div>
         </div>
     </div>
+
     <div class="container-fluid footer-personalizado text-secondary mt-5 pt-5">
         <div class="row px-xl-5 pt-5">
             <div id="Contactanos" class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
@@ -179,6 +181,7 @@
             </div>
         </div>
     </div>
+
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
     <script src="lib/easing/easing.min.js"></script>
