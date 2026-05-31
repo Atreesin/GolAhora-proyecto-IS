@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // 4. Extracción de datos según tu JSON real
             const idCanchaFisica = cancha.id; // 1
-            const nombreClub = cancha.club || "Club No Especificado"; // "Club Atlético River Plate"
+            const nombreClub = cancha.club.nombre || "Club No Especificado"; // "Club Atlético River Plate"
             
             // Accedemos de forma segura al objeto interno 'tipo_cancha'
             const infoTipo = cancha.tipo_cancha ? cancha.tipo_cancha.tipo : "Fútbol"; // "Futbol 5 (sintetico)"
