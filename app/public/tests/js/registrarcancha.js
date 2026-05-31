@@ -1,5 +1,15 @@
 const mensajeError = document.getElementsByClassName("error")[0];
 
+// ==========================================
+// FUNCIÓN PARA LEER COOKIES DEL NAVEGADOR
+// ==========================================
+function obtenerCookie(nombre) {
+    const valor = `; ${document.cookie}`;
+    const partes = valor.split(`; ${nombre}=`);
+    if (partes.length === 2) return partes.pop().split(';').shift();
+    return null;
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
     const tipoCanchaInput = document.getElementById("id_tipo_cancha");
     const tipoCanchaHidden = document.getElementById("id_tipo_cancha_hidden");
@@ -61,7 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // ==========================================
-    // ENVÍO DEL FORMULARIO
+    // ENVÍO DEL FORMULARIO 
     // ==========================================
     formulario.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -75,7 +85,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
             mensajeError.classList.add("escondido");
 
-            // Mapeamos los datos convirtiendo a tipos numéricos puros (int y float)
+            // 1. Intentamos leer la cookie X-Auth-Token que creó tu Login previo
+            let tokenCookie = obtenerCookie("X-Auth-Token");
+
+            // Si la cookie existe pero no viene con el prefijo "jwt=", se lo agregamos dinámicamente
+            if (tokenCookie && !tokenCookie.startsWith("jwt=")) {
+                tokenCookie = `jwt=${tokenCookie}`;
+            }
+
+            // 2. Mapeo estricto de propiedades en formato JSON numérico
             const datosCancha = {
                 nombre: document.getElementById("nombre").value.trim(),
                 tiempo_cancelacion: parseInt(document.getElementById("tiempo_cancelacion").value, 10),
@@ -83,21 +101,21 @@ document.addEventListener("DOMContentLoaded", async () => {
                 id_tipo_cancha: parseInt(tipoCanchaHidden.value, 10)
             };
 
-            // Validación preventiva en frontend
-            if (isNaN(datosCancha.tiempo_cancelacion) || isNaN(datosCancha.precio_hora_reserva) || isNaN(datosCancha.id_tipo_cancha) || !datosCancha.nombre) {
-                mensajeError.textContent = "Algunos campos están vacíos o tienen valores numéricos inválidos.";
-                mensajeError.classList.remove("escondido");
-                return;
+            // 3. Cabeceras requeridas según las especificaciones de tu Swagger
+            const cabeceras = {
+                "Content-Type": "application/json",
+                "plataform": "web"
+            };
+
+            // Si encontramos la cookie en el navegador, la inyectamos también como cabecera por seguridad
+            if (tokenCookie) {
+                cabeceras["X-Auth-Token"] = tokenCookie;
             }
 
             const res = await fetch("/api/canchas/agregar", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "plataform": "web"
-                    // NOTA: No mandamos X-Auth-Token. El backend leerá la cookie de sesión gracias a 'credentials'.
-                },
-                credentials: "include", // Esto adjunta automáticamente tu sesión activa del navegador
+                headers: cabeceras,
+                credentials: "include", // Envía las cookies nativas automáticamente
                 body: JSON.stringify(datosCancha)
             });
 
@@ -108,8 +126,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 tipoCanchaHidden.value = "";
             } else {
                 const errorData = await res.json().catch(() => ({}));
-                // Si la API te devuelve un error, lo mostramos detalladamente
-                mensajeError.textContent = errorData.message || `Error del servidor (${res.status}): Verifica tu sesión o los datos.`;
+                mensajeError.textContent = errorData.message || `Error del servidor (${res.status}): No autorizado o faltan datos.`;
                 mensajeError.classList.remove("escondido");
             }
 
