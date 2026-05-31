@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="d-flex justify-content-between align-items-center flex-wrap">
                         <div>
                             <h4 class="font-weight-bold mb-1" style="color: #111111 !important; font-family: sans-serif; letter-spacing: 0.5px;">
-                                ${nombreClub.toUpperCase()}
+                                ${nombreClub.nombre.toUpperCase()}
                             </h4>
                             <p class="text-muted mb-0" style="font-size: 0.95rem; color: #555555 !important;">
                                 <i class="fas fa-futbol text-primary mr-1"></i> <strong>Modalidad:</strong> ${infoTipo} — <strong>Número:</strong> Cancha N° ${idCanchaFisica}
