@@ -79,7 +79,7 @@ function abrirReserva(dia, inicio, fin) {
     const resumen = document.getElementById("resumen-contenido");
 
     // Inyectamos los datos en el resumen
-    resumen.innerHTML = 
+    resumen.innerHTML = `
         <div class="text-dark">
         <p><strong>Día:</strong> ${dia}</p>
         <p><strong>Horario:</strong> ${inicio} a ${fin}</p>
