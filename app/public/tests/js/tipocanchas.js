@@ -10,13 +10,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   let superficies = [];
 
   try {
-    // 1. Asegúrate de usar la URL completa si estás en un entorno local diferente
     const response = await fetch("/api/superficies");
     superficies = await response.json();
   } catch (error) {
     console.error("Error al cargar superficies:", error);
   }
 
+  // 1. Corregido el error de escritura (superficieInput en lugar de superfimieInput)
   superficieInput.addEventListener("input", () => {
     const query = superficieInput.value.toLowerCase();
     suggestionsBox.innerHTML = "";
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    // 2. CORRECCIÓN: Filtrar buscando en la propiedad 'tipo_superficie'
+    // 2. CORRECCIÓN CLAVE: Buscamos dentro de 's.tipo_superficie'
     const matches = superficies.filter(s => 
       s.tipo_superficie.toLowerCase().includes(query)
     );
@@ -35,11 +35,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       matches.forEach(s => {
         const div = document.createElement("div");
         
-        // 3. CORRECCIÓN: Mostrar el texto de 'tipo_superficie' en la sugerencia
+        // 3. CORRECCIÓN CLAVE: Mostramos solo el texto del tipo de superficie
         div.textContent = s.tipo_superficie; 
         
         div.addEventListener("click", () => {
-          // 4. CORRECCIÓN: Asignar el texto correcto al input al hacer clic
+          // 4. CORRECCIÓN CLAVE: Escribimos el texto en el input al seleccionar
           superficieInput.value = s.tipo_superficie;
           suggestionsBox.style.display = "none";
         });
