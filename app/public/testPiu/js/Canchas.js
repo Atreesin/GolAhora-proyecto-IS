@@ -1,4 +1,4 @@
-// 1. DEFINICIÓN DE LA CLASE (Define el molde y el dibujo)
+/// 1. DEFINICIÓN DE LA CLASE (Define el molde y el dibujo)
 class Cancha {
     constructor(id, tipo_cancha, duracion_min, duracion_max, ancho, largo, capacidad, superficie, descripcion, imagen_url) {
         this.id = id;
@@ -22,17 +22,17 @@ class Cancha {
             <div class="card text-dark shadow border-0 p-4 w-100" style="max-width: 900px; border-radius: 15px; background-color: #ffffff !important;">
                 <div class="d-flex justify-content-between align-items-center flex-wrap">
                     <div>
-                        <h4 class="font-weight-bold mb-1">${this.id}</h4>
+                        <h4 class="font-weight-bold mb-1">Cancha:${this.id}</h4>
                         <p class="text-muted mb-0">
                             <i class="fas fa-futbol text-primary mr-1"></i> 
-                            <strong>Modalidad:</strong> ${this.tipo_cancha}
+                            <strong>Tipo de cancha:</strong> ${this.tipo_cancha}
                         </p>
                         <p class="text-success font-weight-bold mb-0 mt-1">
                             <i class="fas fa-check-circle"></i> ${this.descripcion || "Disponible para reservar"}
                         </p>
                     </div>
                     <div class="mt-3 mt-sm-0">
-                        <button class="btn btn-warning" onclick="elegirHorario(${this.id})">
+                        <button class="btn btn-warning"  onclick="localStorage.setItem('cancha_id', ${this.id})">>
                             Ver Horarios
                         </button>
                     </div>
@@ -88,4 +88,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     obtenerDatos();
 });
-           
+function elegirHorario(cancha_id) {
+    // Guardamos el ID de la cancha seleccionada para usarlo en la siguiente página
+    localStorage.setItem("cancha_id", id);
+    
+    // Redirigimos al usuario a la página de horarios
+    window.location.href = "Disponibilidad_cancha.html"; 
+}
