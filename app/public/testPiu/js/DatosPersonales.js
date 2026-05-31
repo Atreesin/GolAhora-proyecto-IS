@@ -33,7 +33,7 @@ async function ObtenerDatosPersonales(){
         CampoEmail.value = Datos.email;
         CampoDireccion.value = `${Datos.calle} ${Datos.numero}, ${Datos.localidad}, ${Datos.pais}`;
     }catch(error){
-
+        console.error("Hubo un error al obtener los datos:", error);
     };
   
 }  ObtenerDatosPersonales();
