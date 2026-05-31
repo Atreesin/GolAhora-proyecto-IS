@@ -4,20 +4,31 @@ const mensajeError = document.getElementsByClassName("error")[0];
 // LOGIN PARA OBTENER TOKEN
 // ==========================================
 async function obtenerToken() {
-    const res = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "plataform": "web"
-        },
-        credentials: "include",
-        body: JSON.stringify({
-            email: "administrador@golahora.com",
-            password: "Unaj2026@golahora"
-        })
-    });
-    const data = await res.json();
-    return data.token;
+    try {
+        const res = await fetch("/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "plataform": "web"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                email: "administrador@golahora.com",
+                password: "Unaj2026@golahora"
+            })
+        });
+
+        if (!res.ok) {
+            console.error("El login automático falló con estado:", res.status);
+            return null;
+        }
+
+        const data = await res.json();
+        return data.token;
+    } catch (error) {
+        console.error("Error en la petición de login:", error);
+        return null;
+    }
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -44,14 +55,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     tipoCanchaInput.addEventListener("input", () => {
         const query = tipoCanchaInput.value.toLowerCase();
         suggestionsBox.innerHTML = "";
-        tipoCanchaHidden.value = ""; // Limpiamos el ID si el usuario borra o cambia el texto
+        tipoCanchaHidden.value = ""; // Se limpia si el usuario borra o modifica el texto
 
         if (query.length === 0) {
             suggestionsBox.style.display = "none";
             return;
         }
 
-        // Buscamos dentro de la propiedad 'tipo_cancha' de cada objeto
         const matches = tiposCanchas.filter(t =>
             t.tipo_cancha.toLowerCase().includes(query)
         );
@@ -63,8 +73,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 div.classList.add("sugerencia-item");
                 
                 div.addEventListener("click", () => {
-                    tipoCanchaInput.value = t.tipo_cancha; // Texto para el usuario
-                    tipoCanchaHidden.value = t.id;        // ID numérico para la API
+                    tipoCanchaInput.value = t.tipo_cancha; // Texto visual
+                    tipoCanchaHidden.value = t.id;        // ID numérico para enviar
                     suggestionsBox.style.display = "none";
                 });
                 suggestionsBox.appendChild(div);
@@ -75,7 +85,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // Cerrar sugerencias al hacer clic afuera del input
+    // Cerrar sugerencias si el usuario hace clic fuera de la caja
     document.addEventListener("click", (e) => {
         if (!suggestionsBox.contains(e.target) && e.target !== tipoCanchaInput) {
             suggestionsBox.style.display = "none";
@@ -83,7 +93,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // ==========================================
-    // ENVÍO DEL FORMULARIO (CORREGIDO A JSON)
+    // ENVÍO DEL FORMULARIO (MÉTODO JSON + AUTH)
     // ==========================================
     formulario.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -97,10 +107,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
             mensajeError.classList.add("escondido");
 
-            // Obtenemos el token del Administrador
+            // Solicitamos el token del Administrador
             const token = await obtenerToken();
 
-            // Construimos el JSON convirtiendo los números a sus tipos de datos correctos (int y float)
+            if (!token) {
+                mensajeError.textContent = "Error de autenticación: No se pudo generar el token de acceso.";
+                mensajeError.classList.remove("escondido");
+                return;
+            }
+
+            // Estructura JSON mapeada con conversiones de tipos correctas
             const datosCancha = {
                 nombre: document.getElementById("nombre").value,
                 tiempo_cancelacion: parseInt(document.getElementById("tiempo_cancelacion").value, 10),
@@ -111,12 +127,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             const res = await fetch("/api/canchas/agregar", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json", // Especificamos JSON obligatorio
+                    "Content-Type": "application/json",
                     "plataform": "web",
-                    "X-Auth-Token": token
+                    // Corrección crítica: Se incluye el formato jwt= solicitado por tu Swagger
+                    "X-Auth-Token": `jwt=${token}` 
                 },
                 credentials: "include",
-                body: JSON.stringify(datosCancha) // Enviamos la cadena JSON estructurada
+                body: JSON.stringify(datosCancha)
             });
 
             if (res.ok) {
@@ -126,7 +143,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 tipoCanchaHidden.value = "";
             } else {
                 const errorData = await res.json().catch(() => ({}));
-                mensajeError.textContent = errorData.message || `Error: ${res.status}`;
+                mensajeError.textContent = errorData.message || `Error del servidor (${res.status}): No autorizado o datos inválidos.`;
                 mensajeError.classList.remove("escondido");
             }
 
