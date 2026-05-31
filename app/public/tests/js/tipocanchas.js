@@ -1,146 +1,52 @@
-//cargando superficies
+const mensajeError = document.getElementsByClassName("error")[0];
 
-document.addEventListener("DOMContentLoaded", cargarSuperficies);
+// ==========================================
+// SUPERFICIE CON AUTOCOMPLETADO
+// ==========================================
+document.addEventListener("DOMContentLoaded", async () => {
+  const superficieInput = document.getElementById("id_superficie");
+  const suggestionsBox = document.getElementById("id_superficie-suggestions");
 
-async function cargarSuperficies() {
+  let superficies = [];
 
-    const select =
-        document.getElementById("id_superficie");
+  try {
+    const response = await fetch("/api/superficies");
+    superficies = await response.json();
+  } catch (error) {
+    console.error("Error al cargar superficies:", error);
+  }
 
-    try {
+  superficieInput.addEventListener("input", () => {
+    const query = superficieInput.value.toLowerCase();
+    suggestionsBox.innerHTML = "";
 
-        const res = await fetch(
-            "https://golahora-proyecto-is.onrender.com/superficies"
-        );
+    if (query.length === 0) {
+      suggestionsBox.style.display = "none";
+      return;
+    }
 
-        const superficies = await res.json();
+    // Lista simple de strings
+    const matches = superficies.filter(s => s.toLowerCase().includes(query));
 
-        select.innerHTML =
-            '<option value="">Seleccione una superficie</option>';
-
-        superficies.forEach(superficie => {
-
-            const option =
-                document.createElement("option");
-
-            option.value = superficie.id;
-
-            option.textContent =
-                superficie.tipo_superficie;
-
-            select.appendChild(option);
-
+    if (matches.length > 0) {
+      matches.forEach(s => {
+        const div = document.createElement("div");
+        div.textContent = s;
+        div.addEventListener("click", () => {
+          superficieInput.value = s;
+          suggestionsBox.style.display = "none";
         });
-
-    } catch (error) {
-
-        console.error(error);
-
-        select.innerHTML =
-            '<option value="">Error al cargar superficies</option>';
+        suggestionsBox.appendChild(div);
+      });
+      suggestionsBox.style.display = "block";
+    } else {
+      suggestionsBox.style.display = "none";
     }
-}
+  });
 
-
-//cargando superficies
-
-const API_URL =
-    "https://golahora-proyecto-is.onrender.com/tipos_cancha/agregar";
-
-document
-    .getElementById("formTipoCancha")
-    .addEventListener("submit", registrarTipoCancha);
-
-async function registrarTipoCancha(e) {
-
-    e.preventDefault();
-
-    const formData = new FormData();
-
-    formData.append(
-        "tipo_cancha",
-        document.getElementById("tipo_cancha").value
-    );
-
-    formData.append(
-        "duracion_min",
-        document.getElementById("duracion_min").value
-    );
-
-    formData.append(
-        "duracion_max",
-        document.getElementById("duracion_max").value
-    );
-
-    formData.append(
-        "ancho",
-        document.getElementById("ancho").value
-    );
-
-    formData.append(
-        "largo",
-        document.getElementById("largo").value
-    );
-
-    formData.append(
-        "capacidad",
-        document.getElementById("capacidad").value
-    );
-
-    formData.append(
-        "id_superficie",
-        document.getElementById("id_superficie").value
-    );
-
-    const imagen =
-        document.getElementById("imagen").files[0];
-
-    if (imagen) {
-        formData.append("imagen", imagen);
+  document.addEventListener("click", (e) => {
+    if (!suggestionsBox.contains(e.target) && e.target !== superficieInput) {
+      suggestionsBox.style.display = "none";
     }
-
-    try {
-
-        const token =
-            localStorage.getItem("token");
-
-        const response = await fetch(API_URL, {
-            method: "POST",
-            headers: {
-                platform: "web",
-                "X-Auth-Token": token
-            },
-            body: formData
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-
-            document.getElementById("mensaje").innerHTML =
-                `<div class="alert alert-success">
-                    Tipo de cancha registrado correctamente
-                </div>`;
-
-            console.log(data);
-
-        } else {
-
-            document.getElementById("mensaje").innerHTML =
-                `<div class="alert alert-danger">
-                    ${data.message || "Error al registrar"}
-                </div>`;
-
-            console.error(data);
-        }
-
-    } catch (error) {
-
-        console.error(error);
-
-        document.getElementById("mensaje").innerHTML =
-            `<div class="alert alert-danger">
-                Error de conexión con la API
-            </div>`;
-    }
-}
+  });
+});
