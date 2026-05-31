@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     // 1. Recuperamos el ID seleccionado (probamos ambas opciones por las dudas)
-    let tipoCanchaId = localStorage.getItem("tipo_cancha") || localStorage.getItem("tipo_cancha_seleccionado");
+    let tipoCanchaId = localStorage.getItem("tipo_cancha") 
     const contenedor = document.getElementById("tarjetas-canchas-filtradas");
 
     if (!contenedor) return;
