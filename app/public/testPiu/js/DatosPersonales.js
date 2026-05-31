@@ -1,4 +1,4 @@
-const API = "https://golahora-proyecto-is.onrender.com/api/user_info";
+const API = "https://golahora-proyecto-is.onrender.com/api/user_info/Full_info";
 
 async function ObtenerDatosPersonales(){
     try{
@@ -13,8 +13,8 @@ async function ObtenerDatosPersonales(){
        
         const CampoNombre = document.querySelector('.input-Nombre');
         const CampoApellido = document.querySelector('.input-Apellido');
-        const CampoNacionalidad = document.querySelector('.input-Nacionalidad');
         const CampoDni = document.querySelector('.input-Dni');
+        const CampoNacionalidad = document.querySelector('.input-Nacionalidad');
         const CampoGenero = document.querySelector('.input-Genero');
         const CampoFecha = document.querySelector('.input-Fecha');
         const CampoEmail = document.querySelector('.input-Email');
@@ -24,12 +24,12 @@ async function ObtenerDatosPersonales(){
         // conecto los campos con mi DB
         CampoNombre.value = Datos.nombre ;
         CampoApellido.value = Datos.apellido;
-        CampoNacionalidad.value = Datos.nacionalidad;
         CampoDni.value = Datos.dni;
+        CampoNacionalidad.value = Datos.nacionalidad;
         CampoGenero.value = Datos.genero;
         CampoTelefono.value = Datos.telefono;
         CampoEmail.value = Datos.email;
-
+        CampoDireccion.value = `${Datos.calle} ${Datos.numero}, ${Datos.localidad}, ${Datos.pais}`;
     }catch(error){
 
     };
