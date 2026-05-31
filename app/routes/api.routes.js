@@ -16,26 +16,40 @@ import {methods as disp} from "../db/dbDisponibilidadQueries.js"
 import { uploadImagen } from "../services/imageUpload.service.js";
 
 const router = Router()
-
-//docs
+  //*************************************//
+ //              docs                   //
+//*************************************//
 router.get("/api", (req, res) => res.redirect("/api-docs"))
 
-//api get
-//club
+/*****************************************************************************************************************/
+/*                                          API GET                                                              /
+/****************************************************************************************************************/
+
+  //*************************************//
+ //              CLUB                   //
+//*************************************//
 router.get("/api/clubes", wrapper(clubController.getClubes));
 router.get("/api/clubes/full_info", wrapper(clubController.getClubesFullInfo));
 router.get("/api/clubes/club_id=:id", wrapper(clubController.getDatosClubById));
 router.get("/api/clubes/club_id=:id/full_info", wrapper(clubController.getFullDatosClubById));
-// lugares
+
+  //*************************************//
+ //              LUGARES                //
+//*************************************//
 router.get("/api/paises", wrapper(lugarController.nombrePaises));
 router.get("/api/provincias", wrapper(lugarController.nombreProvincias));
 router.get("/api/ciudades", wrapper(lugarController.nombreCiudades));
 router.get("/api/localidades", wrapper(lugarController.nombreLocalidades));
 router.get("/api/localidades/full_info", wrapper(lugarController.fullInfoLocalidades));
-// generos
+
+  //*************************************//
+ //              GENEROS                //
+//*************************************//
 router.get("/api/generos", wrapper(generoController.generos));
 
-// usuarios
+  //*************************************//
+ //          USUARIOS                   //
+//*************************************//
 router.get("/api/users", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(userController.getUsuarios));
 router.get("/api/users/cantidad", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(userController.getCantidadUsuarios));
 router.get("/api/users/user_id=:id", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(userController.getDatosUsuarioById));
@@ -48,16 +62,25 @@ router.get("/api/entrenadores", authorization.apiSoloUsers, authorization.apiSol
 router.get("/api/nombres_profesores", wrapper(userController.getNombresProfesores))
 router.get("/api/nombres_entrenadores", wrapper(userController.getNombresEntrenadores))
 router.get("/api/administradores",authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(userController.getAdministradores))
-// canchas
+
+  //*************************************//
+ //             CANCHAS                 //
+//*************************************//
 router.get("/api/tipos_canchas", wrapper(canchaController.getTipoCanchas));
 router.get("/api/tipos_canchas/tipo_cancha_id=:id", wrapper(canchaController.getTipoCanchaById));
 router.get("/api/tipos_canchas/tipo_cancha_id=:id/canchas", wrapper(canchaController.getCanchaByTipoCancha));
 router.get("/api/canchas", wrapper(canchaController.getCanchas));
 router.get("/api/canchas/cancha_id=:id", wrapper(canchaController.getCanchaById));
 router.get("/api/canchas/tipo_cancha_id=:id", wrapper(canchaController.getCanchaByTipoCancha));
-//superficies
+
+  //*************************************//
+ //          SUPERFICIES                //
+//*************************************//
 router.get("/api/superficies", wrapper(canchaController.getSuperficies));
-// disponibilidad
+
+  //*************************************//
+ //          DISPONIBILIDAD             //
+//*************************************//
 router.get("/api/disponibilidad", wrapper(canchaController.getDisponibilidades))
 router.get("/api/disponibilidad/cerradas", wrapper(canchaController.getListaCarrados))
 router.get("/api/disponibilidad/disponibilidad_id=:id", wrapper(canchaController.getDisponibilidadById))
@@ -68,17 +91,37 @@ router.get("/api/canchas/cancha_id=:id/disponibilidad", wrapper(canchaController
 router.get("/api/disponibilidad/dia=:dia/cancha_id=:id", wrapper(canchaController.getDisponibilidadesCanchaDiaSemanaNormal))
 router.get("/api/canchas/cancha_id=:id/disponibilidad/dia=:dia", wrapper(canchaController.getDisponibilidadesCanchaDiaSemanaNormal))
 router.get("/api/canchas/cancha_id=:id/disponibilidad/fecha=:fecha", wrapper(canchaController.getDisponibilidadCanchaByFecha))
-//excepciones
+
+  //*************************************//
+ //     DISPONIBILIDAD EXCEPCIONES      // 
+//*************************************//
 router.get("/api/disponibilidad/especiales", wrapper(canchaController.getDisponibilidadesExcepciones))
 
-// api post
-// authentication
+  //*************************************//
+ //             OCUPACIONES             //
+//*************************************//
+router.get("/api/ocupaciones", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(canchaController.getOcupacionesCanchas))
+router.get("/api/tipo_ocupaciones", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(canchaController.getTipoOcupacionesCanchas))
+
+/*****************************************************************************************************************/
+/*                                          API POST                                                              /
+/****************************************************************************************************************/
+
+  //*************************************//
+ //         AUTHENTICATION              //
+//*************************************//
 router.post("/api/login", wrapper(authentication.login));
 router.post("/api/register", wrapper(authentication.register));
-// usuarios
+
+  //*************************************//
+ //              USUARIOS               //
+//*************************************//
 router.post("/api/profesores/registrar", (req, res) => res.send(""))
 router.post("/api/entrenadores/regstrar", (req, res) => res.send(""))
-// Gestion Canchas
+
+  //*************************************//
+ //      GESTION DE CANCHAS             //
+//*************************************//
 router.post("/api/tipos_cancha/agregar", authorization.apiSoloUsers, authorization.apiSoloAdmin, (req, res, next) => {
     uploadImagen.single('imagen')(req, res, function (err) {
         if (err) {
@@ -91,7 +134,7 @@ router.post("/api/tipos_cancha/agregar", authorization.apiSoloUsers, authorizati
 router.post("/api/canchas/agregar", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(canchaController.registrarCancha));
 router.post("/api/canchas/cancha_id=:id/disponibilidad/agregar", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(canchaController.registrarDisponibilidad))
 router.post("/api/disponibilidad/agregar", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(canchaController.registrarDisponibilidad))
-// Ocupaciones
+// REGISTRAR
 router.post("/api/ocupaciones/agregar", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(canchaController.registrarOcupacionCancha))
 
 

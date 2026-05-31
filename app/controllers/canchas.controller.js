@@ -526,7 +526,7 @@ async function getDisponibilidadCanchaByFecha(req, res) {
 
     res.send(disponibilidad)
 }
-
+//si esta cerrada o no? no se si se llegue a usar
 async function estadoCanchaFecha(req, res) {
 
 }
@@ -579,8 +579,9 @@ async function registrarOcupacionCancha(req, res) {
     if (!existeCancha) {
         return res.status(404).send({ status: "Error", message: `No existe la Cancha con el id: ${req.params.id || req.body.id_cancha}` })
     }
+    const dia_semana = helper.obtenerDia(fecha)
     if (existe_tipoOcupacion.tipo === 'Reserva') {
-        const dia_semana = helper.obtenerDia(fecha)
+        
         const disponibilidad = await dbDisponibilidadQuery.getDisponibilidadReal(fecha, id_cancha);
 
         if (!disponibilidad) {
@@ -607,10 +608,7 @@ async function registrarOcupacionCancha(req, res) {
         }
         
         const rangoHorario = helper.diferenciaHorasFormato(hora_inicio,hora_fin)
-        if( //si la duracion de la reserva es menor o mayor que el rango min y rango max
-            (helper.horaToMinutos(rangoHorario) < existeCancha.duracion_min) ||
-            (helper.horaToMinutos(rangoHorario) > existeCancha.duracion_max)
-            ){
+        if((helper.horaToMinutos(rangoHorario) < existeCancha.duracion_min) || (helper.horaToMinutos(rangoHorario) > existeCancha.duracion_max)){
                 return res.status(400).send({
                     status: "Error",
                     message: `La duracion de la reserva no se encuentra dentro del rango permitodo`,
@@ -638,7 +636,6 @@ async function registrarOcupacionCancha(req, res) {
         }
         */
 
-
         const nuevaOcupacion = {
             fecha: req.body.fecha,
             hora_inicio,
@@ -664,8 +661,50 @@ async function registrarOcupacionCancha(req, res) {
         }
     }
 
+
     //otro tipo de ocupacion
+    const existeSuperpocionHoraria = await dbOcupacionesQuery.getSuperposicionOcupacionesCanchas(id_cancha, req.body.fecha, req.body.hora_inicio, req.body.hora_fin)
+        console.log(existeSuperpocionHoraria)
+        if (existeSuperpocionHoraria) {
+            return res.status(409).send({
+                status: "Error",
+                message: `El horario de ${req.body.hora_inicio} a ${req.body.hora_fin} se encuentra ocupado para la Cancha con el id: ${req.params.id || req.body.id_cancha} el dia ${dia_semana} ${fecha}`,
+                ocupacion: existeSuperpocionHoraria
+            })
+        }
+    const nuevaOcupacion = {
+            fecha: req.body.fecha,
+            hora_inicio,
+            hora_fin,
+            id_tipo_ocupacion,
+            id_cancha
+        }
+        const result = await dbOcupacionesQuery.agregarOcupacionCancha(nuevaOcupacion);
+        if (result.affectedRows > 0) {
+            return res.status(201).send({
+                status: "ok",
+                message: `La Ocupación fue registrada exitosamente`,
+                tipo_ocupacion: existe_tipoOcupacion.tipo,
+                reservaRegistada: {
+                    id: result.insertId,
+                    fecha: req.body.fecha,
+                    hora_inicio,
+                    hora_fin,
+                    id_tipo_ocupacion,
+                    id_cancha
+                }
+            })
+        }
 }
+
+async function getTipoOcupacionesCanchas(req, res) {
+    res.send(await dbOcupacionesQuery.getTiposOcupaciones() || [])
+}
+
+async function getOcupacionesCanchas(req, res) {
+    res.send(await dbOcupacionesQuery.getOcupacionesCanchas() || [])
+}
+
 
 export const methods = {
     registrarTipoCancha,
@@ -688,5 +727,7 @@ export const methods = {
     //excepciones
     getDisponibilidadesExcepciones,
     // ocupaciones
-    registrarOcupacionCancha
+    registrarOcupacionCancha,
+    getOcupacionesCanchas,
+    getTipoOcupacionesCanchas
 }
