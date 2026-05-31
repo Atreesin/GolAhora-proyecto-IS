@@ -1,36 +1,5 @@
 const mensajeError = document.getElementsByClassName("error")[0];
 
-// ==========================================
-// LOGIN PARA OBTENER TOKEN
-// ==========================================
-async function obtenerToken() {
-    try {
-        const res = await fetch("/api/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "plataform": "web"
-            },
-            credentials: "include",
-            body: JSON.stringify({
-                email: "administrador@golahora.com",
-                password: "Unaj2026@golahora"
-            })
-        });
-
-        if (!res.ok) {
-            console.error("El login automático falló con estado:", res.status);
-            return null;
-        }
-
-        const data = await res.json();
-        return data.token;
-    } catch (error) {
-        console.error("Error en la petición de login:", error);
-        return null;
-    }
-}
-
 document.addEventListener("DOMContentLoaded", async () => {
     const tipoCanchaInput = document.getElementById("id_tipo_cancha");
     const tipoCanchaHidden = document.getElementById("id_tipo_cancha_hidden");
@@ -93,7 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // ==========================================
-    // ENVÍO DEL FORMULARIO (MÉTODO JSON + AUTH)
+    // ENVÍO DEL FORMULARIO (MÉTODO COOKIE NATIVA)
     // ==========================================
     formulario.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -107,16 +76,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
             mensajeError.classList.add("escondido");
 
-            // Solicitamos el token del Administrador
-            const token = await obtenerToken();
-
-            if (!token) {
-                mensajeError.textContent = "Error de autenticación: No se pudo generar el token de acceso.";
-                mensajeError.classList.remove("escondido");
-                return;
-            }
-
-            // Estructura JSON mapeada con conversiones de tipos correctas
+            // Estructura JSON mapeada con las conversiones numéricas correctas
             const datosCancha = {
                 nombre: document.getElementById("nombre").value,
                 tiempo_cancelacion: parseInt(document.getElementById("tiempo_cancelacion").value, 10),
@@ -128,11 +88,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "plataform": "web",
-                    // Corrección crítica: Se incluye el formato jwt= solicitado por tu Swagger
-                    "X-Auth-Token": `jwt=${token}` 
+                    "plataform": "web"
+                    // Nota: Ya no incluimos "X-Auth-Token" de forma manual aquí.
                 },
-                credentials: "include",
+                credentials: "include", // Fuerza al navegador a adjuntar la cookie de sesión existente
                 body: JSON.stringify(datosCancha)
             });
 
