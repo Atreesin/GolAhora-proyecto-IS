@@ -8158,10 +8158,8 @@ body {
     color: #ffffff; /* Esto cambia el texto general a blanco para que sea legible */
 }
 
-/* Si tienes contenedores blancos (como los que se ven alrededor de las imágenes) */
-.container-fluid, .container {
-    background-color: #000 !important;
-}
+
+
 
 /* Ajuste para que las tarjetas de "Clases" y "Entrenamientos" no pierdan contraste */
 .bg-light {
