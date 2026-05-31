@@ -9119,6 +9119,37 @@ body {
 
 }
 
+/* Contenedor principal de las sugerencias */
+#id_superficie-suggestions {
+    border: 1px solid #ccc;
+    background-color: #ffffff;
+    position: absolute;
+    width: 100%; /* Se adapta al ancho del input */
+    max-height: 200px;
+    overflow-y: auto; /* Agrega scroll si hay muchas opciones */
+    z-index: 999;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    margin-top: 2px;
+}
+
+/* Cada uno de los items/opciones dentro de la lista */
+#id_superficie-suggestions div {
+    padding: 10px;
+    cursor: pointer;
+    color: #333333; /* Forzamos color de texto oscuro para que no se vea blanco */
+    text-align: left;
+    font-size: 14px;
+    border-bottom: 1px solid #f0f0f0;
+    background-color: #ffffff;
+}
+
+/* Efecto cuando el usuario pasa el mouse por encima de una opción */
+#id_superficie-suggestions div:hover {
+    background-color: #f1f1f1;
+    color: #000000;
+}
+
    /* ==========================
    FORMULARIO REGISTRO TIPO DE CANCHA
 ========================== */
