@@ -1,7 +1,7 @@
 const mensajeError = document.getElementsByClassName("error")[0];
 
 // ==========================================
-// LOGIN PARA OBTENER TOKEN
+// LOGIN PARA OBTENER TOKEN (Y GUARDAR LA COOKIE)
 // ==========================================
 async function obtenerToken() {
     const res = await fetch("/api/login", {
@@ -10,7 +10,7 @@ async function obtenerToken() {
             "Content-Type": "application/json",
             "plataform": "web"
         },
-        credentials: "include", // ← guarda la cookie de sesión
+        credentials: "include", // ← Guarda la cookie de sesión nativa en el navegador
         body: JSON.stringify({
             email: "administrador@golahora.com",
             password: "Unaj2026@golahora"
@@ -21,49 +21,49 @@ async function obtenerToken() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const superficieInput = document.getElementById("id_superficie");
-    const superficieHidden = document.getElementById("id_superficie_hidden");
-    const suggestionsBox = document.getElementById("id_superficie-suggestions");
-    const formulario = document.getElementById("tipo-cancha-formulario");
+    const tipoCanchaInput = document.getElementById("id_tipo_cancha");
+    const tipoCanchaHidden = document.getElementById("id_tipo_cancha_hidden");
+    const suggestionsBox = document.getElementById("tipo_cancha-suggestions");
+    const formulario = document.getElementById("cancha-formulario");
 
-    let superficies = [];
+    let tiposCanchas = [];
 
     // ==========================================
-    // CARGAR SUPERFICIES DESDE LA API
+    // CARGAR TIPOS DE CANCHAS DESDE LA API
     // ==========================================
     try {
-        const response = await fetch("/api/superficies");
-        superficies = await response.json();
+        const response = await fetch("/api/tipos_canchas");
+        tiposCanchas = await response.json();
     } catch (error) {
-        console.error("Error al cargar superficies:", error);
+        console.error("Error al cargar tipos de canchas:", error);
     }
 
     // ==========================================
-    // AUTOCOMPLETADO DE SUPERFICIE
+    // AUTOCOMPLETADO DE TIPO DE CANCHA
     // ==========================================
-    superficieInput.addEventListener("input", () => {
-        const query = superficieInput.value.toLowerCase();
+    tipoCanchaInput.addEventListener("input", () => {
+        const query = tipoCanchaInput.value.toLowerCase();
         suggestionsBox.innerHTML = "";
-        superficieHidden.value = "";
+        tipoCanchaHidden.value = "";
 
         if (query.length === 0) {
             suggestionsBox.style.display = "none";
             return;
         }
 
-        const matches = superficies.filter(s =>
-            s.tipo_superficie.toLowerCase().includes(query)
+        const matches = tiposCanchas.filter(t =>
+            t.tipo_cancha.toLowerCase().includes(query)
         );
 
         if (matches.length > 0) {
-            matches.forEach(s => {
+            matches.forEach(t => {
                 const div = document.createElement("div");
-                div.textContent = s.tipo_superficie;
+                div.textContent = t.tipo_cancha;
                 div.classList.add("sugerencia-item");
 
                 div.addEventListener("click", () => {
-                    superficieInput.value = s.tipo_superficie;
-                    superficieHidden.value = s.id;
+                    tipoCanchaInput.value = t.tipo_cancha;
+                    tipoCanchaHidden.value = t.id;
                     suggestionsBox.style.display = "none";
                 });
                 suggestionsBox.appendChild(div);
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     document.addEventListener("click", (e) => {
-        if (!suggestionsBox.contains(e.target) && e.target !== superficieInput) {
+        if (!suggestionsBox.contains(e.target) && e.target !== tipoCanchaInput) {
             suggestionsBox.style.display = "none";
         }
     });
@@ -86,8 +86,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     formulario.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        if (!superficieHidden.value) {
-            mensajeError.textContent = "Por favor seleccioná una superficie válida de la lista.";
+        if (!tipoCanchaHidden.value) {
+            mensajeError.textContent = "Por favor seleccioná un tipo de cancha válido de la lista.";
             mensajeError.classList.remove("escondido");
             return;
         }
@@ -95,27 +95,33 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
             mensajeError.classList.add("escondido");
 
-            // Primero obtenemos el token
+            // Primero obtenemos el token (Fuerza la creación/actualización de la cookie)
             const token = await obtenerToken();
 
-            // Armamos el FormData con los datos del formulario
-            const formData = new FormData(formulario);
+            // Armamos el objeto JSON tal como lo estructura tu Swagger
+            const datosCancha = {
+                nombre: document.getElementById("nombre").value.trim(),
+                tiempo_cancelacion: parseInt(document.getElementById("tiempo_cancelacion").value, 10),
+                precio_hora_reserva: parseFloat(document.getElementById("precio_hora_reserva").value),
+                id_tipo_de_cancha: parseInt(tipoCanchaHidden.value, 10) // ← Propiedad exacta de tu API
+            };
 
-            const response = await fetch("/api/tipos_cancha/agregar", {
+            const response = await fetch("/api/canchas/agregar", {
                 method: "POST",
                 headers: {
+                    "Content-Type": "application/json",
                     "plataform": "web"
-                    // ← sin X-Auth-Token, la cookie se envía automáticamente
+                    // ← Sin X-Auth-Token manual, igual que en tu script de tipos de cancha
                 },
-                credentials: "include", // ← esto le dice al navegador que incluya las cookies
-                body: formData
+                credentials: "include", // ← Esto le dice al navegador que incluya las cookies automáticamente
+                body: JSON.stringify(datosCancha) // Envia los datos serializados en JSON puro
             });
 
             if (response.ok) {
-                alert("¡Tipo de cancha registrado con éxito!");
+                alert("¡Cancha registrada con éxito!");
                 formulario.reset();
-                superficieInput.value = "";
-                superficieHidden.value = "";
+                tipoCanchaInput.value = "";
+                tipoCanchaHidden.value = "";
             } else {
                 const errorData = await response.json().catch(() => ({}));
                 mensajeError.textContent = errorData.message || `Error: ${response.status}`;
