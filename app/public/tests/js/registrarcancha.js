@@ -97,11 +97,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             // Login para obtener la cookie de sesión
             const token = await obtenerToken();
 
-            // Usamos FormData igual que tipocanchas.js
             const formData = new FormData();
-            formData.append("nombre", document.querySelector('[name="nombre"]').value);
-            formData.append("tiempo_cancelacion", document.querySelector('[name="tiempo_cancelacion"]').value);
-            formData.append("precio_hora_reserva", document.querySelector('[name="precio_hora_reserva"]').value);
+            formData.append("nombre", document.getElementById("nombre").value);
+            formData.append("tiempo_cancelacion", document.getElementById("tiempo_cancelacion").value);
+            formData.append("precio_hora_reserva", document.getElementById("precio_hora_reserva").value);
             formData.append("id_tipo_cancha", tipoCanchaHidden.value);
 
             const res = await fetch("/api/canchas/agregar", {
