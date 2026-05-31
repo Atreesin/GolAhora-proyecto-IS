@@ -10,11 +10,8 @@ async function obtenerToken() {
             "Content-Type": "application/json",
             "plataform": "web"
         },
-        credentials: "include",
-        body: JSON.stringify({
-            email: "administrador@golahora.com",
-            password: "Unaj2026@golahora"
-        })
+        credentials: "include", // ← este
+        body: JSON.stringify({...})
     });
     const data = await res.json();
     return data.token;
@@ -104,13 +101,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                     "plataform": "web",
                     "X-Auth-Token": token
                 },
-                credentials: "include",
-                body: JSON.stringify({
-                    nombre: formulario.nombre.value,
-                    tiempo_cancelacion: parseInt(formulario.tiempo_cancelacion.value),
-                    precio_hora_reserva: parseFloat(formulario.precio_hora_reserva.value),
-                    id_tipo_cancha: parseInt(tipoCanchaHidden.value)
-                })
+                credentials: "include", // ← y este
+                body: JSON.stringify({...})
             });
 
             if (res.ok) {
