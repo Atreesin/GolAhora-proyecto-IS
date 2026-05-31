@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const nombreClub = cancha.club.nombre || "Club No Especificado"; // "Club Atlético River Plate"
             
             // Accedemos de forma segura al objeto interno 'tipo_cancha'
-            const infoTipo = cancha.tipo_cancha ? cancha.tipo_cancha.tipo : "Fútbol"; // "Futbol 5 (sintetico)"
+            const infoTipo = cancha.tipo_cancha ? ; 
 
             // 5. Dibujamos la tarjeta individual en pantalla
             const fila = document.createElement("div");
