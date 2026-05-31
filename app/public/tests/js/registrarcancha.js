@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 div.addEventListener("click", () => {
                     tipoCanchaInput.value = t.tipo_cancha;
                     tipoCanchaHidden.value = t.id;
-                    console.log("ID seleccionado:", tipoCanchaHidden.value); // ← esta línea
+                    console.log("ID seleccionado:", tipoCanchaHidden.value);
                     suggestionsBox.style.display = "none";
                 });
                 suggestionsBox.appendChild(div);
@@ -75,6 +75,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
             mensajeError.classList.add("escondido");
 
+            const datosEnvio = {
+                nombre: formulario.nombre.value,
+                tiempo_cancelacion: parseInt(formulario.tiempo_cancelacion.value),
+                precio_hora_reserva: parseFloat(formulario.precio_hora_reserva.value),
+                id_tipo_cancha: parseInt(tipoCanchaHidden.value)
+            };
+            console.log("Datos a enviar:", datosEnvio);
+
             const res = await fetch("/api/canchas/agregar", {
                 method: "POST",
                 headers: {
@@ -82,12 +90,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     "plataform": "web"
                 },
                 credentials: "include",
-                body: JSON.stringify({
-                    nombre: formulario.nombre.value,
-                    tiempo_cancelacion: parseInt(formulario.tiempo_cancelacion.value),
-                    precio_hora_reserva: parseFloat(formulario.precio_hora_reserva.value),
-                    id_tipo_cancha: parseInt(tipoCanchaHidden.value)
-                })
+                body: JSON.stringify(datosEnvio)
             });
 
             if (res.ok) {
@@ -103,7 +106,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         } catch (error) {
             console.error("Error:", error);
-            mensajeError.textContent = "Hubo un problema de red al conectar con el servidor.";
+            mensajeError.textContent = "Hueno un problema de red al conectar con el servidor.";
             mensajeError.classList.remove("escondido");
         }
     });
