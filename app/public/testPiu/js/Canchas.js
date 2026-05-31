@@ -88,10 +88,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     obtenerDatos();
 });
-function elegirHorario(cancha_id) {
+/*function elegirHorario(cancha_id) {
     // Guardamos el ID de la cancha seleccionada para usarlo en la siguiente página
     localStorage.setItem("cancha_id", id);
     
     // Redirigimos al usuario a la página de horarios
-    window.location.href = "Disponibilidad_cancha.html"; 
+    window.location.href = "Disponibilidad_cancha.html"; */
     
