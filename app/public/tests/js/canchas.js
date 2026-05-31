@@ -27,17 +27,17 @@ async function cargarCanchas() {
         // Buscamos el contenedor en el HTML
         const contenedor = document.getElementById("lista-canchas");
         // Por cada cancha creamos una card
-        canchas.forEach(cancha => {
+    canchas.forEach(cancha => {
         const card = document.createElement("div");
         card.classList.add("cancha-card");
         card.innerHTML = `
-            <img src="https://golahora-proyecto-is.onrender.com${cancha.tipo_cancha.imagen_url}" alt="${cancha.tipo_cancha.tipo}">
+            <img src="https://golahora-proyecto-is.onrender.com${cancha.imagen_url}" alt="${cancha.tipo_cancha}">
             <div class="cancha-info">
-                <h3>${cancha.tipo_cancha.tipo}</h3>
-                <p><strong>Dimensiones:</strong> ${cancha.tipo_cancha.ancho}m x ${cancha.tipo_cancha.largo}m</p>
-                <p><strong>Capacidad:</strong> ${cancha.tipo_cancha.capacidad} jugadores</p>
-                <p><strong>Superficie:</strong> ${cancha.tipo_cancha.superficie}</p>
-                <p><strong>Descripción:</strong> ${cancha.tipo_cancha.descripcion_superficie}</p>
+                <h3>${cancha.tipo_cancha}</h3>
+                <p><strong>Dimensiones:</strong> ${cancha.ancho}m x ${cancha.largo}m</p>
+                <p><strong>Capacidad:</strong> ${cancha.capacidad} jugadores</p>
+                <p><strong>Superficie:</strong> ${cancha.superficie.tipo}</p>
+                <p><strong>Descripción:</strong> ${cancha.superficie.descripcion}</p>
             </div>
         `;
         contenedor.appendChild(card);
