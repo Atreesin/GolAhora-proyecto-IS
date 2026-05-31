@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Error al cargar superficies:", error);
   }
 
-  superfimieInput.addEventListener("input", () => {
+  superficieInput.addEventListener("input", () => {
     const query = superficieInput.value.toLowerCase();
     suggestionsBox.innerHTML = "";
 
