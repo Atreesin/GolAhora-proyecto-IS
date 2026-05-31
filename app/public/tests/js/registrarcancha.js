@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 div.addEventListener("click", () => {
                     tipoCanchaInput.value = t.tipo_cancha;
                     tipoCanchaHidden.value = t.id;
+                    console.log("ID seleccionado:", tipoCanchaHidden.value); // ← esta línea
                     suggestionsBox.style.display = "none";
                 });
                 suggestionsBox.appendChild(div);
