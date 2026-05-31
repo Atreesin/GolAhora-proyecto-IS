@@ -10,13 +10,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   let superficies = [];
 
   try {
-    const response = await fetch("/api/superficies");
+    // 1. Asegúrate de usar la URL completa si estás en un entorno local diferente
+    const response = await fetch("https://golahora-proyecto-is.onrender.com/api/superficies");
     superficies = await response.json();
   } catch (error) {
     console.error("Error al cargar superficies:", error);
   }
 
-  superficieInput.addEventListener("input", () => {
+  superfimieInput.addEventListener("input", () => {
     const query = superficieInput.value.toLowerCase();
     suggestionsBox.innerHTML = "";
 
@@ -25,15 +26,21 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    // Lista simple de strings
-    const matches = superficies.filter(s => s.toLowerCase().includes(query));
+    // 2. CORRECCIÓN: Filtrar buscando en la propiedad 'tipo_superficie'
+    const matches = superficies.filter(s => 
+      s.tipo_superficie.toLowerCase().includes(query)
+    );
 
     if (matches.length > 0) {
       matches.forEach(s => {
         const div = document.createElement("div");
-        div.textContent = s;
+        
+        // 3. CORRECCIÓN: Mostrar el texto de 'tipo_superficie' en la sugerencia
+        div.textContent = s.tipo_superficie; 
+        
         div.addEventListener("click", () => {
-          superficieInput.value = s;
+          // 4. CORRECCIÓN: Asignar el texto correcto al input al hacer clic
+          superficieInput.value = s.tipo_superficie;
           suggestionsBox.style.display = "none";
         });
         suggestionsBox.appendChild(div);
