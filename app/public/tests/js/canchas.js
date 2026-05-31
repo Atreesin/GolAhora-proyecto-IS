@@ -47,9 +47,6 @@ async function cargarCanchas() {
     }
 }
 
-// Llamamos a la función para cargar las canchas cuando se cargue la página
-window.addEventListener("DOMContentLoaded", cargarCanchas);
-
 // ==========================================
 // 3. CONSULTAR LAS CANCHAS REALES
 // ==========================================
@@ -78,23 +75,27 @@ async function cargarCanchasReales() {
             card.classList.add("cancha-card");
             card.innerHTML = `
                 <img src="${cancha.imagen_url}" 
-                     alt="${cancha.tipo_cancha.tipo}"
+                     alt="${cancha.nombre}"
                      onerror="this.src='/img/cancha.png'">
                 <div class="cancha-info">
-                    <h3>${cancha.tipo_cancha.tipo}</h3>
-                    <p><strong>Club:</strong> ${cancha.club}</p>
-                    <p><strong>Dimensiones:</strong> ${cancha.tipo_cancha.ancho}m x ${cancha.tipo_cancha.largo}m</p>
-                    <p><strong>Capacidad:</strong> ${cancha.tipo_cancha.capacidad} jugadores</p>
-                    <p><strong>Superficie:</strong> ${cancha.tipo_cancha.superficie ?? "No especificada"}</p>
-                    <p><strong>Descripción:</strong> ${cancha.tipo_cancha.descripcion_superficie ?? "No especificada"}</p>
+                    <h3>${cancha.nombre}</h3>
+                    <p><strong>Tipo:</strong> ${cancha.tipo_cancha}</p>
+                    <p><strong>Club:</strong> ${cancha.club.nombre}</p>
+                    <p><strong>Dimensiones:</strong> ${cancha.ancho}m x ${cancha.largo}m</p>
+                    <p><strong>Capacidad:</strong> ${cancha.capacidad} jugadores</p>
+                    <p><strong>Superficie:</strong> ${cancha.superficie.tipo ?? "No especificada"}</p>
+                    <p><strong>Precio por hora:</strong> $${cancha.precio_hora_reserva}</p>
                 </div>
             `;
             contenedor.appendChild(card);
         });
     } catch (error) {
-        console.error("Error al cargar canchas reales:", error);
+        console.error("Error al cargar canchas:", error);
     }
 }
 
-// Ejecutar ambas funciones al cargar la página
-window.addEventListener("DOMContentLoaded", cargarCanchasReales);
+// UN SOLO DOMContentLoaded QUE LLAMA A LAS DOS FUNCIONES
+window.addEventListener("DOMContentLoaded", () => {
+    cargarCanchas();        // tipos de canchas
+    cargarCanchasReales();  // canchas reales
+});
