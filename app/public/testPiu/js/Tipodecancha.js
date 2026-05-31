@@ -22,7 +22,7 @@ class Cancha {
                 <div class="row no-gutters align-items-center">
                     
                     <div class="col-md-5">
-                        <img src="https://golahora-proyecto-is.onrender.com${this.imagen_url}" 
+                        <img src="https://golahora-proyecto-is.onrender.com/api{this.imagen_url}" 
                              class="card-img w-100" 
                              style="height: 280px; object-fit: cover;" 
                              alt="${this.tipo_cancha}">
