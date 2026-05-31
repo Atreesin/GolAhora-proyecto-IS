@@ -31,7 +31,9 @@ async function cargarCanchas() {
         const card = document.createElement("div");
         card.classList.add("cancha-card");
         card.innerHTML = `
-            <img src="/img/canchas/${cancha.imagen_url.split('/').pop()}" alt="${cancha.tipo_cancha}">
+        <img src="https://golahora-proyecto-is.onrender.com${cancha.imagen_url}" 
+             alt="${cancha.tipo_cancha}"
+             onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=Sin+imagen'">
             <div class="cancha-info">
                 <h3>${cancha.tipo_cancha}</h3>
                 <p><strong>Dimensiones:</strong> ${cancha.ancho}m x ${cancha.largo}m</p>
@@ -74,9 +76,9 @@ async function cargarCanchasReales() {
             const card = document.createElement("div");
             card.classList.add("cancha-card");
             card.innerHTML = `
-                <img src="${cancha.imagen_url}" 
-                     alt="${cancha.nombre}"
-                     onerror="this.src='/img/cancha.png'">
+            <img src="https://golahora-proyecto-is.onrender.com${cancha.imagen_url}" 
+                 alt="${cancha.nombre}"
+                 onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=Sin+imagen'">
                 <div class="cancha-info">
                     <h3>${cancha.nombre}</h3>
                     <p><strong>Tipo:</strong> ${cancha.tipo_cancha}</p>
