@@ -1,25 +1,5 @@
 const mensajeError = document.getElementsByClassName("error")[0];
 
-// ==========================================
-// LOGIN PARA OBTENER TOKEN
-// ==========================================
-async function obtenerToken() {
-    const res = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "plataform": "web"
-        },
-        credentials: "include",
-        body: JSON.stringify({
-            email: "administrador@golahora.com",
-            password: "Unaj2026@golahora"
-        })
-    });
-    const data = await res.json();
-    return data.token;
-}
-
 document.addEventListener("DOMContentLoaded", async () => {
     const tipoCanchaInput = document.getElementById("id_tipo_cancha");
     const tipoCanchaHidden = document.getElementById("id_tipo_cancha_hidden");
@@ -28,6 +8,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let tiposCanchas = [];
 
+    // ==========================================
+    // CARGAR TIPOS DE CANCHAS DESDE LA API
+    // ==========================================
     try {
         const response = await fetch("/api/tipos_canchas");
         tiposCanchas = await response.json();
@@ -35,6 +18,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("Error al cargar tipos de canchas:", error);
     }
 
+    // ==========================================
+    // AUTOCOMPLETADO TIPO DE CANCHA
+    // ==========================================
     tipoCanchaInput.addEventListener("input", () => {
         const query = tipoCanchaInput.value.toLowerCase();
         suggestionsBox.innerHTML = "";
@@ -73,6 +59,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
+    // ==========================================
+    // ENVÍO DEL FORMULARIO
+    // ==========================================
     formulario.addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -85,14 +74,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
             mensajeError.classList.add("escondido");
 
-            const token = await obtenerToken();
-
             const res = await fetch("/api/canchas/agregar", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "plataform": "web",
-                    "X-Auth-Token": token
+                    "plataform": "web"
                 },
                 credentials: "include",
                 body: JSON.stringify({
