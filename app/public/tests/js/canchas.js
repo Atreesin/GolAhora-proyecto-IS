@@ -28,16 +28,20 @@ async function cargarCanchas() {
         const contenedor = document.getElementById("lista-canchas");
         // Por cada cancha creamos una card
         canchas.forEach(cancha => {
-            const card = document.createElement("div");
-            card.classList.add("cancha-card");
-            card.innerHTML = `
-                <img src="${cancha.imagen}" alt="${cancha.nombre}">
-                <h3>${cancha.nombre}</h3>
-                <p>${cancha.descripcion}</p>    
-                <p>Precio por hora: $${cancha.precio_hora}</p>
-            `;
-            contenedor.appendChild(card);
-        });
+        const card = document.createElement("div");
+        card.classList.add("cancha-card");
+        card.innerHTML = `
+            <img src="https://golahora-proyecto-is.onrender.com${cancha.tipo_cancha.imagen_url}" alt="${cancha.tipo_cancha.tipo}">
+            <div class="cancha-info">
+                <h3>${cancha.tipo_cancha.tipo}</h3>
+                <p><strong>Dimensiones:</strong> ${cancha.tipo_cancha.ancho}m x ${cancha.tipo_cancha.largo}m</p>
+                <p><strong>Capacidad:</strong> ${cancha.tipo_cancha.capacidad} jugadores</p>
+                <p><strong>Superficie:</strong> ${cancha.tipo_cancha.superficie}</p>
+                <p><strong>Descripción:</strong> ${cancha.tipo_cancha.descripcion_superficie}</p>
+            </div>
+        `;
+        contenedor.appendChild(card);
+    });
     } catch (error) {
         console.error("Error al cargar las canchas:", error);
     }
