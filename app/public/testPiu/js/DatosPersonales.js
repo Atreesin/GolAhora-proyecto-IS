@@ -10,6 +10,7 @@ async function ObtenerDatosPersonales(){
         }
        });
        const Datos = await Respuesta.json();
+        console.log(Datos);
        
         const CampoNombre = document.querySelector('.input-Nombre');
         const CampoApellido = document.querySelector('.input-Apellido');
@@ -27,6 +28,7 @@ async function ObtenerDatosPersonales(){
         CampoDni.value = Datos.dni;
         CampoNacionalidad.value = Datos.nacionalidad;
         CampoGenero.value = Datos.genero;
+        CampoFecha.value = Datos.fecha_nacimiento;
         CampoTelefono.value = Datos.telefono;
         CampoEmail.value = Datos.email;
         CampoDireccion.value = `${Datos.calle} ${Datos.numero}, ${Datos.localidad}, ${Datos.pais}`;
