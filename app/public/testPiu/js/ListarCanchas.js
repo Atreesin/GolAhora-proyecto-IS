@@ -80,4 +80,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     obtenerDatos();
 });
+function ReservarCancha(cancha_id) {
+    // Guardamos el ID de la cancha seleccionada para usarlo en la siguiente página
+    localStorage.setItem("cancha_id", id);
+    
+    // Redirigimos al usuario a la página de horarios
+    window.location.href = "RegistroReservar.html"; 
+}
 
