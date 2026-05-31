@@ -7,24 +7,61 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="fútbol, canchas, torneos, reservas" name="keywords">
 
-    <!-- FUENTES DE GOOGLE -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
-    <!-- CARGA LIBRERIA DE ICONOS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
-    <!-- DA LAS ANIMACIONES -->
     <link href="lib/animate/animate.min.css" rel="stylesheet">
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
 
-    <!-- ARCHIVO CSS CON EL ESTILO PROPIO -->
     <link href="css/style.css" rel="stylesheet">
+
+    <style>
+        #tipo_cancha-suggestions {
+            border: 1px solid #ccc;
+            background-color: #ffffff !important;
+            position: absolute;
+            width: 100%;
+            max-height: 180px;
+            overflow-y: auto;
+            z-index: 1050; /* Mayor al del formulario para sobreponerse */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
+            border-radius: 4px;
+            margin-top: 2px;
+        }
+
+        .sugerencia-item {
+            padding: 10px;
+            cursor: pointer;
+            color: #222222 !important; /* Texto oscuro visible */
+            text-align: left;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            background-color: #ffffff !important;
+        }
+
+        .sugerencia-item:hover {
+            background-color: #f1f1f1 !important;
+            color: #000000 !important;
+        }
+        
+        .error {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .escondido {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- NAVBAR -->
     <div class="col-lg-12 px-0">
         <nav class="navbar navbar-expand-lg navbar-dark py-0 px-0 nav-diagonal">
             <div class="brand-section d-flex align-items-center">
@@ -51,7 +88,6 @@
         </nav>
     </div>
 
-    <!-- INICIO - ACÁ EL CONTENIDO REAL -->
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-lg-8">
@@ -64,30 +100,27 @@
                     <form id="cancha-formulario">
 
                         <div class="form-group">
-                            <label>Nombre de la Cancha</label>
-                            <!-- id agregado -->
+                            <label for="nombre">Nombre de la Cancha</label>
                             <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ej: Cancha Principal" required>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Precio por hora ($)</label>
-                                    <!-- id agregado -->
-                                    <input type="number" step="0.01" id="precio_hora_reserva" name="precio_hora_reserva" class="form-control" required>
+                                    <label for="precio_hora_reserva">Precio por hora ($)</label>
+                                    <input type="number" step="0.01" id="precio_hora_reserva" name="precio_hora_reserva" class="form-control" placeholder="0.00" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Tiempo de cancelación (minutos)</label>
-                                    <!-- id agregado -->
-                                    <input type="number" id="tiempo_cancelacion" name="tiempo_cancelacion" class="form-control" required>
+                                    <label for="tiempo_cancelacion">Tiempo de cancelación (minutos)</label>
+                                    <input type="number" id="tiempo_cancelacion" name="tiempo_cancelacion" class="form-control" placeholder="Ej: 60" required>
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group" style="position: relative;">
-                            <label>Tipo de Cancha</label>
+                            <label for="id_tipo_cancha">Tipo de Cancha</label>
                             <input
                                 type="text"
                                 id="id_tipo_cancha"
@@ -95,8 +128,10 @@
                                 placeholder="Escriba para buscar tipo de cancha..."
                                 autocomplete="off"
                                 required>
+                            
                             <input type="hidden" name="id_tipo_cancha" id="id_tipo_cancha_hidden" required>
-                            <div id="tipo_cancha-suggestions" class="suggestions" style="display: none;"></div>
+                            
+                            <div id="tipo_cancha-suggestions" style="display: none;"></div>
                         </div>
 
                         <div class="d-flex justify-content-center mt-4">
@@ -109,9 +144,6 @@
             </div>
         </div>
     </div>
-    <!-- FIN - ACÁ EL CONTENIDO REAL -->
-
-    <!-- INICIO FOOTER -->
     <div class="container-fluid footer-personalizado text-secondary mt-5 pt-5">
         <div class="row px-xl-5 pt-5">
             <div id="Contactanos" class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
@@ -147,14 +179,12 @@
             </div>
         </div>
     </div>
-    <!-- FIN FOOTER -->
-
-    <!-- SCRIPTS JAVASCRIPT -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
     <script src="lib/easing/easing.min.js"></script>
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
     <script src="js/main.js"></script>
+    
     <script src="js/registrarcancha.js"></script>
 
 </body>
