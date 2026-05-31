@@ -1,5 +1,36 @@
 const mensajeError = document.getElementsByClassName("error")[0];
 
+// ==========================================
+// LOGIN PARA OBTENER TOKEN
+// ==========================================
+async function obtenerToken() {
+    try {
+        const res = await fetch("/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "plataform": "web"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                email: "administrador@golahora.com",
+                password: "Unaj2026@golahora"
+            })
+        });
+
+        if (!res.ok) {
+            console.error("El login automático falló con estado:", res.status);
+            return null;
+        }
+
+        const data = await res.json();
+        return data.token;
+    } catch (error) {
+        console.error("Error en la petición de login:", error);
+        return null;
+    }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
     const tipoCanchaInput = document.getElementById("id_tipo_cancha");
     const tipoCanchaHidden = document.getElementById("id_tipo_cancha_hidden");
@@ -24,7 +55,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     tipoCanchaInput.addEventListener("input", () => {
         const query = tipoCanchaInput.value.toLowerCase();
         suggestionsBox.innerHTML = "";
-        tipoCanchaHidden.value = ""; // Se limpia si el usuario borra o modifica el texto
+        tipoCanchaHidden.value = ""; 
 
         if (query.length === 0) {
             suggestionsBox.style.display = "none";
@@ -42,8 +73,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 div.classList.add("sugerencia-item");
                 
                 div.addEventListener("click", () => {
-                    tipoCanchaInput.value = t.tipo_cancha; // Texto visual
-                    tipoCanchaHidden.value = t.id;        // ID numérico para enviar
+                    tipoCanchaInput.value = t.tipo_cancha; 
+                    tipoCanchaHidden.value = t.id;        
                     suggestionsBox.style.display = "none";
                 });
                 suggestionsBox.appendChild(div);
@@ -54,7 +85,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // Cerrar sugerencias si el usuario hace clic fuera de la caja
     document.addEventListener("click", (e) => {
         if (!suggestionsBox.contains(e.target) && e.target !== tipoCanchaInput) {
             suggestionsBox.style.display = "none";
@@ -62,7 +92,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // ==========================================
-    // ENVÍO DEL FORMULARIO (MÉTODO COOKIE NATIVA)
+    // ENVÍO DEL FORMULARIO (CORREGIDO)
     // ==========================================
     formulario.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -76,22 +106,38 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
             mensajeError.classList.add("escondido");
 
-            // Estructura JSON mapeada con las conversiones numéricas correctas
+            // 1. Obtenemos el token del Administrador indispensable para el ID del Club
+            const token = await obtenerToken();
+
+            if (!token) {
+                mensajeError.textContent = "Error: No se pudo verificar la sesión del administrador.";
+                mensajeError.classList.remove("escondido");
+                return;
+            }
+
+            // 2. Armamos las variables con mapeo exacto de nombres y tipos requeridos
             const datosCancha = {
-                nombre: document.getElementById("nombre").value,
+                nombre: document.getElementById("nombre").value.trim(),
                 tiempo_cancelacion: parseInt(document.getElementById("tiempo_cancelacion").value, 10),
                 precio_hora_reserva: parseFloat(document.getElementById("precio_hora_reserva").value),
                 id_tipo_cancha: parseInt(tipoCanchaHidden.value, 10)
             };
 
+            // 3. Validación preventiva en el Frontend por si se coló un NaN (Not a Number)
+            if (isNaN(datosCancha.tiempo_cancelacion) || isNaN(datosCancha.precio_hora_reserva) || isNaN(datosCancha.id_tipo_cancha) || !datosCancha.nombre) {
+                mensajeError.textContent = "Algunos campos están vacíos o tienen valores numéricos inválidos.";
+                mensajeError.classList.remove("escondido");
+                return;
+            }
+
             const res = await fetch("/api/canchas/agregar", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "plataform": "web"
-                    // Nota: Ya no incluimos "X-Auth-Token" de forma manual aquí.
+                    "plataform": "web",
+                    "X-Auth-Token": `jwt=${token}` // Enviamos el formato JWT requerido por el validador
                 },
-                credentials: "include", // Fuerza al navegador a adjuntar la cookie de sesión existente
+                credentials: "include",
                 body: JSON.stringify(datosCancha)
             });
 
@@ -102,7 +148,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 tipoCanchaHidden.value = "";
             } else {
                 const errorData = await res.json().catch(() => ({}));
-                mensajeError.textContent = errorData.message || `Error del servidor (${res.status}): No autorizado o datos inválidos.`;
+                mensajeError.textContent = errorData.message || `Error del servidor (${res.status}): Campos inválidos.`;
                 mensajeError.classList.remove("escondido");
             }
 
