@@ -1,8 +1,32 @@
 const mensajeError = document.getElementsByClassName("error")[0];
 
 // ==========================================
-// FUNCIÓN PARA LEER COOKIES DEL NAVEGADOR
+// LOGIN PARA OBTENER TOKEN SI NO HAY COOKIE
 // ==========================================
+async function obtenerToken() {
+    try {
+        const res = await fetch("/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "plataform": "web"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                email: "administrador@golahora.com",
+                password: "Unaj2026@golahora"
+            })
+        });
+
+        if (!res.ok) return null;
+        const data = await res.json();
+        return data.token;
+    } catch (error) {
+        return null;
+    }
+}
+
+// Función auxiliar para leer la cookie nativa si existiera
 function obtenerCookie(nombre) {
     const valor = `; ${document.cookie}`;
     const partes = valor.split(`; ${nombre}=`);
@@ -85,37 +109,36 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
             mensajeError.classList.add("escondido");
 
-            // 1. Intentamos leer la cookie X-Auth-Token que creó tu Login previo
-            let tokenCookie = obtenerCookie("X-Auth-Token");
+            // 1. Buscamos el token en la cookie o lo regeneramos con el login automático
+            let token = obtenerCookie("X-Auth-Token") || await obtenerToken();
 
-            // Si la cookie existe pero no viene con el prefijo "jwt=", se lo agregamos dinámicamente
-            if (tokenCookie && !tokenCookie.startsWith("jwt=")) {
-                tokenCookie = `jwt=${tokenCookie}`;
+            if (!token) {
+                mensajeError.textContent = "Error de autenticación: No se pudo verificar la sesión del administrador.";
+                mensajeError.classList.remove("escondido");
+                return;
             }
 
-            // 2. Mapeo estricto de propiedades en formato JSON numérico
+            // Si el token extraído no incluye "jwt=", lo formateamos tal como lo requiere Swagger
+            if (!token.startsWith("jwt=")) {
+                token = `jwt=${token}`;
+            }
+
+            // 2. ¡CORREGIDO! Cambiado 'id_tipo_cancha' por 'id_tipo_de_cancha' según tu JSON de Swagger
             const datosCancha = {
                 nombre: document.getElementById("nombre").value.trim(),
                 tiempo_cancelacion: parseInt(document.getElementById("tiempo_cancelacion").value, 10),
                 precio_hora_reserva: parseFloat(document.getElementById("precio_hora_reserva").value),
-                id_tipo_cancha: parseInt(tipoCanchaHidden.value, 10)
+                id_tipo_de_cancha: parseInt(tipoCanchaHidden.value, 10) 
             };
-
-            // 3. Cabeceras requeridas según las especificaciones de tu Swagger
-            const cabeceras = {
-                "Content-Type": "application/json",
-                "plataform": "web"
-            };
-
-            // Si encontramos la cookie en el navegador, la inyectamos también como cabecera por seguridad
-            if (tokenCookie) {
-                cabeceras["X-Auth-Token"] = tokenCookie;
-            }
 
             const res = await fetch("/api/canchas/agregar", {
                 method: "POST",
-                headers: cabeceras,
-                credentials: "include", // Envía las cookies nativas automáticamente
+                headers: {
+                    "Content-Type": "application/json",
+                    "plataform": "web",
+                    "X-Auth-Token": token // Inyección del header idéntica a Swagger UI
+                },
+                credentials: "include",
                 body: JSON.stringify(datosCancha)
             });
 
@@ -126,7 +149,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 tipoCanchaHidden.value = "";
             } else {
                 const errorData = await res.json().catch(() => ({}));
-                mensajeError.textContent = errorData.message || `Error del servidor (${res.status}): No autorizado o faltan datos.`;
+                mensajeError.textContent = errorData.message || `Error del servidor (${res.status}): Comprobá los campos numéricos.`;
                 mensajeError.classList.remove("escondido");
             }
 
