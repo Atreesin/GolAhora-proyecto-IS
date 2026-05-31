@@ -99,9 +99,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             // Usamos FormData igual que tipocanchas.js
             const formData = new FormData();
-            formData.append("nombre", formulario.nombre.value);
-            formData.append("tiempo_cancelacion", formulario.tiempo_cancelacion.value);
-            formData.append("precio_hora_reserva", formulario.precio_hora_reserva.value);
+            formData.append("nombre", document.querySelector('[name="nombre"]').value);
+            formData.append("tiempo_cancelacion", document.querySelector('[name="tiempo_cancelacion"]').value);
+            formData.append("precio_hora_reserva", document.querySelector('[name="precio_hora_reserva"]').value);
             formData.append("id_tipo_cancha", tipoCanchaHidden.value);
 
             const res = await fetch("/api/canchas/agregar", {
