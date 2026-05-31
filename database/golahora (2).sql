@@ -146,10 +146,11 @@ CREATE TABLE disponibilidad_excepciones (
     dia DATE NOT NULL,    
     hora_inicio TIME NOT NULL,
     hora_fin TIME NOT NULL,
-    id_cancha BIGINT UNSIGNED NOT NULL DEFAULT 0,
+    id_cancha BIGINT UNSIGNED,
     cerrado BOOLEAN GENERATED ALWAYS AS (hora_inicio = hora_fin) STORED,
     CONSTRAINT chk_horario CHECK (hora_inicio <= hora_fin OR hora_inicio = hora_fin),
     FOREIGN KEY (id_cancha) REFERENCES canchas(id_cancha)
+    UNIQUE KEY u_disponibilidad ( dia, id_cancha)
 );
 
 --
@@ -240,12 +241,6 @@ CREATE TABLE reservas (
 CREATE TABLE estado_capacitaciones (
     id_estado_capacitacion SERIAL PRIMARY KEY,
     estado VARCHAR(55) UNIQUE NOT NULL
-);
-
--- no se usa?
-CREATE TABLE dias (
-    id_dia SERIAL PRIMARY KEY,
-    nombre VARCHAR(10) UNIQUE NOT NULL
 );
 
 
@@ -447,6 +442,9 @@ VALUES (
         'Caucho sintético',
         'Piso elástico y antideslizante. Dureza baja-media, amortigua impactos. Uso recomendado en canchas techadas y gimnasios modernos.'
     );
+INSERT INTO tipos_de_ocupaciones (tipo_ocupacion)
+VALUES ('Reserva'), ('Clase'), ('Entrenamiento'), ('Liga'), ('Torneo'), ('Mantenimiento'); 
+
 SELECT pr.id_provincia,
     pr.nombre,
     pa.nombre AS pais
