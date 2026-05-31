@@ -94,4 +94,4 @@ function elegirHorario(cancha_id) {
     
     // Redirigimos al usuario a la página de horarios
     window.location.href = "Disponibilidad_cancha.html"; 
-}
+    
