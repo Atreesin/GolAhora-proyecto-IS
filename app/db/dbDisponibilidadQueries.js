@@ -195,7 +195,7 @@ async function getDisponibilidadReal(fecha, id_cancha) {
         const rows = await pool.query(selectDisponibilidadRealByFechaAndIdCancha, [fecha, fecha, fecha, fecha, fecha, fecha, fecha, fecha, id_cancha, fecha, fecha]);
         if (rows.length > 0) {
             const dispFiltradas = rows.filter(r => r.cancha.id !== 'TODAS')
-            return dispFiltradas;
+            return dispFiltradas[0];
         } else {
             
             return rows;

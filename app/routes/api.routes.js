@@ -63,15 +63,14 @@ router.get("/api/disponibilidad/cerradas", wrapper(canchaController.getListaCarr
 router.get("/api/disponibilidad/disponibilidad_id=:id", wrapper(canchaController.getDisponibilidadById))
 router.get("/api/disponibilidad/dia=:dia", wrapper(canchaController.getDisponibilidadesDiaSemanaNormal))
 router.get("/api/disponibilidad/cancha_id=:id", wrapper(canchaController.getDisponibilidadesCancha))
+router.get("/api/disponibilidad/cancha_id=:id/fecha=:fecha", wrapper(canchaController.getDisponibilidadCanchaByFecha))
 router.get("/api/canchas/cancha_id=:id/disponibilidad", wrapper(canchaController.getDisponibilidadesCancha))
 router.get("/api/disponibilidad/dia=:dia/cancha_id=:id", wrapper(canchaController.getDisponibilidadesCanchaDiaSemanaNormal))
 router.get("/api/canchas/cancha_id=:id/disponibilidad/dia=:dia", wrapper(canchaController.getDisponibilidadesCanchaDiaSemanaNormal))
+router.get("/api/canchas/cancha_id=:id/disponibilidad/fecha=:fecha", wrapper(canchaController.getDisponibilidadCanchaByFecha))
 //excepciones
 router.get("/api/disponibilidad/especiales", wrapper(canchaController.getDisponibilidadesExcepciones))
-router.get("/probar", async (req, res) => {
-    const disponibilidad = await disp.getDisponibilidadReal("2026-06-08", 1)
-    
-    res.send(disponibilidad)})
+
 // api post
 // authentication
 router.post("/api/login", wrapper(authentication.login));
@@ -92,4 +91,8 @@ router.post("/api/tipos_cancha/agregar", authorization.apiSoloUsers, authorizati
 router.post("/api/canchas/agregar", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(canchaController.registrarCancha));
 router.post("/api/canchas/cancha_id=:id/disponibilidad/agregar", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(canchaController.registrarDisponibilidad))
 router.post("/api/disponibilidad/agregar", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(canchaController.registrarDisponibilidad))
+// Ocupaciones
+router.post("/api/ocupaciones/agregar", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(canchaController.registrarOcupacionCancha))
+
+
 export default router

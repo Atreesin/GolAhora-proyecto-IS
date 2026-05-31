@@ -41,8 +41,8 @@ function normalizarFecha(fecha) {
 
   const regex = /^\d{4}-\d{2}-\d{2}$/;
   if (!regex.test(fecha)) return false;
-
-  const fechaNormalizada = new Date(fecha);
+  const [anio, mes, dia] = fecha.split('-');
+  const fechaNormalizada = new Date(anio, mes, dia, 23, 59);
 
   // Verificar si es una fecha válida
   if (!isNaN(fechaNormalizada.getTime())) {
@@ -50,6 +50,14 @@ function normalizarFecha(fecha) {
   } else {
     return false;  // no es fecha válida
   }
+}
+
+function esFechaFuturaOEsHoy(fecha){
+  console.log(fecha)
+  
+  const hoy = new Date()
+  
+  return (fecha.getTime() >= hoy.getTime())
 }
 
 function compararFechas(fecha1, fecha2) {
@@ -144,15 +152,19 @@ function diferenciaHorasFormato(horaInicio, horaFin) {
 }
 
 function horaToMinutos(hora) {
+  
   const [hh, mm] = hora.split(":").map(Number);
   return hh * 60 + mm;
 }
 
 // si hora 1 es mayor o igual retorna true
 function compararHoras(hora1, hora2) {
+  
   return horaToMinutos(hora1) >= horaToMinutos(hora2);
 }
-
+function esHoraMayorQue(hora1, hora2) {
+  return horaToMinutos(hora1) > horaToMinutos(hora2);
+}
 
 function tipoUsuario(codigo) {
   
@@ -286,8 +298,10 @@ export const methods = {
   diferenciaHorasFormato,
   horaToMinutos,
   compararHoras,
+  esHoraMayorQue,
   estaEnRango,
   esPar,
   compararFechas,
-  normalizarFecha
+  normalizarFecha,
+  esFechaFuturaOEsHoy
 }

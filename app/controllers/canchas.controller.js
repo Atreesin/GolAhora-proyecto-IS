@@ -4,8 +4,9 @@ import { methods as dbUserQuery } from "../db/dbUserQueries.js";
 import { methods as dbDisponibilidadQuery } from "../db/dbDisponibilidadQueries.js";
 import { methods as dbOcupacionesQuery } from "../db/dbOcupacionesQueries.js"
 import { methods as helper } from "../helpers/utilsHelper.js";
-import { methods as cookieHelper} from "../helpers/cookieHelper.js";
+import { methods as cookieHelper } from "../helpers/cookieHelper.js";
 import { borrarArchivoSiExiste } from "../helpers/archivoHelper.js";
+import { randomBytes } from "crypto";
 
 //registrar
 async function registrarTipoCancha(req, res) {
@@ -97,7 +98,7 @@ async function registrarTipoCancha(req, res) {
         id_superficie
     }
     await dbCanchaQuery.agregarTipoCancha(nuevo_tipo_cancha);
-    
+
     return res.status(201).send({ status: "ok", message: `Tipo de cancha ${nuevo_tipo_cancha.tipo_cancha} agregado`, redirect: "/" })
 }
 
@@ -187,13 +188,13 @@ async function getCanchaById(req, res) {
     res.send(cancha)
 }
 
-async function getCanchaByTipoCancha (req, res) {
+async function getCanchaByTipoCancha(req, res) {
     const id_tipo_de_cancha = req.params.id;
     if (!id_tipo_de_cancha) {
         return res.status(400).send({ status: "Error", message: "Ingrese el id del tipo cancha" })
     }
     const cancha = await dbCanchaQuery.getCanchaByTipoCancha(id_tipo_de_cancha) || []
-    
+
     res.send(cancha)
 }
 
@@ -208,7 +209,7 @@ async function registrarDisponibilidad(req, res) {
     let hora_inicio = req.body.hora_inicio;
     let hora_fin = req.body.hora_fin;
     let id_cancha = (req.params.id || req.body.id_cancha);
-    
+
     if ([hora_inicio, hora_fin, id_cancha].some(v => v === undefined || v === null || v === "")) {
 
         return res.status(400).send({ status: "Error", message: "Algunos campos estan vacios" })
@@ -219,7 +220,7 @@ async function registrarDisponibilidad(req, res) {
     hora_fin = helper.convertirAHora24(hora_fin);
     id_cancha = helper.convertirADecimalValidado(id_cancha);
 
-    
+
     const existeCancha = await dbCanchaQuery.getCanchaById(id_cancha);
     if (!existeCancha) {
         return res.status(404).send({ status: "Error", message: `No existe la Cancha con el id: ${req.params.id || req.body.id_cancha}` })
@@ -329,7 +330,7 @@ async function registrarDisponibilidad(req, res) {
 
     if (!await dbDisponibilidadQuery.getDisponibilidadByDiaSemanaAndIdCancha(dia_semana, id_cancha)) {
         const respuesta = await dbDisponibilidadQuery.agregarDisponibilidad(nuevaDisponibilidad);
-        
+
         if (respuesta.affectedRows > 0) {
             return res.status(201).send({
                 status: "Success",
@@ -489,12 +490,41 @@ async function getDisponibilidadesExcepcionesByIdCancha(req, res) {
 async function getDisponibilidadesExcepcionesByMotivo(req, res) {
 
 }
+//disponibilidades excepcionales en cierta fecha
 async function getDisponibilidadesExcepcionesByFecha(req, res) {
 
 }
-
+//disponibilidad real de una cancha en cierta fecha
 async function getDisponibilidadCanchaByFecha(req, res) {
+    //id_cancha
+    let id_cancha = req.params.id;
+    let fecha = req.params.fecha;
+    if ([fecha, id_cancha].some(v => v === undefined || v === null || v === "")) {
 
+        return res.status(400).send({ status: "Error", message: "Algunos campos estan vacios" })
+    }
+    if (!id_cancha) {
+        return res.status(400).send({ status: "Error", message: "Ingrese el id de la cancha" })
+    }
+    id_cancha = helper.convertirADecimalValidado(id_cancha);
+    if (id_cancha === null) {
+        return res.status(400).send({ status: "Error", message: "El id de la cancha debe ser un número entero" })
+    }
+    const cancha = await dbCanchaQuery.getCanchaById(id_cancha);
+    if (!cancha) {
+        return res.status(404).send({ status: "Error", message: `La cancha con el id ${req.params.id} no existe` })
+    }
+    //fecha
+    fecha = helper.normalizarFecha(fecha);
+    if (!fecha) {
+        return res.status(400).send({ status: "Error", message: `El formato de la fecha ${req.params.fecha} no es válido` })
+    }
+    const disponibilidad = await dbDisponibilidadQuery.getDisponibilidadReal(fecha, id_cancha)
+    if (!disponibilidad) {
+        return res.status(404).send({ status: "Error", message: `La cancha con el id ${req.params.id} no tiene ninguna disponibilidad asignada` })
+    }
+
+    res.send(disponibilidad)
 }
 
 async function estadoCanchaFecha(req, res) {
@@ -526,11 +556,11 @@ async function registrarOcupacionCancha(req, res) {
     hora_fin = helper.convertirAHora24(hora_fin);
     id_tipo_ocupacion = helper.convertirADecimalValidado(id_cancha);
     id_cancha = helper.convertirADecimalValidado(id_cancha);
-    if(!fecha){
+    if (!fecha) {
         return res.status(400).send({ status: "Error", message: `El formato de la fecha ${req.body.fecha} no es válido` })
     }
-    if (false){
-
+    if (!helper.esFechaFuturaOEsHoy(fecha)) {
+        return res.status(400).send({ status: "Error", message: `La fecha ${req.body.fecha} no es valida` })
     }
     if (!hora_inicio) {
         return res.status(400).send({ status: "Error", message: "Horario o formato de hora de inicio inválido" })
@@ -542,35 +572,99 @@ async function registrarOcupacionCancha(req, res) {
         return res.status(400).send({ status: "Error", message: "La hora de inicio no puede ser mayor o igual que la hora de fin" })
     }
     const existe_tipoOcupacion = await dbOcupacionesQuery.getTipoOcupacionById(id_tipo_ocupacion);
-    if (!existe_tipoOcupacion){
+    if (!existe_tipoOcupacion) {
         return res.status(404).send({ status: "Error", message: `Tipo de ocupacion con el id: ${req.body.id_tipo_ocupacion}  no encontrada` })
     }
     const existeCancha = await dbCanchaQuery.getCanchaById(id_cancha);
     if (!existeCancha) {
         return res.status(404).send({ status: "Error", message: `No existe la Cancha con el id: ${req.params.id || req.body.id_cancha}` })
     }
-    if (existe_tipoOcupacion.tipo === 'Reserva'){
+    if (existe_tipoOcupacion.tipo === 'Reserva') {
         const dia_semana = helper.obtenerDia(fecha)
         const disponibilidad = await dbDisponibilidadQuery.getDisponibilidadReal(fecha, id_cancha);
 
-        if (!disponibilidad){
-            return res.status(404).send({ status: "Error", message: `No hay disponibilidad para la Cancha con el id: ${req.params.id || req.body.id_cancha} el dia ${dia_semana} ${fecha}` })
+        if (!disponibilidad) {
+            return res.status(404).send({ status: "Error", message: `No hay disponibilidad para la Cancha con el id: ${req.body.id_cancha} el dia ${dia_semana} ${fecha}` })
         }
-        if (disponibilidad.estado === 'Cerrado'){
-            return res.status(404).send({ status: "Error", message: `La Cancha con el id: ${req.params.id || req.body.id_cancha} se encuentra cerrada el dia ${dia_semana} ${fecha}` })
+        if (disponibilidad.estado === 'Cerrado') {
+            return res.status(404).send({ status: "Error", message: `La Cancha con el id: ${req.body.id_cancha} se encuentra cerrada el dia ${dia_semana} ${fecha}` })
         }
-        if (1){
-
-        }
-
-
         
+        if (
+            helper.esHoraMayorQue(disponibilidad.hora_inicio, hora_inicio) ||
+            helper.compararHoras(disponibilidad.hora_inicio, hora_fin) ||
+            !helper.compararHoras(disponibilidad.hora_fin, hora_fin) ||
+            !helper.compararHoras(disponibilidad.hora_fin, hora_inicio)
+        ) {
+            return res.status(409).send({
+                status: "Error",
+                message: `El horario de ${req.body.hora_inicio} a ${req.body.hora_fin} se encuentra fuera del rango permitido para la Cancha con el id: ${req.params.id || req.body.id_cancha} el dia ${dia_semana} ${fecha}`, horarioDisponible: {
+                    hora_inicio: disponibilidad.hora_inicio,
+                    hora_fin: disponibilidad.hora_fin
+                },
+                estado_de_cancha: disponibilidad.estado
+            })
+        }
+        
+        const rangoHorario = helper.diferenciaHorasFormato(hora_inicio,hora_fin)
+        if( //si la duracion de la reserva es menor o mayor que el rango min y rango max
+            (helper.horaToMinutos(rangoHorario) < existeCancha.duracion_min) ||
+            (helper.horaToMinutos(rangoHorario) > existeCancha.duracion_max)
+            ){
+                return res.status(400).send({
+                    status: "Error",
+                    message: `La duracion de la reserva no se encuentra dentro del rango permitodo`,
+                    duracion_en_horas: rangoHorario,
+                    rango_enviado: helper.horaToMinutos(rangoHorario),
+                    rango_permitido: {
+                        duracion_min: existeCancha.duracion_min,
+                        duracion_max: existeCancha.duracion_max
+                    } 
+                })
+            }
+        const existeSuperpocionHorariaOcupacionCancha = await dbOcupacionesQuery.getSuperposicionOcupacionesCanchas(id_cancha, req.body.fecha, req.body.hora_inicio, req.body.hora_fin)
+        console.log(existeSuperpocionHorariaOcupacionCancha)
+        if (existeSuperpocionHorariaOcupacionCancha) {
+            return res.status(409).send({
+                status: "Error",
+                message: `El horario de ${req.body.hora_inicio} a ${req.body.hora_fin} se encuentra ocupado para la Cancha con el id: ${req.params.id || req.body.id_cancha} el dia ${dia_semana} ${fecha}`,
+                ocupacion: existeSuperpocionHorariaOcupacionCancha
+            })
+        }
+        /*
+        const canchaOcupada = await dbOcupacionesQuery.getSuperposicionOcupacionesCanchas(id_cancha, fecha, hora_inicio, hora_fin)
+        if (canchaOcupada) {
+            return res.status(409).send({ status: "Error", message: `No existe la Cancha con el id: ${req.params.id || req.body.id_cancha}` })
+        }
+        */
+
+
+        const nuevaOcupacion = {
+            fecha: req.body.fecha,
+            hora_inicio,
+            hora_fin,
+            id_tipo_ocupacion,
+            id_cancha
+        }
+        const result = await dbOcupacionesQuery.agregarOcupacionCancha(nuevaOcupacion);
+        if (result.affectedRows > 0) {
+            return res.status(201).send({
+                status: "ok",
+                message: `La Ocupación fue registrada exitosamente`,
+                tipo_ocupacion: existe_tipoOcupacion.tipo,
+                reservaRegistada: {
+                    id: result.insertId,
+                    fecha: req.body.fecha,
+                    hora_inicio,
+                    hora_fin,
+                    id_tipo_ocupacion,
+                    id_cancha
+                }
+            })
+        }
     }
-    //   aaa
-    const canchaOcupada = await dbOcupacionesQuery.getSuperposicionOcupacionesCanchas(id_cancha, fecha, hora_inicio, hora_fin)
-    if (canchaOcupada){
-        return res.status(409).send({ status: "Error", message: `No existe la Cancha con el id: ${req.params.id || req.body.id_cancha}` })
-    }
+
+    //otro tipo de ocupacion
 }
 
 export const methods = {
@@ -590,6 +684,9 @@ export const methods = {
     getDisponibilidadesDiaSemanaNormal,
     getDisponibilidadesCancha,
     getDisponibilidadesCanchaDiaSemanaNormal,
+    getDisponibilidadCanchaByFecha,
     //excepciones
-    getDisponibilidadesExcepciones
+    getDisponibilidadesExcepciones,
+    // ocupaciones
+    registrarOcupacionCancha
 }
