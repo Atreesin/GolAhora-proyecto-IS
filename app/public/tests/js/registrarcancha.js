@@ -10,8 +10,11 @@ async function obtenerToken() {
             "Content-Type": "application/json",
             "plataform": "web"
         },
-        credentials: "include", // ← este
-        body: JSON.stringify({...})
+        credentials: "include",
+        body: JSON.stringify({
+            email: "administrador@golahora.com",
+            password: "Unaj2026@golahora"
+        })
     });
     const data = await res.json();
     return data.token;
@@ -25,9 +28,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let tiposCanchas = [];
 
-    // ==========================================
-    // CARGAR TIPOS DE CANCHAS DESDE LA API
-    // ==========================================
     try {
         const response = await fetch("/api/tipos_canchas");
         tiposCanchas = await response.json();
@@ -35,9 +35,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("Error al cargar tipos de canchas:", error);
     }
 
-    // ==========================================
-    // AUTOCOMPLETADO TIPO DE CANCHA
-    // ==========================================
     tipoCanchaInput.addEventListener("input", () => {
         const query = tipoCanchaInput.value.toLowerCase();
         suggestionsBox.innerHTML = "";
@@ -57,7 +54,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const div = document.createElement("div");
                 div.textContent = t.tipo_cancha;
                 div.classList.add("sugerencia-item");
-
                 div.addEventListener("click", () => {
                     tipoCanchaInput.value = t.tipo_cancha;
                     tipoCanchaHidden.value = t.id;
@@ -77,9 +73,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // ==========================================
-    // ENVÍO DEL FORMULARIO
-    // ==========================================
     formulario.addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -101,8 +94,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                     "plataform": "web",
                     "X-Auth-Token": token
                 },
-                credentials: "include", // ← y este
-                body: JSON.stringify({...})
+                credentials: "include",
+                body: JSON.stringify({
+                    nombre: formulario.nombre.value,
+                    tiempo_cancelacion: parseInt(formulario.tiempo_cancelacion.value),
+                    precio_hora_reserva: parseFloat(formulario.precio_hora_reserva.value),
+                    id_tipo_cancha: parseInt(tipoCanchaHidden.value)
+                })
             });
 
             if (res.ok) {
