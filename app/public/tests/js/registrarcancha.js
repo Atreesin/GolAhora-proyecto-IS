@@ -1,36 +1,5 @@
 const mensajeError = document.getElementsByClassName("error")[0];
 
-// ==========================================
-// LOGIN PARA OBTENER TOKEN
-// ==========================================
-async function obtenerToken() {
-    try {
-        const res = await fetch("/api/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "plataform": "web"
-            },
-            credentials: "include",
-            body: JSON.stringify({
-                email: "administrador@golahora.com",
-                password: "Unaj2026@golahora"
-            })
-        });
-
-        if (!res.ok) {
-            console.error("El login automático falló con estado:", res.status);
-            return null;
-        }
-
-        const data = await res.json();
-        return data.token;
-    } catch (error) {
-        console.error("Error en la petición de login:", error);
-        return null;
-    }
-}
-
 document.addEventListener("DOMContentLoaded", async () => {
     const tipoCanchaInput = document.getElementById("id_tipo_cancha");
     const tipoCanchaHidden = document.getElementById("id_tipo_cancha_hidden");
@@ -92,7 +61,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // ==========================================
-    // ENVÍO DEL FORMULARIO (CORREGIDO)
+    // ENVÍO DEL FORMULARIO
     // ==========================================
     formulario.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -106,16 +75,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
             mensajeError.classList.add("escondido");
 
-            // 1. Obtenemos el token del Administrador indispensable para el ID del Club
-            const token = await obtenerToken();
-
-            if (!token) {
-                mensajeError.textContent = "Error: No se pudo verificar la sesión del administrador.";
-                mensajeError.classList.remove("escondido");
-                return;
-            }
-
-            // 2. Armamos las variables con mapeo exacto de nombres y tipos requeridos
+            // Mapeamos los datos convirtiendo a tipos numéricos puros (int y float)
             const datosCancha = {
                 nombre: document.getElementById("nombre").value.trim(),
                 tiempo_cancelacion: parseInt(document.getElementById("tiempo_cancelacion").value, 10),
@@ -123,7 +83,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 id_tipo_cancha: parseInt(tipoCanchaHidden.value, 10)
             };
 
-            // 3. Validación preventiva en el Frontend por si se coló un NaN (Not a Number)
+            // Validación preventiva en frontend
             if (isNaN(datosCancha.tiempo_cancelacion) || isNaN(datosCancha.precio_hora_reserva) || isNaN(datosCancha.id_tipo_cancha) || !datosCancha.nombre) {
                 mensajeError.textContent = "Algunos campos están vacíos o tienen valores numéricos inválidos.";
                 mensajeError.classList.remove("escondido");
@@ -134,10 +94,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "plataform": "web",
-                    "X-Auth-Token": `jwt=${token}` // Enviamos el formato JWT requerido por el validador
+                    "plataform": "web"
+                    // NOTA: No mandamos X-Auth-Token. El backend leerá la cookie de sesión gracias a 'credentials'.
                 },
-                credentials: "include",
+                credentials: "include", // Esto adjunta automáticamente tu sesión activa del navegador
                 body: JSON.stringify(datosCancha)
             });
 
@@ -148,7 +108,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 tipoCanchaHidden.value = "";
             } else {
                 const errorData = await res.json().catch(() => ({}));
-                mensajeError.textContent = errorData.message || `Error del servidor (${res.status}): Campos inválidos.`;
+                // Si la API te devuelve un error, lo mostramos detalladamente
+                mensajeError.textContent = errorData.message || `Error del servidor (${res.status}): Verifica tu sesión o los datos.`;
                 mensajeError.classList.remove("escondido");
             }
 
