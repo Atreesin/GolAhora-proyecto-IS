@@ -10,6 +10,7 @@ async function obtenerToken() {
             "Content-Type": "application/json",
             "plataform": "web"
         },
+        credentials: "include", // ← guarda la cookie de sesión
         body: JSON.stringify({
             email: "administrador@golahora.com",
             password: "Unaj2026@golahora"
@@ -103,9 +104,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             const response = await fetch("/api/tipos_cancha/agregar", {
                 method: "POST",
                 headers: {
-                    "plataform": "web",      // ← nombre correcto
-                    "X-Auth-Token": token    // ← token del admin
+                    "plataform": "web"
+                    // ← sin X-Auth-Token, la cookie se envía automáticamente
                 },
+                credentials: "include", // ← esto le dice al navegador que incluya las cookies
                 body: formData
             });
 
