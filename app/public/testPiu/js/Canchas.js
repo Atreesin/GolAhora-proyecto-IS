@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!respuesta.ok) throw new Error("Error en la respuesta del servidor");
             return respuesta.json();
         })
-        .then(cancha.json => {
+        .then(cancha => {
             contenedor.innerHTML = ""; // Limpiamos el texto de carga
 
             // VALIDACIÓN: Si el objeto viene vacío o no tiene ID válido
