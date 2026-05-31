@@ -31,9 +31,9 @@ class Cancha {
                         </p>
                     </div>
                     <div class="mt-3 mt-sm-0">
-                        <button class="btn btn-warning"  onclick="localStorage.setItem('cancha_id', ${this.id})">>
-                            Reservar
-                        </button>
+                        <a class="text-primary" href="RegistroReservar.html">Reservar</a>
+                           
+                        </a>
                     </div>
                 </div>
             </div>
@@ -80,11 +80,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
     obtenerDatos();
 });
-function ReservarCancha(cancha_id) {
-    // Guardamos el ID de la cancha seleccionada para usarlo en la siguiente página
-    localStorage.setItem("cancha_id", id);
-    
-    // Redirigimos al usuario a la página de horarios
-    window.location.href = "RegistroReservar.html"; 
-}
 
