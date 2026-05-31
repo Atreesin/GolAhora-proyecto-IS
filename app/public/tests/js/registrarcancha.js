@@ -1,32 +1,8 @@
 const mensajeError = document.getElementsByClassName("error")[0];
 
 // ==========================================
-// LOGIN PARA OBTENER TOKEN SI NO HAY COOKIE
+// FUNCIÓN PARA LEER COOKIES DEL NAVEGADOR
 // ==========================================
-async function obtenerToken() {
-    try {
-        const res = await fetch("/api/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "plataform": "web"
-            },
-            credentials: "include",
-            body: JSON.stringify({
-                email: "administrador@golahora.com",
-                password: "Unaj2026@golahora"
-            })
-        });
-
-        if (!res.ok) return null;
-        const data = await res.json();
-        return data.token;
-    } catch (error) {
-        return null;
-    }
-}
-
-// Función auxiliar para leer la cookie nativa si existiera
 function obtenerCookie(nombre) {
     const valor = `; ${document.cookie}`;
     const partes = valor.split(`; ${nombre}=`);
@@ -100,30 +76,32 @@ document.addEventListener("DOMContentLoaded", async () => {
     formulario.addEventListener("submit", async (e) => {
         e.preventDefault();
 
+        // Si el hidden quedó vacío, validamos si lo escrito coincide textualmente con un Tipo de Cancha válido
         if (!tipoCanchaHidden.value) {
-            mensajeError.textContent = "Por favor seleccioná un tipo de cancha válido de la lista.";
-            mensajeError.classList.remove("escondido");
-            return;
+            const textoEscrito = tipoCanchaInput.value.trim().toLowerCase();
+            const coincidenciaExacta = tiposCanchas.find(t => t.tipo_cancha.toLowerCase() === textoEscrito);
+            
+            if (coincidenciaExacta) {
+                tipoCanchaHidden.value = coincidenciaExacta.id;
+            } else {
+                mensajeError.textContent = "Por favor, seleccioná un Tipo de Cancha válido de la lista de sugerencias.";
+                mensajeError.classList.remove("escondido");
+                return;
+            }
         }
 
         try {
             mensajeError.classList.add("escondido");
 
-            // 1. Buscamos el token en la cookie o lo regeneramos con el login automático
-            let token = obtenerCookie("X-Auth-Token") || await obtenerToken();
+            // 1. Extraemos el token directo de la sesión real de tu navegador
+            let token = obtenerCookie("X-Auth-Token");
 
-            if (!token) {
-                mensajeError.textContent = "Error de autenticación: No se pudo verificar la sesión del administrador.";
-                mensajeError.classList.remove("escondido");
-                return;
-            }
-
-            // Si el token extraído no incluye "jwt=", lo formateamos tal como lo requiere Swagger
-            if (!token.startsWith("jwt=")) {
+            // Ajustamos el prefijo si la cookie pura no lo incluye
+            if (token && !token.startsWith("jwt=")) {
                 token = `jwt=${token}`;
             }
 
-            // 2. ¡CORREGIDO! Cambiado 'id_tipo_cancha' por 'id_tipo_de_cancha' según tu JSON de Swagger
+            // 2. Mapeamos el Request Body en JSON respetando la nomenclatura de tu Swagger (id_tipo_de_cancha)
             const datosCancha = {
                 nombre: document.getElementById("nombre").value.trim(),
                 tiempo_cancelacion: parseInt(document.getElementById("tiempo_cancelacion").value, 10),
@@ -131,14 +109,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                 id_tipo_de_cancha: parseInt(tipoCanchaHidden.value, 10) 
             };
 
+            const cabeceras = {
+                "Content-Type": "application/json",
+                "plataform": "web"
+            };
+
+            if (token) {
+                cabeceras["X-Auth-Token"] = token;
+            }
+
             const res = await fetch("/api/canchas/agregar", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "plataform": "web",
-                    "X-Auth-Token": token // Inyección del header idéntica a Swagger UI
-                },
-                credentials: "include",
+                headers: cabeceras,
+                credentials: "include", // Envía automáticamente las cookies de sesión persistentes
                 body: JSON.stringify(datosCancha)
             });
 
@@ -149,7 +132,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 tipoCanchaHidden.value = "";
             } else {
                 const errorData = await res.json().catch(() => ({}));
-                mensajeError.textContent = errorData.message || `Error del servidor (${res.status}): Comprobá los campos numéricos.`;
+                mensajeError.textContent = errorData.message || `Error del servidor (${res.status}): No autorizado o datos inválidos.`;
                 mensajeError.classList.remove("escondido");
             }
 
