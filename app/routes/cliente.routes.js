@@ -13,5 +13,6 @@ router.get("/MisClases", authorization.soloUsers, (req,res)=>res.sendFile(__dirn
 router.get("/MisEntrenamientos", authorization.soloUsers, (req,res)=>res.sendFile(__dirname + "/pages/user/MisEntrenamientoshtml"))
 router.get("/MisReservas", authorization.soloUsers, (req,res)=>res.sendFile(__dirname + "/pages/user/MisReservas.html"))
 router.get("/ReservaDeCancha", authorization.soloUsers, (req,res)=>res.sendFile(__dirname + "/pages/user/ReservadeCancha.html"))
+router.get("/Reservar", authorization.soloUsers, (req,res)=>res.sendFile(__dirname + "/pages/user/ReservadeCancha.html"))
 
 export default router
