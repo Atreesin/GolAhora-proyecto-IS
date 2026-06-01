@@ -96,7 +96,7 @@ function cerrarReserva() {
 }
 
 function finalizarReserva() {
-    alert("¡Reserva confirmada!");
+    window.location.href = "Cobro.html";
     // Aquí podrías redirigir a una página de éxito o limpiar todo
     cerrarReserva();
 }
