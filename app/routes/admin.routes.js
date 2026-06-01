@@ -6,7 +6,7 @@ import { methods as authorization } from "../middlewares/authorization.js";
 
 const router = Router()
 
-router.get("/admin", authorization.soloUsers, authorization.soloAdmin, (req, res) => res.sendFile(__dirname + "/pages/admin/admin.html"));
+router.get("/admin", authorization.soloUsers, authorization.soloAdmin, (req, res) => res.sendFile(__dirname + "/pages/admin/InterfazAdministrador.html"));
 router.get("/admin/Clientes", authorization.soloUsers, authorization.soloAdmin, (req, res) => res.sendFile(__dirname + "/pages/admin/ConsultaClientes.html"));
 router.get("/admin/Entrenadores", authorization.soloUsers, authorization.soloAdmin, (req, res) => res.sendFile(__dirname + "/pages/admin/ConsultaEntrenadores.html"));
 router.get("/admin/Profesores", authorization.soloUsers, authorization.soloAdmin, (req, res) => res.sendFile(__dirname + "/pages/admin/ConsultaProfesores.html"));
