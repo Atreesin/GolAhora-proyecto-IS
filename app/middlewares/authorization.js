@@ -4,7 +4,7 @@ import { methods as cookieHelper } from '../helpers/cookieHelper.js';
 async function soloAdmin(req, res, next) {
     const isAdmin = await cookieHelper.comprobarAdmin(req);
     if (isAdmin) return next();
-    return res.redirect("/login");
+    return res.redirect("/Acceder");
 }
 
 async function soloUsers(req, res, next) {
@@ -19,7 +19,7 @@ async function soloUsers(req, res, next) {
         path: "/"
     };
     res.cookie("jwt", "", cookieOpption);
-    return res.redirect("/login");
+    return res.redirect("/Acceder");
 }
 
 async function soloPublico(req, res, next) {
