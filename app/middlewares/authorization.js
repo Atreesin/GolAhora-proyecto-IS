@@ -2,6 +2,8 @@ import { methods as cookieHelper } from '../helpers/cookieHelper.js';
 
 
 async function soloAdmin(req, res, next) {
+    const referer = req.get('Referer');
+    res.referer = referer
     const isAdmin = await cookieHelper.comprobarAdmin(req);
     if (isAdmin) return next();
     return res.redirect("/Acceder");
