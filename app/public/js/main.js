@@ -146,18 +146,3 @@
     });
 })(jQuery);
 
-// Chequear si existe la cookie jwt
-function tieneCookie(nombre) {
-    return document.cookie.split(';').some(c => c.trim().startsWith(nombre + '='));
-}
-
-if (tieneCookie('jwt')) {
-    document.getElementById('menu-publico').style.display = 'none';
-    document.getElementById('menu-privado').style.display = 'block';
-}
-
-async function logout() {
-    await fetch('/logout', { method: 'POST' });
-    document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    location.reload();
-}
