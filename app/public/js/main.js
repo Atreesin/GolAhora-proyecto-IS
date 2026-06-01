@@ -18,7 +18,7 @@
 
                 // Aparece el logo en el centro
                 loadingLogo.addClass('show-gol');
-            }, 1000);
+            }, 500);
 
             // Desvanecimiento final para entrar a la web
             setTimeout(function () {
@@ -26,8 +26,8 @@
 
                 setTimeout(function () {
                     preloader.css('display', 'none');
-                }, 500);
-            }, 3800);
+                }, 250);
+            }, 1700);
         }
     });
 

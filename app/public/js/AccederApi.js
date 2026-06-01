@@ -1,7 +1,7 @@
 const API_LOGIN = "https://golahora-proyecto-is.onrender.com/api/login";
 
 document.getElementById("login").addEventListener("submit", async (evento) => {
-    evento.preventDefault(); 
+    evento.preventDefault();
 
     const email = document.querySelector("#email").value;
     const password = document.querySelector("#password").value;
@@ -11,7 +11,7 @@ document.getElementById("login").addEventListener("submit", async (evento) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "plataform":"web"
+                "plataform": "web"
             },
             body: JSON.stringify({
                 email: email,
@@ -23,22 +23,30 @@ document.getElementById("login").addEventListener("submit", async (evento) => {
         if (!Respuesta.ok) {
             throw new Error("El correo o la contraseña son incorrectos.");
         }
-        
+
         const datos = await Respuesta.json();
-       
-    
+
+
         alert("¡Ingreso exitoso!");
-        
-        
+
+
         const nivelUsuario = datos.user_level;
 
         // 3. Evaluamos con los valores exactos
+        /*
         if (nivelUsuario === "Administrador") {
             window.location.href = "InterfazAdministrador.html";
         } else if(nivelUsuario==="Cliente") {
             
             window.location.href = "InterfazCliente.html";
+        }*/
+        
+        if (datos.redirect) {
+            window.location.href = datos.redirect;
+        } else{
+            window.location.href = "/";
         }
+
 
     } catch (error) {
         alert(error.message);
