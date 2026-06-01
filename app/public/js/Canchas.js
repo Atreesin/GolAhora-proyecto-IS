@@ -95,6 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 function elegirHorario(id) { // Recibe el ID
     localStorage.setItem("cancha_id", id); // Guarda el ID recibido
-    window.location.href = "Cancha"; // Redirige
+    window.location.href = "Disponibilidad"; // Redirige
 }
     
