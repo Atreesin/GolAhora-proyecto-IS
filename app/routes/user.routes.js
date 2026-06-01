@@ -13,6 +13,7 @@ router.get("/Perfil", authorization.soloUsers, (req,res)=>res.sendFile(__dirname
 router.get('/logout', (req, res) => {
   res.clearCookie('jwt');
   res.json({ message: 'Sesión cerrada' });
+  res.redirect("/")
 });
 //router.get("/verificar/:token", authentication.verificarCuenta)
 
