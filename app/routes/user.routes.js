@@ -10,7 +10,7 @@ router.get("/Acceso", authorization.soloPublico, (req, res)=>res.sendFile(__dirn
 router.get("/Registro", authorization.soloPublico, (req,res)=>res.sendFile(__dirname + "/pages/Registro.html"));
 router.get("/Perfil", authorization.soloUsers, (req,res)=>res.sendFile(__dirname + "/pages/user/InterfazCliente.html"))
 //router.get("/user/:useriId", (req, res) => res.sendFile(__dirname + "/pages/user/profile.html"));
-router.post('/logout', (req, res) => {
+router.get('/logout', (req, res) => {
   res.clearCookie('jwt');
   res.json({ message: 'Sesión cerrada' });
 });
