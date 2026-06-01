@@ -1,29 +1,6 @@
 const API = "https://golahora-proyecto-is.onrender.com/api";
 
-// ==========================================
-// 1. LOGIN COMO ADMINISTRADOR Y OBTENER TOKEN
-// ==========================================
-async function obtenerToken() {
-    const res = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json", 
-            "plataform": "web" 
-        },
-        body: JSON.stringify({
-            email: "administrador@golahora.com",
-            password: "Unaj2026@golahora"
-        })
-    });
 
-    const data = await res.json();
-    console.log("Respuesta del login:", data);
-    return data.token;
-}
-
-// ==========================================
-// 2. CONSULTAR LOS ENTRENADORES CON EL TOKEN
-// ==========================================
 
 async function obtenerEntrenadores(token) {
     const res = await fetch(API + "/entrenadores", {

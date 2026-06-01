@@ -82,7 +82,7 @@ async function login(req, res) {
  * @returns {void}
  */
 async function register(req, res) {
-
+    const destino = req.query.redirect || "/";
     let nombre = req.body.nombre;
     let apellido = req.body.apellido;
     let nacionalidad = req.body.nacionalidad;
@@ -259,7 +259,7 @@ async function register(req, res) {
 
     //ENVIAR MAIL DE CONFIRMACION
     await enviarBienvenidaEmail(email, `${nuevoUsuario.nombre} ${nuevoUsuario.apellido}`)
-    return res.status(201).send({ status: "ok", message: `Usuario ${nuevoUsuario.username} agregado`, redirect: "/" })
+    return res.status(201).send({ status: "ok", message: `Usuario ${nuevoUsuario.username} agregado`, redirect: destino })
 }
 
 /*no se usa de momento
