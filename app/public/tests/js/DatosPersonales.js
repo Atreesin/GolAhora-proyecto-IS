@@ -29,7 +29,7 @@ async function ObtenerDatosPersonales(){
         CampoGenero.value = Datos.genero;
         CampoTelefono.value = Datos.telefono;
         CampoEmail.value = Datos.email;
-
+        CampoDireccion.value = `${Datos.direccion.calle} ${Datos.direccion.numero}, ${Datos.direccion.localidad}, ${Datos.direccion.pais}`;
     }catch(error){
 
     };
