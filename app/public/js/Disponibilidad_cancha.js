@@ -74,33 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     obtenerDatos();
 });
-// Función que se activa al hacer clic en "Reservar" de la tarjeta
-function abrirReserva(dia, inicio, fin) {
-    const modal = document.getElementById("modal-reserva");
-    const resumen = document.getElementById("resumen-contenido");
 
-    resumen.innerHTML = `
-        <div class="text-dark">
-        <p><strong>Día:</strong> ${dia}</p>
-        <p><strong>Fecha:</strong> ${fecha}</p>
-        <p><strong>Horario:</strong> ${inicio} a ${fin}</p>
-        <p>¿Estás seguro de continuar?</p>
-        </div>
-    `;
-
-    // Hacemos visible el modal
-    modal.style.display = "flex";
-}
-
-function cerrarReserva() {
-    document.getElementById("modal-reserva").style.display = "none";
-}
-
-function finalizarReserva() {
-    window.location.href = "Cobro";
- 
-    cerrarReserva();
-}
 */
 
 class Disponibilidad { // (Convención: las clases empiezan con mayúscula)
@@ -128,7 +102,7 @@ class Disponibilidad { // (Convención: las clases empiezan con mayúscula)
                     </div>
                     <div class="mt-3 mt-sm-0">
                       
-                    <button class="btn btn-success text-white" 
+                    <button class="btn btn-success btn-reservar" 
                     onclick="abrirReserva('${this.dia_semana}', '${this.hora_inicio}', '${this.hora_fin}')">
                         Reservar
                         </button>
@@ -196,12 +170,32 @@ function abrirReserva(dia, inicio, fin) {
     modal.style.display = "flex";
 }
 
+
+
+// Función que se activa al hacer clic en "Reservar" de la tarjeta
+function abrirReserva(dia, inicio, fin) {
+    const modal = document.getElementById("modal-reserva");
+    const resumen = document.getElementById("resumen-contenido");
+
+    resumen.innerHTML = `
+        <div class="text-dark">
+        <p><strong>Día:</strong> ${dia}</p>
+        <p><strong>Fecha:</strong> ${fecha}</p>
+        <p><strong>Horario:</strong> ${inicio} a ${fin}</p>
+        <p>¿Estás seguro de continuar?</p>
+        </div>
+    `;
+
+    // Hacemos visible el modal
+    modal.style.display = "flex";
+}
+
 function cerrarReserva() {
     document.getElementById("modal-reserva").style.display = "none";
 }
 
 function finalizarReserva() {
-    alert("¡Reserva confirmada!");
-    // Aquí podrías redirigir a una página de éxito o limpiar todo
+    window.location.href = "Cobro";
+ 
     cerrarReserva();
 }
