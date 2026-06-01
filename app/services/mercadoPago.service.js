@@ -74,7 +74,7 @@ export const crearQR = async (req, res) => {
 };
 
 
-router.post('/webhook', async (req, res) => {
+router.post('/api/webhook', async (req, res) => {
   try {
     const { type, data } = req.body;
 
