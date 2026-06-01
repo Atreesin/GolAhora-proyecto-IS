@@ -51,8 +51,7 @@ async function login(req, res) {
         path: "/"
     }
     let link_redirect = "/Perfil"
-    console.log(usuarioARevisar.user_level)
-    if (usuarioARevisar.user_level === ADMIN_USER_LEVEL) {
+    if (validator.tipoUsuario(usuarioARevisar.user_level) === "Administrador" ) {
         console.log("si ves esto entonces esto no es el problema")
         link_redirect = "/Admin"
     }
