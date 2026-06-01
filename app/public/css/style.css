@@ -9079,5 +9079,102 @@ box-shadow:
     color: #000; /* negro */
 }
 /* ==========================================
-   TABLA CONSULTA CLIENTES
+   Cobro
    ========================================== */
+
+    .Cobro{
+    background:#031d46 !important;
+    font-family:'Poppins',sans-serif;
+}
+
+
+
+.pago-input{
+    background:#0d3474;
+}
+
+
+
+   .card-custom2{
+    background:#0b0930;
+    border:1px solid #1b4b9b;
+    border-radius:15px;
+    color:white;
+}
+
+.titulo2{
+    color:white;
+    font-weight:bold;
+    font-size:20px !important;
+}
+
+.precio{
+    color:#ffd700;
+    font-size:2.5rem;
+    font-weight:bold;
+}
+
+.form-control2{
+    width:100%;
+    padding:12px 15px;
+    background:#0d3474;
+    border:1px solid #2c5bb8;
+    border-radius:8px;
+    color:white;
+}
+
+.form-control2::placeholder{
+    color:#bfc8d8;
+}
+
+.form-control2:focus{
+    outline:none;
+    background:#0d3474;
+    color:white;
+    border-color:#4ea7ff;
+}
+
+.btn-pagar{
+    background:#ffd700;
+    color:black;
+    font-weight:bold;
+    padding:15px;
+    border:none;
+    border-radius:8px;
+}
+
+.btn-pagar:hover{
+    background:#ffea70;
+}
+.icono-pago{
+    height: 50px;
+    margin-bottom: 10px;
+}
+.btn-outline-light{
+    background-color: #0d3474;
+    border: 1px solid #4ea7ff;
+    border: radius 12px;;
+    color: white;
+}
+.btn-metodo{
+    background-color:#12428d;
+    border:2px solid transparent;
+    color:white;
+    border-radius:12px;
+    padding:15px;
+    position:relative;
+}
+
+.btn-metodo.seleccionado{
+    border:2px solid #ffd700;
+}
+.btn-metodo.seleccionado::after{
+    content:"";
+    width:12px;
+    height:12px;
+    background:#ffd700;
+    border-radius:50%;
+    position:absolute;
+    top:10px;
+    right:10px;
+}
