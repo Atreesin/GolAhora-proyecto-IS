@@ -554,7 +554,7 @@ async function registrarOcupacionCancha(req, res) {
     fecha = helper.normalizarFecha(fecha);
     hora_inicio = helper.convertirAHora24(hora_inicio);
     hora_fin = helper.convertirAHora24(hora_fin);
-    id_tipo_ocupacion = helper.convertirADecimalValidado(id_cancha);
+    id_tipo_ocupacion = helper.convertirADecimalValidado(id_tipo_ocupacion);
     id_cancha = helper.convertirADecimalValidado(id_cancha);
     if (!fecha) {
         return res.status(400).send({ status: "Error", message: `El formato de la fecha ${req.body.fecha} no es válido` })
