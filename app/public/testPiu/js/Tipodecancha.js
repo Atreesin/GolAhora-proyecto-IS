@@ -17,7 +17,7 @@ class Cancha {
         columna.className = "col-12 mb-4 d-flex justify-content-center";
 
         columna.innerHTML = `
-            <div class="card text-dark shadow border-0 overflow-hidden" 
+            <div class="card card-entrenamientos text-dark shadow border-0 overflow-hidden" 
                  style="max-width: 900px; width: 100%; border-radius: 15px; background-color: #ffffff !important;">
                 <div class="row no-gutters align-items-center">
                     
