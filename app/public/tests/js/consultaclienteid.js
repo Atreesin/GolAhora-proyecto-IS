@@ -41,7 +41,7 @@ document.getElementById("btn-buscar").addEventListener("click", async () => {
             method: "GET",
             headers: {
                 "plataform": "web",
-                "X-Auth-Token": token
+                "Authorization": "Bearer " + token  // ← cambiá X-Auth-Token por esto
             },
             credentials: "include"
         });
