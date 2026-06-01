@@ -50,7 +50,7 @@ async function login(req, res) {
         expires: new Date(Date.now() + JWT_COOKIE_EXPIRES * 24 * 60 * 1000),
         path: "/"
     }
-    let link_redirect = "/Perfil"
+    let link_redirect = "/Admin"
     if (usuarioARevisar.user_level === ADMIN_USER_LEVEL) {
         console.log("si ves esto entonces esto no es el problema")
         link_redirect = "/Admin"

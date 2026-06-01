@@ -71,6 +71,7 @@ app.use(cors({
 
 
 //PRUEBAS
+/*
 const hora = "22:00"
 const fecha = "2026-05-20"
 const fechaActual = new Date()
@@ -92,3 +93,4 @@ console.log(await crearPreferencia(
     ]
 
 ))
+*/
