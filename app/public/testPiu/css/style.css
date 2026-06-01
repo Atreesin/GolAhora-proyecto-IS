@@ -9076,7 +9076,10 @@ box-shadow:
     padding: 20px;
     border-radius: 15px; /* Opcional: bordes redondeados */
     display: inline-block;
-    width: auto;          /* Se ajusta al ancho del texto */
+    width: auto; 
+    top: 0;
+    bottom: 50px; /* Asegura que no baje más allá de aquí */
+    padding-bottom: 0;/* Se ajusta al ancho del texto */
 }
 
 .carousel-item::after {
