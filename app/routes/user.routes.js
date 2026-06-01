@@ -6,11 +6,10 @@ import { methods as authorization } from "../middlewares/authorization.js";
 
 const router = Router()
 
-router.get("/Acceso", authorization.soloPublico, (req, res)=>res.sendFile(__dirname + "/pages/Acceder.html"))
+router.get("/Acceder", authorization.soloPublico, (req, res)=>res.sendFile(__dirname + "/pages/Acceder.html"))
 router.get("/Registro", authorization.soloPublico, (req,res)=>res.sendFile(__dirname + "/pages/Registro.html"));
-router.get("/Perfil", authorization.soloUsers, (req,res)=>res.sendFile(__dirname + "/pages/user/InterfazCliente.html"))
 //router.get("/user/:useriId", (req, res) => res.sendFile(__dirname + "/pages/user/profile.html"));
-app.post('/logout', (req, res) => {
+router.post('/logout', (req, res) => {
   res.clearCookie('jwt');
   res.json({ message: 'Sesión cerrada' });
 });
