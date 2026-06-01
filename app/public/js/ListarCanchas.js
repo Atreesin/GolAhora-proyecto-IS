@@ -37,7 +37,7 @@ class Cancha {
                         </p>
                     </div>
                     <div class="mt-3 mt-sm-0">
-                        <a class="text-primary" href="Registro?redirect=Reservar">Reservar</a>
+                        <a class="text-primary" href="Reservar?redirect=Reservar">Reservar</a>
                            
                         </a>
                     </div>
