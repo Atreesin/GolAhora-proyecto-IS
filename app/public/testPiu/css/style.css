@@ -9067,7 +9067,7 @@ box-shadow:
 }
 /* Esta clase mueve los puntitos del carrusel hacia abajo */
 .carousel-indicators {
-    bottom: -35px !important; /* Prueba con -20px o 0px si están muy arriba */
+    bottom: 0px !important; /* Prueba con -20px o 0px si están muy arriba */
 }
 
 .carousel-caption {
