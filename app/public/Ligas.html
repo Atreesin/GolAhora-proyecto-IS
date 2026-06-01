@@ -6,7 +6,7 @@
 
 <head>
     <meta charset="utf-8"> <!-- IDIOMA DE CARACTERES A USAR -->
-    <title>Gol Ahora - Ligas</title>  <!-- TITULO DE LA PAGINA  -->
+    <title>Gol Ahora - Ligas</title> <!-- TITULO DE LA PAGINA  -->
     <meta content="width=device-width, initial-scale=1.0" name="viewport"> <!-- HACE LA PAGINA RESPONSIVE -->
     <meta content="fútbol, canchas, torneos, reservas" name="keywords">
 
@@ -34,7 +34,7 @@
 
             <!-- LOGO Y TITULOS -->
             <div class="brand-section d-flex align-items-center">
-                <a href="index.html" class="text-decoration-none d-flex align-items-center">
+                <a href="/" class="text-decoration-none d-flex align-items-center">
                     <img src="img/icono1.png" alt="Logo GA" class="logo-img">
                     <div class="d-flex align-items-center text-nowrap">
                         <span class="h1 text-uppercase mb-0 brand-club">CLUB</span>
@@ -49,13 +49,31 @@
             </button>
 
             <!-- LINKS -->
+            <!--
             <div class="collapse navbar-collapse justify-content-end" id="navbarCollapse">
                 <div class="navbar-nav py-0 pr-xl-5">
-                    <a href="index.html" class="nav-item nav-link">Home</a>
-                    <a href="Login.html" class="nav-item nav-link">Registrarse</a>
-                    <a href="Acceder.html" class="nav-item nav-link">Acceder</a>
+                    <a href="/" class="nav-item nav-link">Home</a>
+                    <a href="Registro" class="nav-item nav-link">Registrarse</a>
+                    <a href="Acceder" class="nav-item nav-link">Acceder</a>
                     <a href="#SobreNosotros" class="nav-item nav-link">Sobre Nosotros</a>
                     <a href="#Contactanos" class="nav-item nav-link">Contactanos</a>
+                </div>
+            </div>
+            -->
+            <div class="collapse navbar-collapse justify-content-end" id="navbarCollapse">
+                <div id="menu-publico" class="navbar-nav py-0 pr-xl-5">
+                    <a href="/" class="nav-item nav-link">Home</a>
+                    <a href="Registro" class="nav-item nav-link">Registrarse</a>
+                    <a href="Acceder" class="nav-item nav-link">Acceder</a>
+                    <a href="#SobreNosotros" class="nav-item nav-link">Sobre Nosotros</a>
+                    <a href="#Contactanos" class="nav-item nav-link">Contactanos</a>
+                </div>
+
+                <div id="menu-privado" class="navbar-nav py-0 pr-xl-5" style="display:none;">
+                    <a href="/" class="nav-item nav-link">Home</a>
+                    <a href="/perfil" class="nav-item nav-link">Mi Perfil</a>
+                    <a href="/reservas" class="nav-item nav-link">Mis Reservas</a>
+                    <a href="/logout" class="nav-item nav-link">Cerrar Sesión</a>
                 </div>
             </div>
         </nav>
@@ -83,7 +101,8 @@
             <div class="col-md-6 text-center">
                 <h2 class="text-uppercase mb-3 text-white
                     ">¿Tu equipo tiene madera de campeón?</h2>
-                <p class="mb-3">Nuestras ligas anuales son la competencia más exigente del club. Meses de partidos, puntos que se acumulan y una sola copa al final. ¿Están listos para la batalla?</p>
+                <p class="mb-3">Nuestras ligas anuales son la competencia más exigente del club. Meses de partidos,
+                    puntos que se acumulan y una sola copa al final. ¿Están listos para la batalla?</p>
                 <p class="mb-4">Tres categorías, un solo campeón por año. La liga no perdona, cada partido cuenta.</p>
             </div>
 
@@ -103,7 +122,8 @@
                 <img src="img/Futbol5.jpeg" alt="Liga Fútbol 5">
                 <div class="categoria-info">
                     <h5>LIGA FÚTBOL 5</h5>
-                    <p>Competencia anual de equipos de 5. Cada partido suma puntos hacia el título. ¿Tu equipo puede aguantar todo un año de presión?</p>
+                    <p>Competencia anual de equipos de 5. Cada partido suma puntos hacia el título. ¿Tu equipo puede
+                        aguantar todo un año de presión?</p>
                 </div>
             </div>
 
@@ -112,7 +132,8 @@
                 <img src="img/Futbol7.jpeg" alt="Liga Fútbol 7">
                 <div class="categoria-info">
                     <h5>LIGA FÚTBOL 7</h5>
-                    <p>La liga más competitiva del club. Semanas de partidos, tabla de posiciones en vivo y un trofeo que solo se gana con constancia.</p>
+                    <p>La liga más competitiva del club. Semanas de partidos, tabla de posiciones en vivo y un trofeo
+                        que solo se gana con constancia.</p>
                 </div>
             </div>
 
@@ -121,7 +142,8 @@
                 <img src="img/Futbol11.jpeg" alt="Liga Fútbol 11">
                 <div class="categoria-info">
                     <h5>LIGA FÚTBOL 11</h5>
-                    <p>El fútbol en su máxima expresión. Once contra once durante todo el año. Solo el mejor equipo se lleva la copa anual.</p>
+                    <p>El fútbol en su máxima expresión. Once contra once durante todo el año. Solo el mejor equipo se
+                        lleva la copa anual.</p>
                 </div>
             </div>
 
@@ -181,51 +203,51 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="primer-puesto">
-                            <td>1</td>
-                            <td>Los Cañones FC</td>
-                            <td>10</td>
-                            <td>8</td>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>25</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Guerreros United</td>
-                            <td>10</td>
-                            <td>6</td>
-                            <td>2</td>
-                            <td>2</td>
-                            <td>20</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Los Pibes SC</td>
-                            <td>10</td>
-                            <td>5</td>
-                            <td>1</td>
-                            <td>4</td>
-                            <td>16</td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>Estrellas del Sur</td>
-                            <td>10</td>
-                            <td>3</td>
-                            <td>2</td>
-                            <td>5</td>
-                            <td>11</td>
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td>La Banda FC</td>
-                            <td>10</td>
-                            <td>1</td>
-                            <td>0</td>
-                            <td>9</td>
-                            <td>3</td>
-                        </tr>
+                        <tr class=" primer-puesto">
+                    <td>1</td>
+                    <td>Los Cañones FC</td>
+                    <td>10</td>
+                    <td>8</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>25</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Guerreros United</td>
+                        <td>10</td>
+                        <td>6</td>
+                        <td>2</td>
+                        <td>2</td>
+                        <td>20</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Los Pibes SC</td>
+                        <td>10</td>
+                        <td>5</td>
+                        <td>1</td>
+                        <td>4</td>
+                        <td>16</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Estrellas del Sur</td>
+                        <td>10</td>
+                        <td>3</td>
+                        <td>2</td>
+                        <td>5</td>
+                        <td>11</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>La Banda FC</td>
+                        <td>10</td>
+                        <td>1</td>
+                        <td>0</td>
+                        <td>9</td>
+                        <td>3</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -246,51 +268,51 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="primer-puesto">
-                            <td>1</td>
-                            <td>Los Titanes</td>
-                            <td>10</td>
-                            <td>9</td>
-                            <td>0</td>
-                            <td>1</td>
-                            <td>27</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Fénix FC</td>
-                            <td>10</td>
-                            <td>7</td>
-                            <td>1</td>
-                            <td>2</td>
-                            <td>22</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Los Cracks</td>
-                            <td>10</td>
-                            <td>4</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>15</td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>Barrio Norte SC</td>
-                            <td>10</td>
-                            <td>2</td>
-                            <td>1</td>
-                            <td>7</td>
-                            <td>7</td>
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td>El Potrero</td>
-                            <td>10</td>
-                            <td>0</td>
-                            <td>1</td>
-                            <td>9</td>
-                            <td>1</td>
-                        </tr>
+                        <tr class=" primer-puesto">
+                    <td>1</td>
+                    <td>Los Titanes</td>
+                    <td>10</td>
+                    <td>9</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>27</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Fénix FC</td>
+                        <td>10</td>
+                        <td>7</td>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>22</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Los Cracks</td>
+                        <td>10</td>
+                        <td>4</td>
+                        <td>3</td>
+                        <td>3</td>
+                        <td>15</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Barrio Norte SC</td>
+                        <td>10</td>
+                        <td>2</td>
+                        <td>1</td>
+                        <td>7</td>
+                        <td>7</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>El Potrero</td>
+                        <td>10</td>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>9</td>
+                        <td>1</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -311,51 +333,51 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="primer-puesto">
-                            <td>1</td>
-                            <td>Imperio FC</td>
-                            <td>10</td>
-                            <td>8</td>
-                            <td>2</td>
-                            <td>0</td>
-                            <td>26</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Los Gladiadores</td>
-                            <td>10</td>
-                            <td>6</td>
-                            <td>1</td>
-                            <td>3</td>
-                            <td>19</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Atlético Sur</td>
-                            <td>10</td>
-                            <td>4</td>
-                            <td>2</td>
-                            <td>4</td>
-                            <td>14</td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>Los Halcones</td>
-                            <td>10</td>
-                            <td>2</td>
-                            <td>2</td>
-                            <td>6</td>
-                            <td>8</td>
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td>Club Nomade</td>
-                            <td>10</td>
-                            <td>0</td>
-                            <td>1</td>
-                            <td>9</td>
-                            <td>1</td>
-                        </tr>
+                        <tr class=" primer-puesto">
+                    <td>1</td>
+                    <td>Imperio FC</td>
+                    <td>10</td>
+                    <td>8</td>
+                    <td>2</td>
+                    <td>0</td>
+                    <td>26</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Los Gladiadores</td>
+                        <td>10</td>
+                        <td>6</td>
+                        <td>1</td>
+                        <td>3</td>
+                        <td>19</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Atlético Sur</td>
+                        <td>10</td>
+                        <td>4</td>
+                        <td>2</td>
+                        <td>4</td>
+                        <td>14</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Los Halcones</td>
+                        <td>10</td>
+                        <td>2</td>
+                        <td>2</td>
+                        <td>6</td>
+                        <td>8</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Club Nomade</td>
+                        <td>10</td>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>9</td>
+                        <td>1</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -420,4 +442,5 @@
     <script src="js/main.js"></script>
 
 </body>
+
 </html>
