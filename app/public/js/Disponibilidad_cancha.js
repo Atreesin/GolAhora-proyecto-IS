@@ -1,6 +1,6 @@
 class Disponibilidad { // (Convención: las clases empiezan con mayúscula)
-    constructor(canchaId, dia_semana, hora_inicio, hora_fin, cancha) {
-        this.id_cancha = canchaId;
+    constructor(cancha_id, dia_semana, hora_inicio, hora_fin, cancha) {
+        this.cancha_id = cancha_id;
         this.dia_semana = dia_semana;
         this.hora_inicio = hora_inicio;
         this.hora_fin = hora_fin;
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Corregí la URL: nota el cambio en el parámetro
-    const API_URL = `https://golahora-proyecto-is.onrender.com/api/canchas/cancha_id=${cancha_id}/disponibilidad/`;
+    const API_URL = `https://golahora-proyecto-is.onrender.com/api/canchas/cancha_id=${canchaId}/disponibilidad/`;
 
     async function obtenerDatos() {
         try {
