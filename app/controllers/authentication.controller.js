@@ -22,6 +22,7 @@ import { enviarBienvenidaEmail } from '../services/email.service.js';
 */
 async function login(req, res) {
     const destino = req.query.redirect || "/";
+    const referer = req.get('Referer');
     const email = req.body.email;
     const password = req.body.password;
 
@@ -60,7 +61,7 @@ async function login(req, res) {
     }
     if (req.headers.plataform === "web") {
         res.cookie("jwt", token, cookieOpption);
-        res.send({ status: "ok", message: "Usuario loggeado", redirect: link_redirect, user_level: validator.tipoUsuario(usuarioARevisar.user_level) })
+        res.send({ status: "ok", message: "Usuario loggeado", redirect: link_redirect || referer, user_level: validator.tipoUsuario(usuarioARevisar.user_level) })
     }
     if (req.headers.plataform === "windows") {
         if (usuarioARevisar.user_level != ADMIN_USER_LEVEL) {

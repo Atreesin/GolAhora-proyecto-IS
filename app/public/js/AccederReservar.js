@@ -33,10 +33,10 @@ document.getElementById("login").addEventListener("submit", async (evento) => {
 
         // 3. Evaluamos con los valores exactos
         if (nivelUsuario === "Administrador") {
-            window.location.href = "InterfazAdministrador.html";
+            window.location.href = "/Admin";
         } else if(nivelUsuario==="Cliente") {
             
-            window.location.href = "ReservadeCancha.html";
+            window.location.href = "ReservadeCancha";
         }
 
     } catch (error) {

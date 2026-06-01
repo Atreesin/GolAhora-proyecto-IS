@@ -52,7 +52,7 @@ class Cancha {
                            <div class="text-left">
                     <a class="btn btn-warning text-dark font-weight-bold px-4 shadow-sm" 
                        style="border-radius: 50px; background-color: #ffc107 !important; border: none; color: #000000 !important;" 
-                           href="canchas.html"
+                           href="Canchas"
                            onclick="localStorage.setItem('tipo_cancha', ${this.id})">
                         Seleccionar
                         </a>
@@ -119,5 +119,5 @@ function seleccionarCancha(id) {
     localStorage.setItem('tipo_cancha', id);
 
     // 2. Redireccionamos a la nueva pantalla que va a mostrar las canchas físicas de ese tipo
-    window.location.href = "canchas.html";
+    window.location.href = "Canchas";
 }

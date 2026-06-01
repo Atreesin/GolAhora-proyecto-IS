@@ -193,6 +193,6 @@ document.getElementById("register-form").addEventListener("submit", async (e) =>
 
   const resJson = await res.json();
   if (resJson.redirect) {
-    window.location.href = "ReservadeCancha.html";
+    window.location.href = "ReservadeCancha";
   }
 });

@@ -103,7 +103,7 @@ function cerrarReserva() {
 }
 
 function finalizarReserva() {
-    window.location.href = "Cobro.html";
+    window.location.href = "Cobro";
  
     cerrarReserva();
 }
