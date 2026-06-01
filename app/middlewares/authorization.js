@@ -14,7 +14,8 @@ async function soloUsers(req, res, next) {
     const logeado = await cookieHelper.revisarCookie(req);
 
     if (logeado) return next();
-
+    const referer = req.get('Referer');
+    res.referer = referer
     const now = new Date(Date.now());
     const cookieOpption = {
         expires: now,
