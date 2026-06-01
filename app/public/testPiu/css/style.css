@@ -9069,33 +9069,19 @@ box-shadow:
 .carousel-indicators {
     bottom: 0px !important; /* Prueba con -20px o 0px si están muy arriba */
 }
-/* Esto asegura que el contenido del carrusel tenga espacio y no se desborde */
-/* Borra cualquier 'div' de fondo que tengas antes y aplica esto: */
+
 .carousel-caption {
-    background-color: rgba(0, 0, 0, 0.5); /* Oscurece solo el fondo del texto */
-    padding: 20px;
-    border-radius: 15px; /* Opcional: bordes redondeados */
-    display: inline-block;
-    width: auto; 
     top: 0;
     bottom: 50px; /* Asegura que no baje más allá de aquí */
-    padding-bottom: 0;/* Se ajusta al ancho del texto */
+    padding-bottom: 0;
 }
 
-.carousel-item::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* 50% de opacidad negra */
-    z-index: 1; /* Asegura que esté detrás del texto pero sobre la imagen */
-}
-
-/* Asegura que el texto esté encima de la capa */
 .carousel-caption {
-    z-index: 2;
+    z-index: 5; /* Capa del texto */
+}
+
+.carousel-indicators {
+    z-index: 2; /* Capa de los puntos, debe ser menor */
 }
 /* ==========================================
    TABLA CONSULTA CLIENTES
