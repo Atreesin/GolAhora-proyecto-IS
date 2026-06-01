@@ -1,10 +1,13 @@
 class Disponibilidad { // (Convención: las clases empiezan con mayúscula)
-    constructor(id_disponibilidad, dia_semana, hora_inicio, hora_fin, id_cancha) {
-        this.id_disponibilidad = id_disponibilidad;
+    constructor(canchaId,motivo, dia_semana, hora_inicio, hora_fin, cancha,fecha,estado) {
+        this.id_cancha = canchaId;
+        this.motivo = motivo;
         this.dia_semana = dia_semana;
         this.hora_inicio = hora_inicio;
         this.hora_fin = hora_fin;
-        this.id_cancha = id_cancha;
+        this.cancha = cancha;
+        this.fecha = fecha;
+        this.estado = estado;
     }
 
     generarHTML() {
@@ -15,16 +18,18 @@ class Disponibilidad { // (Convención: las clases empiezan con mayúscula)
             <div class="card card-entrenamientos text-dark shadow border-0 p-4 w-100" style="max-width: 900px; border-radius: 15px; background-color: #ffffff !important;">
                 <div class="d-flex justify-content-between align-items-center flex-wrap">
                     <div>
-                        <h4 class="font-weight-bold mb-1">Día: ${this.dia_semana}</h4>
+                        <h4 class="font-weight-bold mb-1">Día: ${this.dia_semana} ${this.cancha.fecha}</h4>
                         <p class="text-muted mb-0">
                             <i class="far fa-clock text-primary mr-1"></i> 
                             <strong>Horario:</strong> ${this.hora_inicio} a ${this.hora_fin}
+                            <strong>Motivo:</strong> ${this.motivo} 
+                            <strong>Estado:</strong> ${this.cancha.estado} 
                         </p>
                     </div>
                     <div class="mt-3 mt-sm-0">
                       
                     <button class="btn btn-success btn-reservar" 
-                    onclick="abrirReserva('${this.dia_semana}', '${this.hora_inicio}', '${this.hora_fin}')">
+                    onclick="abrirReserva('${this.dia_semana}','${this.cancha.fecha}, '${this.hora_inicio}', '${this.hora_fin}')">
                         Reservar
                         </button>
                     </div>
@@ -47,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Corregí la URL: nota el cambio en el parámetro
-    const API_URL = `https://golahora-proyecto-is.onrender.com/api/disponibilidad/cancha_id=${canchaId}`;
+    const API_URL = `https://golahora-proyecto-is.onrender.com/api/cancha/cancha_id=${canchaId}/disponibilidad/fecha=fecha`;
 
     async function obtenerDatos() {
         try {
@@ -56,11 +61,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
             datosCrudos.forEach(data => {
                 const nuevaDisponibilidad = new Disponibilidad(
-                    data.id_disponibilidad, 
-                    data.dia_semana, 
-                    data.hora_inicio, 
+                    data.motivo,
+                    data.dia_semana,
+                    data.hora_inicio,
                     data.hora_fin,
-                    data.id_cancha
+                    data.cancha,
+                    data.fecha,
+                    data.estado,
                 );
 
                 contenedor.appendChild(nuevaDisponibilidad.generarHTML());
@@ -78,10 +85,10 @@ function abrirReserva(dia, inicio, fin) {
     const modal = document.getElementById("modal-reserva");
     const resumen = document.getElementById("resumen-contenido");
 
-    // Inyectamos los datos en el resumen
     resumen.innerHTML = `
         <div class="text-dark">
         <p><strong>Día:</strong> ${dia}</p>
+        <p><strong>Fecha:</strong> ${fecha}</p>
         <p><strong>Horario:</strong> ${inicio} a ${fin}</p>
         <p>¿Estás seguro de continuar?</p>
         </div>
@@ -97,6 +104,6 @@ function cerrarReserva() {
 
 function finalizarReserva() {
     window.location.href = "Cobro.html";
-    // Aquí podrías redirigir a una página de éxito o limpiar todo
+ 
     cerrarReserva();
 }
