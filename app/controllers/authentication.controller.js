@@ -51,10 +51,10 @@ async function login(req, res) {
         path: "/"
     }
     let link_redirect = "/Perfil"
-    if (usuarioARevisar.user_level === ADMIN_USER_LEVEL) {
+    if (usuarioARevisar.user_level == ADMIN_USER_LEVEL) {
         link_redirect = "/Admin"
     }
-    if(destino){
+    if(destino !== "/"){
         link_redirect = destino
     }
     if (req.headers.plataform === "web") {
