@@ -9065,9 +9065,22 @@ box-shadow:
     padding: 12px 16px;
     border-bottom: 1px solid #333;
 }
+/* Esta clase mueve los puntitos del carrusel hacia abajo */
 .carousel-indicators {
-    margin-bottom: 3rem !important; /* Mueve los puntitos más abajo */
+    bottom: 0px !important; /* Prueba con -20px o 0px si están muy arriba */
 }
+/* Esto asegura que el contenido del carrusel tenga espacio y no se desborde */
+.carousel-caption {
+    top: 0;
+    bottom: 50px; /* Asegura que no baje más allá de aquí */
+    padding-bottom: 0;
+}
+.carousel-caption {
+    z-index: 5; /* Capa del texto */
+}
+
+.carousel-indicators {
+    z-index: 2; /* Capa de los puntos, debe ser menor */
 /* ==========================================
    TABLA CONSULTA CLIENTES
    ========================================== */
