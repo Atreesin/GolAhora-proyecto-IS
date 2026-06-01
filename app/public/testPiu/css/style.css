@@ -9065,7 +9065,9 @@ box-shadow:
     padding: 12px 16px;
     border-bottom: 1px solid #333;
 }
-
+.carousel-indicators {
+    margin-bottom: 3rem !important; /* Mueve los puntitos más abajo */
+}
 /* ==========================================
    TABLA CONSULTA CLIENTES
    ========================================== */
