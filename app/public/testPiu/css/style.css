@@ -9065,7 +9065,19 @@ box-shadow:
     padding: 12px 16px;
     border-bottom: 1px solid #333;
 }
+.btn-reservar {
+    background-color: transparent;
+    color: #FFD700; /* amarillo */
+    border: 2px solid #FFD700;
+    padding: 12px 30px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
 
+.btn-reservar:hover {
+    background-color: #FFD700;
+    color: #000; /* negro */
+}
 /* ==========================================
    TABLA CONSULTA CLIENTES
    ========================================== */
