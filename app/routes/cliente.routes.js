@@ -15,4 +15,6 @@ router.get("/MisReservas", authorization.soloUsers, (req,res)=>res.sendFile(__di
 router.get("/ReservaDeCancha", authorization.soloUsers, (req,res)=>res.sendFile(__dirname + "/pages/user/ReservadeCancha.html"))
 router.get("/Reservar", authorization.soloUsers, (req,res)=>res.sendFile(__dirname + "/pages/user/ReservadeCancha.html"))
 
+
+
 export default router

@@ -14,6 +14,9 @@ router.post('/logout', (req, res) => {
   res.json({ message: 'Sesión cerrada' });
 });
 //router.get("/verificar/:token", authentication.verificarCuenta)
-
+router.get("/ListarCancha", (req,res)=>res.sendFile(__dirname + "/public/ListarCanchas.html"))
+router.get("/Torneos", (req,res)=>res.sendFile(__dirname + "/public/Torneos.html"))
+router.get("/Ligas", (req,res)=>res.sendFile(__dirname + "/public/Ligas.html"))
+router.get("/Descuentos", (req,res)=>res.sendFile(__dirname + "/public/Descuentos.html"))
 
 export default router
