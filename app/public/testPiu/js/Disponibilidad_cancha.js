@@ -12,7 +12,7 @@ class Disponibilidad { // (Convención: las clases empiezan con mayúscula)
         fila.className = "col-12 mb-3 d-flex justify-content-center";
 
         fila.innerHTML = `
-            <div class="card text-dark shadow border-0 p-4 w-100" style="max-width: 900px; border-radius: 15px; background-color: #ffffff !important;">
+            <div class="card card-entrenamientos text-dark shadow border-0 p-4 w-100" style="max-width: 900px; border-radius: 15px; background-color: #ffffff !important;">
                 <div class="d-flex justify-content-between align-items-center flex-wrap">
                     <div>
                         <h4 class="font-weight-bold mb-1">Día: ${this.dia_semana}</h4>
