@@ -6,7 +6,6 @@ import { methods as authorization } from "../middlewares/authorization.js";
 
 const router = Router()
 
-router.get("/", authorization.SoloUsers)
-
+router.get("/Perfil", authorization.soloUsers, (req, res) => res.sendFile(__dirname + "/pages/admin/admin.html"))
 
 export default router
