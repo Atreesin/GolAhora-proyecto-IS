@@ -52,6 +52,7 @@ async function login(req, res) {
     }
     let link_redirect = "/Perfil"
     if (usuarioARevisar.user_level === ADMIN_USER_LEVEL) {
+        console.log("si ves esto entonces esto no es el problema")
         link_redirect = "/Admin"
     }
     if(destino !== "/"){
