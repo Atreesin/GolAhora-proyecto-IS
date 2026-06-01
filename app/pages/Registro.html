@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="utf-8"> <!-- IDIOMA DE CARACTERES A USAR -->
-    <title>Gol Ahora - Registro</title>  <!-- TITULO DE LA PAGINA  -->
+    <title>Gol Ahora - Registro</title> <!-- TITULO DE LA PAGINA  -->
     <meta content="width=device-width, initial-scale=1.0" name="viewport"> <!-- HACE LA PAGINA RESPONSIVE -->
     <meta content="fútbol, canchas, torneos, reservas" name="keywords">
 
@@ -22,7 +23,7 @@
 </head>
 
 <body>
-    
+
     <!-- PRELOADER PANTALLA DE CARGA
     <div id="preloader">
         <div class="cancha-mini">
@@ -55,101 +56,122 @@
             </button>
 
             <!-- LINKS -->
-            <div class="collapse navbar-collapse justify-content-end" id="navbarCollapse">
-                <div class="navbar-nav py-0 pr-xl-5">
-                    <a href="index.html" class="nav-item nav-link">Home</a>
-                    <a href="Login.html" class="nav-item nav-link">Registrarse</a>
-                    <a href="Acceder.html" class="nav-item nav-link">Acceder</a>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarCollapse menu-publico">
+                <div id="menu-publico" class="navbar-nav py-0 pr-xl-5">
+                    <a href="/" class="nav-item nav-link">Home</a>
+                    <a href="Registro" class="nav-item nav-link">Registrarse</a>
+                    <a href="Acceder" class="nav-item nav-link">Acceder</a>
                     <a href="#SobreNosotros" class="nav-item nav-link">Sobre Nosotros</a>
                     <a href="#Contactanos" class="nav-item nav-link">Contactanos</a>
                 </div>
+                <div id="menu-privado" class="navbar-nav py-0 pr-xl-5" style="display:none;">
+                    <a href="/" class="nav-item nav-link">Home</a>
+                    <a href="/perfil" class="nav-item nav-link">Mi Perfil</a>
+                    <a href="/reservas" class="nav-item nav-link">Mis Reservas</a>
+                    <a href="/logout" class="nav-item nav-link">Cerrar Sesión</a>
+                </div>
             </div>
+            <script>// Chequear si existe la cookie jwt
+                function tieneCookie(nombre) {
+                    return document.cookie.split(';').some(c => c.trim().startsWith(nombre + '='));
+                }
+
+                if (tieneCookie('jwt')) {
+                    document.getElementById('menu-publico').style.display = 'none';
+                    document.getElementById('menu-privado').style.display = 'flex';
+                }
+
+                async function logout() {
+                    await fetch('/logout', { method: 'POST' });
+                    document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                    location.reload();
+                }
+            </script>
         </nav>
     </div>
 
-        <!-- INICIO - ACÁ EL CONTENIDO REAL DE LA PAGINA REGISTRO -->
-        <div class="form-container">
+    <!-- INICIO - ACÁ EL CONTENIDO REAL DE LA PAGINA REGISTRO -->
+    <div class="form-container">
 
-            <h1 class="text-center">Crear una cuenta</h1>
+        <h1 class="text-center">Crear una cuenta</h1>
 
-            <form id="register-form">
+        <form id="register-form">
 
-                <!-- Info de usuario-->
-                <label for="nombre" class="sr-only">Nombre</label>
-                <input type="text" name="nombre" id="nombre" placeholder="Nombre">
+            <!-- Info de usuario-->
+            <label for="nombre" class="sr-only">Nombre</label>
+            <input type="text" name="nombre" id="nombre" placeholder="Nombre">
 
-                <label for="apellido" class="sr-only">Apellido</label>
-                <input type="text" name="apellido" id="apellido" placeholder="Apellido">
-                
-                <label for="nacionalidad" class="sr-only">Nacionalidad</label>
-                <input type="text" name="nacionalidad" id="nacionalidad" placeholder="Nacionalidad">
-                <div id="nacionalidad-suggestions" class="suggestions"></div>
+            <label for="apellido" class="sr-only">Apellido</label>
+            <input type="text" name="apellido" id="apellido" placeholder="Apellido">
 
-                <label for="dni" class="sr-only">dni</label>
-                <input type="text" name="dni" id="dni" placeholder="DNI">
-                
-                <label for="genero" class="sr-only">genero</label>
-                <input type="text" name="genero" id="genero" placeholder="Genero">
-                <div id="genero-suggestions" class="suggestions"></div>
+            <label for="nacionalidad" class="sr-only">Nacionalidad</label>
+            <input type="text" name="nacionalidad" id="nacionalidad" placeholder="Nacionalidad">
+            <div id="nacionalidad-suggestions" class="suggestions"></div>
 
-                <label for="fecha_nacimiento" class="sr-only">Fecha de Nacimiento</label>
-                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" placeholder="Fecha de Nacimiento">
+            <label for="dni" class="sr-only">dni</label>
+            <input type="text" name="dni" id="dni" placeholder="DNI">
 
-                <label for="telefono" class="sr-only">telefono</label>
-                <input type="text" name="telefono" id="telefono" placeholder="telefono">
+            <label for="genero" class="sr-only">genero</label>
+            <input type="text" name="genero" id="genero" placeholder="Genero">
+            <div id="genero-suggestions" class="suggestions"></div>
 
-                <label for="email" class="sr-only">Email</label>
-                <input type="email" name="email" id="email" placeholder="Email">
+            <label for="fecha_nacimiento" class="sr-only">Fecha de Nacimiento</label>
+            <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" placeholder="Fecha de Nacimiento">
 
-                <label for="password" class="sr-only">Contraseña</label>
-                <input type="password" name="password" id="password" placeholder="Contraseña">
+            <label for="telefono" class="sr-only">telefono</label>
+            <input type="text" name="telefono" id="telefono" placeholder="telefono">
 
-                <label for="confirm_password" class="sr-only">Confirmar Contraseña</label>
-                <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirmar Contraseña">
-                 
-                <label for="calle" class="sr-only">calle</label>
-                <input type="text" name="calle" id="calle" placeholder="Calle">
+            <label for="email" class="sr-only">Email</label>
+            <input type="email" name="email" id="email" placeholder="Email">
 
-                <label for="numero" class="sr-only">número</label>
-                <input type="text" name="numero" id="numero" placeholder="Número">
+            <label for="password" class="sr-only">Contraseña</label>
+            <input type="password" name="password" id="password" placeholder="Contraseña">
 
-                <label for="codigo_postal" class="sr-only">código postal</label>
-                <input type="text" name="codigo_postal" id="codigo_postal" placeholder="Código Postal">
+            <label for="confirm_password" class="sr-only">Confirmar Contraseña</label>
+            <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirmar Contraseña">
 
-                <label for="pais" class="sr-only">País</label>
-                <input type="text" name="pais" id="pais" placeholder="País">
-                <div id="pais-suggestions" class="suggestions"></div
+            <label for="calle" class="sr-only">calle</label>
+            <input type="text" name="calle" id="calle" placeholder="Calle">
 
-                <label> for="provincia" class="sr-only">provincia</label>
-                <input type="text" name="provincia" id="provincia" placeholder="Provincia">
-                <div id="provincia-suggestions" class="suggestions"></div>
+            <label for="numero" class="sr-only">número</label>
+            <input type="text" name="numero" id="numero" placeholder="Número">
 
-                <label for="ciudad" class="sr-only">ciudad</label>
-                <input type="text" name="ciudad" id="ciudad" placeholder="Ciudad">
-                <div id="ciudad-suggestions" class="suggestions"></div>
+            <label for="codigo_postal" class="sr-only">código postal</label>
+            <input type="text" name="codigo_postal" id="codigo_postal" placeholder="Código Postal">
 
-                <label for="localidad" class="sr-only">localidad</label>
-                <input type="text" name="localidad" id="localidad" placeholder="localidad">
-                <div id="localidad-suggestions" class="suggestions"></div>
+            <label for="pais" class="sr-only">País</label>
+            <input type="text" name="pais" id="pais" placeholder="País">
+            <div id="pais-suggestions" class="suggestions"></div <label> for="provincia"
+            class="sr-only">provincia</label>
+            <input type="text" name="provincia" id="provincia" placeholder="Provincia">
+            <div id="provincia-suggestions" class="suggestions"></div>
 
-                <button type="submit">Crear cuenta</button>
-                <p class="error escondido">error al registrarse</p>
+            <label for="ciudad" class="sr-only">ciudad</label>
+            <input type="text" name="ciudad" id="ciudad" placeholder="Ciudad">
+            <div id="ciudad-suggestions" class="suggestions"></div>
 
-            </form>
+            <label for="localidad" class="sr-only">localidad</label>
+            <input type="text" name="localidad" id="localidad" placeholder="localidad">
+            <div id="localidad-suggestions" class="suggestions"></div>
 
-            <p>¿Ya tenes una cuenta? - <a href="Acceder.html">Iniciar sesión</a></p>
+            <button type="submit">Crear cuenta</button>
+            <p class="error escondido">error al registrarse</p>
 
-        </div>
+        </form>
+
+        <p>¿Ya tenes una cuenta? - <a href="Acceder.html">Iniciar sesión</a></p>
+
+    </div>
     <!-- FIN - ACÁ EL CONTENIDO REAL DE LA PAGINA DESCUENTOS -->
 
-        <div>
-            <p>Proyecto final Integrador</p>
-            <p>Autores: <br>Equipo N° 5</p>
-            <p>Universidad Nacional Arturo Jauretche</p>
-            <p>Ingenieria de Software I - 1° cuatrimestre 2026</p>
-        </div>
+    <div>
+        <p>Proyecto final Integrador</p>
+        <p>Autores: <br>Equipo N° 5</p>
+        <p>Universidad Nacional Arturo Jauretche</p>
+        <p>Ingenieria de Software I - 1° cuatrimestre 2026</p>
+    </div>
 
-    
+
     <!-- INICIO FOOTER -->
     <div class="container-fluid footer-personalizado text-secondary mt-5 pt-5">
         <div class="row px-xl-5 pt-5">
@@ -196,14 +218,15 @@
     </div>
     <!-- FIN FOOTER -->
 
-            <!-- SCRIPTS JAVASCRIPT -->
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-        <script src="lib/easing/easing.min.js"></script>
-        <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-        <script src="js/main.js"></script>
-        <script src="js/registro.js"></script>
+    <!-- SCRIPTS JAVASCRIPT -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/registro.js"></script>
 
 
 </body>
+
 </html>

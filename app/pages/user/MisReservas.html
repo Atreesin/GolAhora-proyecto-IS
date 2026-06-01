@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-      <meta charset="utf-8">
+    <meta charset="utf-8">
     <title>Mis reservas</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
@@ -13,7 +14,7 @@
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">  
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -25,198 +26,249 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
 </head>
+
 <body>
-      <!-- Barra de navegacion comienzo -->
-   <div class="col-lg-12 px-0">
-    <!-- Aplicamos una clase personalizada 'nav-diagonal' -->
-    <nav class="navbar navbar-expand-lg navbar-dark py-0 px-0 nav-diagonal">
-        
-        <!-- Contenedor del Logo y Título (Lado Izquierdo) -->
-        <div class="brand-section d-flex align-items-center">
-            <a href="" class="text-decoration-none d-flex align-items-center">
-                <img src="img/icono1.png" alt="Logo GA" class="logo-img">
-                <div class="d-flex align-items-center text-nowrap">
-                    <!-- 'CLUB' en azul del logo, 'GOL AHORA' en blanco -->
-                    <span class="h1 text-uppercase mb-0 brand-club">CLUB</span>
-                    <span class="h1 text-uppercase text-white mb-0 brand-gol">GOL AHORA</span>
-                </div>
-            </a>
-        </div>
+    <!-- Barra de navegacion comienzo -->
+    <div class="col-lg-12 px-0">
+        <!-- Aplicamos una clase personalizada 'nav-diagonal' -->
+        <nav class="navbar navbar-expand-lg navbar-dark py-0 px-0 nav-diagonal">
 
-        <!-- Botón para móviles -->
-        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- Enlaces (Lado Derecho / Celeste) -->
-        <div class="collapse navbar-collapse justify-content-end" id="navbarCollapse">
-            <div class="navbar-nav py-0 pr-xl-5">
-                <a href="index.html" class="nav-item nav-link active">Home</a>
-                <a href="Login.html" class="nav-item nav-link">Registrarse</a>
-                <a href="Acceder.html" class="nav-item nav-link">Acceder</a>
-                <a href="#SobreNosotros" class="nav-item nav-link">Sobre Nosotros</a>
-                <a href="#Contactanos" class="nav-item nav-link">Contactanos</a>
-            </div>
-        </div>
-    </nav>
-</div>
-
-   <!-- Navbar Start -->
-
-
-        <!-- Sección Derecha de la Navbar (Menú horizontal y responsive) -->
-        <div class="col-lg-9">
-            <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-0">
-                <a href="" class="text-decoration-none d-block d-lg-none">
-                    <span class="h1 text-uppercase text-dark bg-light px-2">GOL</span>
-                    <span class="h1 text-uppercase text-light bg-info px-2 ml-n1">AHORA</span>
+            <!-- Contenedor del Logo y Título (Lado Izquierdo) -->
+            <div class="brand-section d-flex align-items-center">
+                <a href="" class="text-decoration-none d-flex align-items-center">
+                    <img src="img/icono1.png" alt="Logo GA" class="logo-img">
+                    <div class="d-flex align-items-center text-nowrap">
+                        <!-- 'CLUB' en azul del logo, 'GOL AHORA' en blanco -->
+                        <span class="h1 text-uppercase mb-0 brand-club">CLUB</span>
+                        <span class="h1 text-uppercase text-white mb-0 brand-gol">GOL AHORA</span>
+                    </div>
                 </a>
-                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                
-                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                    <div class="navbar-nav mr-auto py-0">
-                        <!-- Aquí puedes agregar links como Inicio, Contacto, etc. -->
-                    </div>
-                </div>
-            </nav>
-        </div>
-    </div>
-</div>
-
-
-
-<div class="container mt-4" style="background: linear-gradient(to bottom,#004e92, #000428); min-height: 100vh;">
-    <div>
-        <h1 class="text-white mis-fuentes">MIS RESERVAS</h1>
-    </div>
-
-    <div class="row">
-        
-        <div class="col-12 col-md-4 mb-4">
-            <div class="card card-reservas overflow-hidden border-0 shadow text-center" style="border-radius: 20px;">
-                <img src="img/Futbol11.jpeg" class="card-img-top w-100" style="height: 180px; object-fit: cover;" alt="imagen cancha">
-                
-                <div class="card-body bg-white p-3">
-                    <h3 class="fs-4 fw-bold text-dark mb-3">CANCHA DE FUTBOL 11</h3>
-                    <h4 class="fs-6 text-muted mb-2">Cancha: 2</h4>
-                    <h4 class="fs-6 text-muted mb-2">Fecha: 02/07/2026</h4>
-                    <h4 class="fs-6 text-muted mb-2">Horario: 18hs</h4>
-                    <h4 class="fs-6 text-muted mb-3">Tiempo: 3hs</h4>
-                    
-                    <div class="collapse" id="detallesCancha1">
-                        <div class="p-2 my-2 rounded-3 text-start border-top">
-                            <p class="mb-1 fs-6 text-dark"><strong>Capacidad:</strong> 11 jugadores</p>
-                            <p class="mb-1 fs-6 text-dark"><strong>Superficie:</strong> Césped sintético (artificial)</p>
-                            <p class="mb-1 fs-6 text-dark"><strong>Estado del pago:</strong> <span class="badge bg-success">Pagado</span></p>
-                            <p class="mb-2 fs-6 text-dark"><strong>Precio Total:</strong> $15.000</p>
-                            <button type="button" class="btn btn-outline-primary btn-sm w-100">Modificar reserva</button>
-                        </div>
-                    </div>
-
-                    <div class="text-end mt-2">
-                        <button class="btn btn-warning text-dark fw-bold px-4 rounded-pill" type="button" data-bs-toggle="collapse" data-bs-target="#detallesCancha1" aria-expanded="false" aria-controls="detallesCancha1">
-                            Ver detalles
-                        </button>
-                        <button type="button" class="btn btn-warning text-dark fw-bold px-4 rounded-pill" data-bs-toggle="modal" data-bs-target="#modalCancelar">
-                            Cancelar
-                        </button>
-                    </div>
-                </div>
-            </div> 
-        </div>
-
-        <div class="col-12 col-md-4 mb-4">
-            <div class="card card-reservas overflow-hidden border-0 shadow text-center" style="border-radius: 20px;">
-                <img src="img/Futbol5.jpeg" class="card-img-top w-100" style="height: 180px; object-fit: cover;" alt="imagen cancha">
-                
-                <div class="card-body bg-white p-3">
-                    <h3 class="fs-4 fw-bold text-dark mb-3">CANCHA DE FUTBOL 5</h3>
-                    <h4 class="fs-6 text-muted mb-2">Cancha: 3</h4>
-                    <h4 class="fs-6 text-muted mb-2">Fecha: 24/09/2026</h4>
-                    <h4 class="fs-6 text-muted mb-2">Horario: 20hs</h4>
-                    <h4 class="fs-6 text-muted mb-3">Tiempo: 2hs</h4>
-                    
-                    <div class="collapse" id="detallesCancha2">
-                        <div class="p-2 my-2 rounded-3 text-start border-top">
-                            <p class="mb-1 fs-6 text-dark"><strong>Capacidad:</strong> 5 jugadores</p>
-                            <p class="mb-1 fs-6 text-dark"><strong>Superficie:</strong> Césped sintético (artificial)</p>
-                            <p class="mb-1 fs-6 text-dark"><strong>Estado del pago:</strong> <span class="badge bg-success">Pagado</span></p>
-                            <p class="mb-2 fs-6 text-dark"><strong>Precio Total:</strong> $10.000</p>
-                            <button type="button" class="btn btn-outline-primary btn-sm w-100">Modificar reserva</button>
-                        </div>
-                    </div>
-
-                    <div class="text-end mt-2">
-                        <button class="btn btn-warning text-dark fw-bold px-4 rounded-pill" type="button" data-bs-toggle="collapse" data-bs-target="#detallesCancha2" aria-expanded="false" aria-controls="detallesCancha2">
-                            Ver detalles
-                        </button>
-                        <button type="button" class="btn btn-warning text-dark fw-bold px-4 rounded-pill" data-bs-toggle="modal" data-bs-target="#modalCancelar">
-                            Cancelar
-                        </button>
-                    </div>
-                </div>
-            </div> 
-        </div>
-
-        <div class="col-12 col-md-4 mb-4">
-            <div class="card card-reservas overflow-hidden border-0 shadow text-center" style="border-radius: 20px;">
-                <img src="img/Futbol7.jpeg" class="card-img-top w-100" style="height: 180px; object-fit: cover;" alt="imagen cancha">
-                
-                <div class="card-body bg-white p-3">
-                    <h3 class="fs-4 fw-bold text-dark mb-3">CANCHA DE FUTBOL 7</h3>
-                    <h4 class="fs-6 text-muted mb-2">Cancha: 1</h4>
-                    <h4 class="fs-6 text-muted mb-2">Fecha: 20/06/2026</h4>
-                    <h4 class="fs-6 text-muted mb-2">Horario: 10hs</h4>
-                    <h4 class="fs-6 text-muted mb-3">Tiempo: 2hs</h4>
-
-                    <div class="collapse" id="detallesCancha3">
-                        <div class="p-2 my-2 rounded-3 text-start border-top">
-                            <p class="mb-1 fs-6 text-dark"><strong>Capacidad:</strong> 7 jugadores</p>
-                            <p class="mb-1 fs-6 text-dark"><strong>Superficie:</strong> Césped sintético (artificial)</p>
-                            <p class="mb-1 fs-6 text-dark"><strong>Estado del pago:</strong> <span class="badge bg-success">Pagado</span></p>
-                            <p class="mb-2 fs-6 text-dark"><strong>Precio Total:</strong> $12.000</p>
-                            <button type="button" class="btn btn-outline-primary btn-sm w-100">Modificar reserva</button>
-                        </div>
-                    </div>
-                    
-                    <div class="text-end mt-2">
-                        <button class="btn btn-warning text-dark fw-bold px-4 rounded-pill" type="button" data-bs-toggle="collapse" data-bs-target="#detallesCancha3" aria-expanded="false" aria-controls="detallesCancha3">
-                            Ver detalles
-                        </button>
-                        <button type="button" class="btn btn-warning text-dark fw-bold px-4 rounded-pill" data-bs-toggle="modal" data-bs-target="#modalCancelar">
-                            Cancelar
-                        </button>
-                    </div>
-                </div>
-            </div> 
-        </div>
-
-    </div>
-</div>
-
-<div class="modal fade" id="modalCancelar" tabindex="-1" aria-labelledby="modalCancelarLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered overflow-hidden" style="border-radius: 20px;">
-        <div class="modal-content" style="border-radius: 20px; overflow: hidden;">
-            
-            <div class="modal-header " style="background-color: #004e92;">
-                <h5 class="modal-title fw-bold w-100 text-center text-white" id="modalCancelarLabel">⚠️ Advertencia</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            
-            <div class="modal-body text-center text-dark fs-5">
-                ¿Está seguro de que desea cancelar la reserva?
-            </div>
-            
-            <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">No, regresar</button>
-                <a href="InterfazCliente.html" class="btn btn-primary text-white fw-bold px-4 rounded-pill">Sí, cancelar</a>
             </div>
 
+            <!-- Botón para móviles -->
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Enlaces (Lado Derecho / Celeste) -->
+            <div class="collapse navbar-collapse justify-content-end" id="navbarCollapse menu-publico">
+                <div id="menu-publico" class="navbar-nav py-0 pr-xl-5">
+                    <a href="/" class="nav-item nav-link">Home</a>
+                    <a href="Registro" class="nav-item nav-link">Registrarse</a>
+                    <a href="Acceder" class="nav-item nav-link">Acceder</a>
+                    <a href="#SobreNosotros" class="nav-item nav-link">Sobre Nosotros</a>
+                    <a href="#Contactanos" class="nav-item nav-link">Contactanos</a>
+                </div>
+                <div id="menu-privado" class="navbar-nav py-0 pr-xl-5" style="display:none;">
+                    <a href="/" class="nav-item nav-link">Home</a>
+                    <a href="/perfil" class="nav-item nav-link">Mi Perfil</a>
+                    <a href="/reservas" class="nav-item nav-link">Mis Reservas</a>
+                    <a href="/logout" class="nav-item nav-link">Cerrar Sesión</a>
+                </div>
+            </div>
+            <script>// Chequear si existe la cookie jwt
+                function tieneCookie(nombre) {
+                    return document.cookie.split(';').some(c => c.trim().startsWith(nombre + '='));
+                }
+
+                if (tieneCookie('jwt')) {
+                    document.getElementById('menu-publico').style.display = 'none';
+                    document.getElementById('menu-privado').style.display = 'flex';
+                }
+
+                async function logout() {
+                    await fetch('/logout', { method: 'POST' });
+                    document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                    location.reload();
+                }
+            </script>
+        </nav>
+    </div>
+
+    <!-- Navbar Start -->
+
+
+    <!-- Sección Derecha de la Navbar (Menú horizontal y responsive) -->
+    <div class="col-lg-9">
+        <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-0">
+            <a href="" class="text-decoration-none d-block d-lg-none">
+                <span class="h1 text-uppercase text-dark bg-light px-2">GOL</span>
+                <span class="h1 text-uppercase text-light bg-info px-2 ml-n1">AHORA</span>
+            </a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                <div class="navbar-nav mr-auto py-0">
+                    <!-- Aquí puedes agregar links como Inicio, Contacto, etc. -->
+                </div>
+            </div>
+        </nav>
+    </div>
+    </div>
+    </div>
+
+
+
+    <div class="container mt-4" style="background: linear-gradient(to bottom,#004e92, #000428); min-height: 100vh;">
+        <div>
+            <h1 class="text-white mis-fuentes">MIS RESERVAS</h1>
+        </div>
+
+        <div class="row">
+
+            <div class="col-12 col-md-4 mb-4">
+                <div class="card card-reservas overflow-hidden border-0 shadow text-center"
+                    style="border-radius: 20px;">
+                    <img src="img/Futbol11.jpeg" class="card-img-top w-100" style="height: 180px; object-fit: cover;"
+                        alt="imagen cancha">
+
+                    <div class="card-body bg-white p-3">
+                        <h3 class="fs-4 fw-bold text-dark mb-3">CANCHA DE FUTBOL 11</h3>
+                        <h4 class="fs-6 text-muted mb-2">Cancha: 2</h4>
+                        <h4 class="fs-6 text-muted mb-2">Fecha: 02/07/2026</h4>
+                        <h4 class="fs-6 text-muted mb-2">Horario: 18hs</h4>
+                        <h4 class="fs-6 text-muted mb-3">Tiempo: 3hs</h4>
+
+                        <div class="collapse" id="detallesCancha1">
+                            <div class="p-2 my-2 rounded-3 text-start border-top">
+                                <p class="mb-1 fs-6 text-dark"><strong>Capacidad:</strong> 11 jugadores</p>
+                                <p class="mb-1 fs-6 text-dark"><strong>Superficie:</strong> Césped sintético
+                                    (artificial)</p>
+                                <p class="mb-1 fs-6 text-dark"><strong>Estado del pago:</strong> <span
+                                        class="badge bg-success">Pagado</span></p>
+                                <p class="mb-2 fs-6 text-dark"><strong>Precio Total:</strong> $15.000</p>
+                                <button type="button" class="btn btn-outline-primary btn-sm w-100">Modificar
+                                    reserva</button>
+                            </div>
+                        </div>
+
+                        <div class="text-end mt-2">
+                            <button class="btn btn-warning text-dark fw-bold px-4 rounded-pill" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#detallesCancha1" aria-expanded="false"
+                                aria-controls="detallesCancha1">
+                                Ver detalles
+                            </button>
+                            <button type="button" class="btn btn-warning text-dark fw-bold px-4 rounded-pill"
+                                data-bs-toggle="modal" data-bs-target="#modalCancelar">
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-4 mb-4">
+                <div class="card card-reservas overflow-hidden border-0 shadow text-center"
+                    style="border-radius: 20px;">
+                    <img src="img/Futbol5.jpeg" class="card-img-top w-100" style="height: 180px; object-fit: cover;"
+                        alt="imagen cancha">
+
+                    <div class="card-body bg-white p-3">
+                        <h3 class="fs-4 fw-bold text-dark mb-3">CANCHA DE FUTBOL 5</h3>
+                        <h4 class="fs-6 text-muted mb-2">Cancha: 3</h4>
+                        <h4 class="fs-6 text-muted mb-2">Fecha: 24/09/2026</h4>
+                        <h4 class="fs-6 text-muted mb-2">Horario: 20hs</h4>
+                        <h4 class="fs-6 text-muted mb-3">Tiempo: 2hs</h4>
+
+                        <div class="collapse" id="detallesCancha2">
+                            <div class="p-2 my-2 rounded-3 text-start border-top">
+                                <p class="mb-1 fs-6 text-dark"><strong>Capacidad:</strong> 5 jugadores</p>
+                                <p class="mb-1 fs-6 text-dark"><strong>Superficie:</strong> Césped sintético
+                                    (artificial)</p>
+                                <p class="mb-1 fs-6 text-dark"><strong>Estado del pago:</strong> <span
+                                        class="badge bg-success">Pagado</span></p>
+                                <p class="mb-2 fs-6 text-dark"><strong>Precio Total:</strong> $10.000</p>
+                                <button type="button" class="btn btn-outline-primary btn-sm w-100">Modificar
+                                    reserva</button>
+                            </div>
+                        </div>
+
+                        <div class="text-end mt-2">
+                            <button class="btn btn-warning text-dark fw-bold px-4 rounded-pill" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#detallesCancha2" aria-expanded="false"
+                                aria-controls="detallesCancha2">
+                                Ver detalles
+                            </button>
+                            <button type="button" class="btn btn-warning text-dark fw-bold px-4 rounded-pill"
+                                data-bs-toggle="modal" data-bs-target="#modalCancelar">
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-4 mb-4">
+                <div class="card card-reservas overflow-hidden border-0 shadow text-center"
+                    style="border-radius: 20px;">
+                    <img src="img/Futbol7.jpeg" class="card-img-top w-100" style="height: 180px; object-fit: cover;"
+                        alt="imagen cancha">
+
+                    <div class="card-body bg-white p-3">
+                        <h3 class="fs-4 fw-bold text-dark mb-3">CANCHA DE FUTBOL 7</h3>
+                        <h4 class="fs-6 text-muted mb-2">Cancha: 1</h4>
+                        <h4 class="fs-6 text-muted mb-2">Fecha: 20/06/2026</h4>
+                        <h4 class="fs-6 text-muted mb-2">Horario: 10hs</h4>
+                        <h4 class="fs-6 text-muted mb-3">Tiempo: 2hs</h4>
+
+                        <div class="collapse" id="detallesCancha3">
+                            <div class="p-2 my-2 rounded-3 text-start border-top">
+                                <p class="mb-1 fs-6 text-dark"><strong>Capacidad:</strong> 7 jugadores</p>
+                                <p class="mb-1 fs-6 text-dark"><strong>Superficie:</strong> Césped sintético
+                                    (artificial)</p>
+                                <p class="mb-1 fs-6 text-dark"><strong>Estado del pago:</strong> <span
+                                        class="badge bg-success">Pagado</span></p>
+                                <p class="mb-2 fs-6 text-dark"><strong>Precio Total:</strong> $12.000</p>
+                                <button type="button" class="btn btn-outline-primary btn-sm w-100">Modificar
+                                    reserva</button>
+                            </div>
+                        </div>
+
+                        <div class="text-end mt-2">
+                            <button class="btn btn-warning text-dark fw-bold px-4 rounded-pill" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#detallesCancha3" aria-expanded="false"
+                                aria-controls="detallesCancha3">
+                                Ver detalles
+                            </button>
+                            <button type="button" class="btn btn-warning text-dark fw-bold px-4 rounded-pill"
+                                data-bs-toggle="modal" data-bs-target="#modalCancelar">
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <div class="modal fade" id="modalCancelar" tabindex="-1" aria-labelledby="modalCancelarLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered overflow-hidden" style="border-radius: 20px;">
+            <div class="modal-content" style="border-radius: 20px; overflow: hidden;">
+
+                <div class="modal-header " style="background-color: #004e92;">
+                    <h5 class="modal-title fw-bold w-100 text-center text-white" id="modalCancelarLabel">⚠️ Advertencia
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body text-center text-dark fs-5">
+                    ¿Está seguro de que desea cancelar la reserva?
+                </div>
+
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">No,
+                        regresar</button>
+                    <a href="InterfazCliente.html" class="btn btn-primary text-white fw-bold px-4 rounded-pill">Sí,
+                        cancelar</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

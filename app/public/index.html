@@ -60,15 +60,38 @@
             </button>
 
             <!-- Enlaces (Lado Derecho / Celeste) -->
-            <div class="collapse navbar-collapse justify-content-end" id="navbarCollapse">
-                <div class="navbar-nav py-0 pr-xl-5">
-                    <a href="/" class="nav-item nav-link active">Home</a>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarCollapse menu-publico">
+                <div id="menu-publico" class="navbar-nav py-0 pr-xl-5">
+                    <a href="/" class="nav-item nav-link">Home</a>
                     <a href="Registro" class="nav-item nav-link">Registrarse</a>
                     <a href="Acceder" class="nav-item nav-link">Acceder</a>
                     <a href="#SobreNosotros" class="nav-item nav-link">Sobre Nosotros</a>
                     <a href="#Contactanos" class="nav-item nav-link">Contactanos</a>
                 </div>
+                <div id="menu-privado" class="navbar-nav py-0 pr-xl-5" style="display:none;">
+                    <a href="/" class="nav-item nav-link">Home</a>
+                    <a href="/perfil" class="nav-item nav-link">Mi Perfil</a>
+                    <a href="/reservas" class="nav-item nav-link">Mis Reservas</a>
+                    <a href="/logout" class="nav-item nav-link">Cerrar Sesión</a>
+                </div>
             </div>
+            <script>// Chequear si existe la cookie jwt
+                function tieneCookie(nombre) {
+                    return document.cookie.split(';').some(c => c.trim().startsWith(nombre + '='));
+                }
+
+                if (tieneCookie('jwt')) {
+                    document.getElementById('menu-publico').style.display = 'none';
+                    document.getElementById('menu-privado').style.display = 'flex';
+                }
+
+                async function logout() {
+                    await fetch('/logout', { method: 'POST' });
+                    document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                    location.reload();
+                }
+            </script>
+
         </nav>
     </div>
     <!-- Navbar End -->
@@ -346,7 +369,7 @@
             <div id="Datos" class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
                 <h5 class="text-secondary text-uppercase mb-4">Proyecto final-Ingenieria en software</h5>
                 <p class="mb-4">Profesores:Ing.Juan Piñeiro, Dr.Conde</p>
-                <p class="mb-3">Integrantes: 
+                <p class="mb-3">Integrantes:
                     <span class="mb-1">Arce Julio,</span>
                     <span class="mb-1">Avila Franco,</span>
                     <span class="mb-1">Carteau Piuque,</span>
