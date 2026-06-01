@@ -171,25 +171,6 @@ function abrirReserva(dia, inicio, fin) {
 }
 
 
-
-// Función que se activa al hacer clic en "Reservar" de la tarjeta
-function abrirReserva(dia, inicio, fin) {
-    const modal = document.getElementById("modal-reserva");
-    const resumen = document.getElementById("resumen-contenido");
-
-    resumen.innerHTML = `
-        <div class="text-dark">
-        <p><strong>Día:</strong> ${dia}</p>
-        <p><strong>Fecha:</strong> ${fecha}</p>
-        <p><strong>Horario:</strong> ${inicio} a ${fin}</p>
-        <p>¿Estás seguro de continuar?</p>
-        </div>
-    `;
-
-    // Hacemos visible el modal
-    modal.style.display = "flex";
-}
-
 function cerrarReserva() {
     document.getElementById("modal-reserva").style.display = "none";
 }
