@@ -101,7 +101,8 @@ router.post('/api/webhook', async (req, res) => {
         ]
       );*/
     }
-
+    console.log(type),
+    console.log(data)
     res.sendStatus(200);
   } catch (error) {
     console.error(error);
