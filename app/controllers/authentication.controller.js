@@ -21,7 +21,7 @@ import { enviarBienvenidaEmail } from '../services/email.service.js';
 * @returns {void}
 */
 async function login(req, res) {
-    const destino = req.query.redirect;
+    const destino = req.query.redirect || "/";
     const email = req.body.email;
     const password = req.body.password;
 
