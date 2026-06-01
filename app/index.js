@@ -16,8 +16,11 @@ import userRoutes from './routes/user.routes.js';
 import adminRoutes from './routes/admin.routes.js';
 import clienteRoutes from './routes/cliente.routes.js';
 import pagoRoutes from './routes/pago.routes.js';
+import webhookMpRoute, { crearPago } from "./services/mercadoPago.service.js";
 import apiRoutes from './routes/api.routes.js';
 import archivosRoutes from './routes/achivos.routes.js';
+
+import {methods as helper} from "./helpers/utilsHelper.js"
 
 import path from 'path';
 import { fileURLToPath } from "url";
@@ -58,4 +61,34 @@ app.use(userRoutes);
 app.use(adminRoutes);
 app.use(clienteRoutes);
 app.use(pagoRoutes);
-app.use(cors());
+app.use(webhookMpRoute)
+app.use(cors({
+  origin: "http://localhost:3000",   // el dominio de tu frontend local
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization", "plataform"],
+  credentials: true                  // habilita cookies y headers de sesión
+}));
+
+
+//PRUEBAS
+const hora = "22:00"
+const fecha = "2026-05-20"
+const fechaActual = new Date()
+const fechaLocal = fechaActual.toLocaleDateString()
+const horaActual = fechaActual.toLocaleTimeString()
+const test = helper.diferenciaHorasFormato("20:30","22:00")
+const test2 = helper.compararHoras("12:00", "13:00")
+const test3 = helper.compararFechas(new Date(Date.now) , "2026-05-30")
+console.log(helper.normalizarFecha(fecha).toString())
+
+import { crearPreferencia } from "./services/mercadoPago.service.js";
+console.log(await crearPreferencia(
+  [
+      {
+        title: "Reserva",
+        quantity: 2,
+        unit_price: 5500
+      }
+    ]
+
+))

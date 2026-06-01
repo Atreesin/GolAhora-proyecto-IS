@@ -11,6 +11,7 @@ import { methods as userController } from "../controllers/user.controller.js";
 import { methods as clubController } from "../controllers/club.controller.js";
 import { methods as canchaController } from "../controllers/canchas.controller.js";
 import {methods as disp} from "../db/dbDisponibilidadQueries.js"
+import { crearQR } from "../services/mercadoPago.service.js";
 
 
 import { uploadImagen } from "../services/imageUpload.service.js";
@@ -91,6 +92,7 @@ router.get("/api/canchas/cancha_id=:id/disponibilidad", wrapper(canchaController
 router.get("/api/disponibilidad/dia=:dia/cancha_id=:id", wrapper(canchaController.getDisponibilidadesCanchaDiaSemanaNormal))
 router.get("/api/canchas/cancha_id=:id/disponibilidad/dia=:dia", wrapper(canchaController.getDisponibilidadesCanchaDiaSemanaNormal))
 router.get("/api/canchas/cancha_id=:id/disponibilidad/fecha=:fecha", wrapper(canchaController.getDisponibilidadCanchaByFecha))
+router.get("/api/canchas/cancha_id=:id/ocupaciones", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(canchaController.getOcupacionesCanchasByCanchaId))
 
   //*************************************//
  //     DISPONIBILIDAD EXCEPCIONES      // 
@@ -102,6 +104,10 @@ router.get("/api/disponibilidad/especiales", wrapper(canchaController.getDisponi
 //*************************************//
 router.get("/api/ocupaciones", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(canchaController.getOcupacionesCanchas))
 router.get("/api/tipo_ocupaciones", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(canchaController.getTipoOcupacionesCanchas))
+router.get("/api/ocupaciones/ocupacion_id=:id", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(canchaController.getOcupacionesCanchasById))
+router.get("/api/ocupaciones/fecha=:fecha", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(canchaController.getOcupacionesCanchasByFecha))
+router.get("/api/ocupaciones/tipo_ocupacion_id=:id", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(canchaController.getOcupacionesCanchasByTipo))
+router.get("/api/ocupaciones/cancha_id=:id", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(canchaController.getOcupacionesCanchasByCanchaId))
 
 /*****************************************************************************************************************/
 /*                                          API POST                                                              /
@@ -137,5 +143,9 @@ router.post("/api/disponibilidad/agregar", authorization.apiSoloUsers, authoriza
 // REGISTRAR
 router.post("/api/ocupaciones/agregar", authorization.apiSoloUsers, authorization.apiSoloAdmin, wrapper(canchaController.registrarOcupacionCancha))
 
+
+
+//qr
+router.post("/api/qr-pago", crearQR)
 
 export default router

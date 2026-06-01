@@ -705,6 +705,88 @@ async function getOcupacionesCanchas(req, res) {
     res.send(await dbOcupacionesQuery.getOcupacionesCanchas() || [])
 }
 
+async function getOcupacionesCanchasById(req, res){
+    //id_ocupacion
+    let id_ocupacion = req.params.id;
+    if (!id_ocupacion) {
+        return res.status(400).send({ status: "Error", message: "Ingrese el id de la ocupacion" })
+    }
+    id_ocupacion = helper.convertirADecimalValidado(id_ocupacion);
+    if (id_ocupacion === null) {
+        return res.status(400).send({ status: "Error", message: "El id debe ser un número entero" })
+    }
+    const ocupacion = await dbOcupacionesQuery.getOcupacionCanchaById(id_ocupacion)
+    if (!ocupacion) {
+        return res.status(404).send({ status: "Error", message: `No existe una ocupación con el id ${req.params.id}` })
+    }
+
+    res.send(ocupacion)
+}
+
+async function getOcupacionesCanchasByFecha(req, res){
+    //id_ocupacion
+    let fecha = req.params.fecha;
+
+    fecha = helper.normalizarFecha(fecha);
+    if (!fecha) {
+        return res.status(400).send({ status: "Error", message: `El formato de la fecha ${req.params.fecha} no es válido` })
+    }
+    const ocupacion = await dbOcupacionesQuery.getOcupacionesCanchasByFecha(fecha)
+    if (!ocupacion) {
+        return res.status(404).send({ status: "Error", message: `No existen ocupaciones en la fecha ${req.params.fecha}` })
+    }
+
+    res.send(ocupacion)
+
+    res.send(ocupacion)
+}
+async function getOcupacionesCanchasByTipo(req, res){
+    let id_tipo_ocupacion = req.params.id
+    if (!id_tipo_ocupacion) {
+        return res.status(400).send({ status: "Error", message: "Ingrese el id de la ocupación" })
+    }
+    id_tipo_ocupacion = helper.convertirADecimalValidado(id_tipo_ocupacion);
+    if (id_tipo_ocupacion === null) {
+        return res.status(400).send({ status: "Error", message: "El id debe ser un número entero" })
+    }
+    const existeTipo = await dbOcupacionesQuery.getTipoOcupacionById(id_tipo_ocupacion)
+    if (!existeTipo){
+        return res.status(404).send({ status: "Error", message: `No existe el tipo de ocupación con el id ${req.params.id}` })
+    }
+    const ocupacion = await dbOcupacionesQuery.getOcupacionCanchaById(id_tipo_ocupacion)
+    if (!ocupacion) {
+        return res.status(404).send({ status: "Error", message: `No existe una ocupación con del tipo ${existeTipo.tipo}` })
+    }
+
+    res.send(ocupacion)
+}
+async function getOcupacionesCanchasByCanchaId(req, res){
+    //id_cancha
+    let id_cancha = req.params.id;
+    if (!id_cancha) {
+        return res.status(400).send({ status: "Error", message: "Ingrese el id de la cancha" })
+    }
+    id_cancha = helper.convertirADecimalValidado(id_cancha);
+    if (id_cancha === null) {
+        return res.status(400).send({ status: "Error", message: "El id de la cancha debe ser un número entero" })
+    }
+    const cancha = await dbCanchaQuery.getCanchaById(id_cancha);
+    if (!cancha) {
+        return res.status(404).send({ status: "Error", message: `La cancha con el id ${req.params.id} no existe` })
+    }
+    const ocupacion = await dbOcupacionesQuery.getOcupacionesCanchasByCanchaId(id_cancha)
+    if (!ocupacion) {
+        return res.status(404).send({ status: "Error", message: `La cancha con el id ${req.params.id} no tiene ninguna ocupación` })
+    }
+
+    res.send(ocupacion)
+}
+
+// reserva
+async function registrarOcupacion(){
+
+}
+
 
 export const methods = {
     registrarTipoCancha,
@@ -729,5 +811,9 @@ export const methods = {
     // ocupaciones
     registrarOcupacionCancha,
     getOcupacionesCanchas,
-    getTipoOcupacionesCanchas
+    getTipoOcupacionesCanchas,
+    getOcupacionesCanchasById,
+    getOcupacionesCanchasByFecha,
+    getOcupacionesCanchasByTipo,
+    getOcupacionesCanchasByCanchaId
 }

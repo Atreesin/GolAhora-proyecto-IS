@@ -6,6 +6,7 @@ import { methods as authorization } from "../middlewares/authorization.js";
 
 const router = Router()
 
+router.get("/", authorization.SoloUsers)
 
 
 export default router
