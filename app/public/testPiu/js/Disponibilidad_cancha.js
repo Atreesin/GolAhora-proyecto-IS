@@ -23,7 +23,7 @@ class Disponibilidad { // (Convención: las clases empiezan con mayúscula)
                     </div>
                     <div class="mt-3 mt-sm-0">
                       
-                    <button class="btn btn-success " 
+                    <button class="btn btn-success btn-reservar" 
                     onclick="abrirReserva('${this.dia_semana}', '${this.hora_inicio}', '${this.hora_fin}')">
                         Reservar
                         </button>
