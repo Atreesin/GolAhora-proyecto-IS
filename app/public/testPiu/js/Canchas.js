@@ -19,7 +19,7 @@ class Cancha {
         fila.className = "col-12 mb-3 d-flex justify-content-center";
 
         fila.innerHTML = `
-            <div class="card text-dark shadow border-0 p-4 w-100" style="max-width: 900px; border-radius: 15px; background-color: #ffffff !important;">
+            <div class="card card-entrenamientos text-dark shadow border-0 p-4 w-100" style="max-width: 900px; border-radius: 15px; background-color: #ffffff !important;">
                 <div class="d-flex justify-content-between align-items-center flex-wrap">
                    <img src="https://golahora-proyecto-is.onrender.com/api${this.imagen_url}" 
                              class="card-img w-100" 
