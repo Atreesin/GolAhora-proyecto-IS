@@ -14,7 +14,7 @@ router.get("/MisClases", authorization.soloUsers, (req,res)=>res.sendFile(__dirn
 router.get("/MisEntrenamientos", authorization.soloUsers, (req,res)=>res.sendFile(__dirname + "/pages/user/MisEntrenamientos.html"))
 router.get("/MisReservas", authorization.soloUsers, (req,res)=>res.sendFile(__dirname + "/pages/user/MisReservas.html"))
 router.get("/ReservaDeCancha", authorization.soloUsers, (req,res)=>res.sendFile(__dirname + "/pages/user/ReservadeCancha.html"))
-router.get("/Reservar", authorization.soloPublico, (req,res)=>res.sendFile(__dirname + "/pages/user/AccederReservar.html"))
+router.get("/Reservar", authorization.soloPublico, (req,res)=>res.sendFile(__dirname + "/pages/AccederReservar.html"))
 
 
 
